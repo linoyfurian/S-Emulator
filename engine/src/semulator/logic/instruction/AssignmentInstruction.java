@@ -28,4 +28,16 @@ public class AssignmentInstruction extends AbstractInstruction{
 
         return FixedLabel.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        String description = getVariable().getRepresentation() + " <- " + assignedVariable.getRepresentation();
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }

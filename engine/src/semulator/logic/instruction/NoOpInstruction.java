@@ -19,4 +19,17 @@ public class NoOpInstruction extends AbstractInstruction {
     public Label execute(ExecutionContext context) {
         return FixedLabel.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        String variableRepresentation=getVariable().getRepresentation();
+        String description = variableRepresentation + " <- " + variableRepresentation;
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }

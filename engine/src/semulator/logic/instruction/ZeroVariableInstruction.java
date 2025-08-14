@@ -21,5 +21,17 @@ public class ZeroVariableInstruction extends AbstractInstruction {
 
         return FixedLabel.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        String description = getVariable().getRepresentation() + " <- 0";
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }
 

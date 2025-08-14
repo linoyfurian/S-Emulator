@@ -32,4 +32,17 @@ public class JumpEqualVariableInstruction extends AbstractInstruction {
 
         return FixedLabel.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        String description = "IF " + getVariable().getRepresentation() + "=" + variableName.getRepresentation() + " GOTO " + JEVariableLabel.getLabelRepresentation();
+
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }

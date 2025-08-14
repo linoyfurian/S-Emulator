@@ -11,6 +11,7 @@ public interface Instruction {
     Label getLabel();
     Variable getVariable();
     int getExpansionDegree();
-    //long getInstructionNumber();
+    long getInstructionNumber();
+    InstructionType getType();
 }
 

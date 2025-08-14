@@ -22,4 +22,16 @@ public class GoToLabelInstruction extends AbstractInstruction {
     public Label execute(ExecutionContext context) {
         return gotoLabel;
     }
+
+    @Override
+    public String toString() {
+        String description = "GOTO " + gotoLabel.getLabelRepresentation();
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }

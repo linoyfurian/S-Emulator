@@ -51,4 +51,13 @@ public abstract class AbstractInstruction implements Instruction {
         return variable;
     }
 
+    @Override
+    public long getInstructionNumber() {
+        return instructionNumber;
+    }
+
+    @Override
+    public InstructionType getType() {
+        return type;
+    }
 }

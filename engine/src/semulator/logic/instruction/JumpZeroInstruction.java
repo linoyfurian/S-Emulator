@@ -28,4 +28,16 @@ public class JumpZeroInstruction extends AbstractInstruction{
         }
         return FixedLabel.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        String description = "IF " + getVariable().getRepresentation() + "=0" + " GOTO " + jzLabel.getLabelRepresentation();
+        return String.format(
+                "#%d (%s) [%s] %s (%d)",
+                getInstructionNumber(),
+                getType().getType(),
+                getLabel().getLabelRepresentation(),
+                description,
+                cycles());
+    }
 }
