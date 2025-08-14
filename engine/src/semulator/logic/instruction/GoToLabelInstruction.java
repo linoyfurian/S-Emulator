@@ -1,23 +1,20 @@
 package semulator.logic.instruction;
 
 import semulator.logic.execution.ExecutionContext;
-import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
-
-import java.util.List;
 
 public class GoToLabelInstruction extends AbstractInstruction {
 
     private final Label gotoLabel;
 
-    public GoToLabelInstruction(List<Variable> variables, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variables, InstructionType.SYNTHETIC, 1);
+    public GoToLabelInstruction(Variable variable, Label gotoLabel, long instructionNumber) {
+        super(InstructionData.GOTO_LABEL, variable, InstructionType.SYNTHETIC, 1, instructionNumber);
         this.gotoLabel = gotoLabel;
     }
 
-    public GoToLabelInstruction(List<Variable> variables, Label label, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variables, label, InstructionType.SYNTHETIC, 1);
+    public GoToLabelInstruction(Variable variable, Label label, Label gotoLabel, long instructionNumber) {
+        super(InstructionData.GOTO_LABEL, variable, label, InstructionType.SYNTHETIC, 1, instructionNumber);
         this.gotoLabel = gotoLabel;
     }
 

@@ -5,28 +5,24 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-import java.util.List;
-
 public class ConstantAssignmentInstruction extends AbstractInstruction {
 
     private final long constantValue;
 
-    public ConstantAssignmentInstruction(List<Variable> variables, long constantValue) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variables, InstructionType.SYNTHETIC, 2);
+    public ConstantAssignmentInstruction(Variable variable, long constantValue, long instructionNumber) {
+        super(InstructionData.CONSTANT_ASSIGNMENT, variable, InstructionType.SYNTHETIC, 2, instructionNumber);
         this.constantValue = constantValue;
     }
 
-    public ConstantAssignmentInstruction(List<Variable> variables, Label label, long constantValue) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variables, label, InstructionType.SYNTHETIC, 2);
+    public ConstantAssignmentInstruction(Variable variable, Label label, long constantValue, long instructionNumber) {
+        super(InstructionData.CONSTANT_ASSIGNMENT, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber);
         this.constantValue = constantValue;
     }
 
     @Override
     public Label execute(ExecutionContext context) {
 
-        long variableValue = context.getVariableValue(getVariables().get(0));
-        variableValue = constantValue;
-        context.updateVariable(getVariables().get(0), variableValue);
+        context.updateVariable(getVariable(), constantValue);
 
         return FixedLabel.EMPTY;
     }

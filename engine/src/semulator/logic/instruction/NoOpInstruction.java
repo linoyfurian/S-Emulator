@@ -5,16 +5,14 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-import java.util.List;
-
 public class NoOpInstruction extends AbstractInstruction {
 
-    public NoOpInstruction(List<Variable> variables) {
-        super(InstructionData.NO_OP, variables, InstructionType.BASIC, 0);
+    public NoOpInstruction(Variable variable, long instructionNumber) {
+        super(InstructionData.NO_OP, variable, InstructionType.BASIC, 0, instructionNumber);
     }
 
-    public NoOpInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.NO_OP, variables, label, InstructionType.BASIC, 0);
+    public NoOpInstruction(Variable variable, Label label, long instructionNumber) {
+        super(InstructionData.NO_OP, variable, label, InstructionType.BASIC, 0, instructionNumber);
     }
 
     @Override

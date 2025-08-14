@@ -5,25 +5,23 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-import java.util.List;
-
 public class JumpNotZeroInstruction extends AbstractInstruction{
 
     private final Label jnzLabel;
 
-    public JumpNotZeroInstruction(List<Variable> variables, Label jnzLabel) {
-        super(InstructionData.JUMP_NOT_ZERO, variables, InstructionType.BASIC, 0);
+    public JumpNotZeroInstruction(Variable variable, Label jnzLabel, long instructionNumber) {
+        super(InstructionData.JUMP_NOT_ZERO, variable, InstructionType.BASIC, 0, instructionNumber);
         this.jnzLabel = jnzLabel;
     }
 
-    public JumpNotZeroInstruction(List<Variable> variables, Label jnzLabel, Label label) {
-        super(InstructionData.JUMP_NOT_ZERO, variables, label, InstructionType.BASIC, 0);
+    public JumpNotZeroInstruction(Variable variable, Label jnzLabel, Label label, long instructionNumber) {
+        super(InstructionData.JUMP_NOT_ZERO, variable, label, InstructionType.BASIC, 0, instructionNumber);
         this.jnzLabel = jnzLabel;
     }
 
     @Override
     public Label execute(ExecutionContext context) {
-        long variableValue = context.getVariableValue(getVariables().get(0));
+        long variableValue = context.getVariableValue(getVariable());
 
         if (variableValue != 0) {
             return jnzLabel;

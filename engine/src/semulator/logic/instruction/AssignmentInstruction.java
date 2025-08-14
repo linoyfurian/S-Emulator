@@ -5,25 +5,26 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-import java.util.List;
 
 public class AssignmentInstruction extends AbstractInstruction{
 
-    public AssignmentInstruction(List<Variable> variables) {
-        super(InstructionData.ASSIGNMENT, variables, InstructionType.SYNTHETIC, 2);
+    private final Variable assignedVariable;
+
+    public AssignmentInstruction(Variable variable, long instructionNumber, Variable assignedVariable) {
+        super(InstructionData.ASSIGNMENT, variable, InstructionType.SYNTHETIC, 2, instructionNumber);
+        this.assignedVariable = assignedVariable;
     }
 
-    public AssignmentInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.ASSIGNMENT, variables,  label, InstructionType.SYNTHETIC, 2);
+    public AssignmentInstruction(Variable variable, Label label, long instructionNumber, Variable assignedVariable) {
+        super(InstructionData.ASSIGNMENT, variable,  label, InstructionType.SYNTHETIC, 2, instructionNumber);
+        this.assignedVariable = assignedVariable;
     }
 
     @Override
     public Label execute(ExecutionContext context) {
 
-        long variable1Value = context.getVariableValue(getVariables().get(0));
-        long variable2Value = context.getVariableValue(getVariables().get(1));
-        variable1Value = variable2Value;
-        context.updateVariable(getVariables().get(0), variable1Value);
+        long assignedValue = context.getVariableValue(assignedVariable);
+        context.updateVariable(getVariable(), assignedValue);
 
         return FixedLabel.EMPTY;
     }
