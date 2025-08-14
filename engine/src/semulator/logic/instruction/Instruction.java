@@ -4,11 +4,13 @@ import semulator.logic.execution.ExecutionContext;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.List;
+
 public interface Instruction {
     String getName();
     Label execute(ExecutionContext context);
     int cycles();
     Label getLabel();
-    Variable getVariable();
+    List<Variable> getVariables();
 }
 

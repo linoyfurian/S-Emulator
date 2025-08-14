@@ -5,21 +5,23 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.List;
+
 public class ZeroVariableInstruction extends AbstractInstruction {
-    public ZeroVariableInstruction(Variable variable) {
-        super(InstructionData.ZERO_VARIABLE, variable);
+    public ZeroVariableInstruction(List<Variable> variables) {
+        super(InstructionData.ZERO_VARIABLE, variables);
     }
 
-    public ZeroVariableInstruction(Variable variable, Label label) {
-        super(InstructionData.ZERO_VARIABLE, variable, label);
+    public ZeroVariableInstruction(List<Variable> variables, Label label) {
+        super(InstructionData.ZERO_VARIABLE, variables, label);
     }
 
     @Override
     public Label execute(ExecutionContext context) {
 
-        long variableValue = context.getVariableValue(getVariable());
+        long variableValue = context.getVariableValue(getVariables().get(0));
         variableValue=0;
-        context.updateVariable(getVariable(), variableValue);
+        context.updateVariable(getVariables().get(0), variableValue);
 
         return FixedLabel.EMPTY;
     }

@@ -4,23 +4,24 @@ import semulator.logic.execution.ExecutionContext;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
+import java.util.List;
 
 public class DecreaseInstruction extends AbstractInstruction {
 
-    public DecreaseInstruction(Variable variable) {
-        super(InstructionData.DECREASE, variable);
+    public DecreaseInstruction(List<Variable> variables) {
+        super(InstructionData.DECREASE, variables);
     }
 
-    public DecreaseInstruction(Variable variable, Label label) {
-        super(InstructionData.DECREASE, variable, label);
+    public DecreaseInstruction(List<Variable> variables, Label label) {
+        super(InstructionData.DECREASE, variables, label);
     }
 
     @Override
     public Label execute(ExecutionContext context) {
 
-        long variableValue = context.getVariableValue(getVariable());
+        long variableValue = context.getVariableValue(getVariables().get(0));
         variableValue = Math.max(0, variableValue - 1);
-        context.updateVariable(getVariable(), variableValue);
+        context.updateVariable(getVariables().get(0), variableValue);
 
         return FixedLabel.EMPTY;
     }

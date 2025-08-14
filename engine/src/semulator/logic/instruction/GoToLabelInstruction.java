@@ -5,17 +5,19 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.List;
+
 public class GoToLabelInstruction extends AbstractInstruction {
 
     private final Label gotoLabel;
 
-    public GoToLabelInstruction(Variable variable, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variable);
+    public GoToLabelInstruction(List<Variable> variables, Label gotoLabel) {
+        super(InstructionData.GOTO_LABEL, variables);
         this.gotoLabel = gotoLabel;
     }
 
-    public GoToLabelInstruction(Variable variable, Label label, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variable, label);
+    public GoToLabelInstruction(List<Variable> variables, Label label, Label gotoLabel) {
+        super(InstructionData.GOTO_LABEL, variables, label);
         this.gotoLabel = gotoLabel;
     }
 
