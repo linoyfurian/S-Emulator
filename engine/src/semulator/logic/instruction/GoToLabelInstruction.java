@@ -12,12 +12,12 @@ public class GoToLabelInstruction extends AbstractInstruction {
     private final Label gotoLabel;
 
     public GoToLabelInstruction(List<Variable> variables, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variables);
+        super(InstructionData.GOTO_LABEL, variables, InstructionType.SYNTHETIC, 1);
         this.gotoLabel = gotoLabel;
     }
 
     public GoToLabelInstruction(List<Variable> variables, Label label, Label gotoLabel) {
-        super(InstructionData.GOTO_LABEL, variables, label);
+        super(InstructionData.GOTO_LABEL, variables, label, InstructionType.SYNTHETIC, 1);
         this.gotoLabel = gotoLabel;
     }
 

@@ -11,12 +11,12 @@ public class JumpEqualVariableInstruction extends AbstractInstruction {
     private final Label JEVariableLabel;
 
     public JumpEqualVariableInstruction(List<Variable> variables, Label JEVariableLabel) {
-        super(InstructionData.JUMP_EQUAL_VARIABLE, variables);
+        super(InstructionData.JUMP_EQUAL_VARIABLE, variables, InstructionType.SYNTHETIC, 3);
         this.JEVariableLabel = JEVariableLabel;
     }
 
     public JumpEqualVariableInstruction(List<Variable> variables, Label label, Label JEVariableLabel) {
-        super(InstructionData.JUMP_EQUAL_VARIABLE, variables, label);
+        super(InstructionData.JUMP_EQUAL_VARIABLE, variables, label, InstructionType.SYNTHETIC, 3);
         this.JEVariableLabel = JEVariableLabel;
     }
 

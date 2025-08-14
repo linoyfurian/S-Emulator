@@ -12,12 +12,12 @@ public class JumpNotZeroInstruction extends AbstractInstruction{
     private final Label jnzLabel;
 
     public JumpNotZeroInstruction(List<Variable> variables, Label jnzLabel) {
-        super(InstructionData.JUMP_NOT_ZERO, variables);
+        super(InstructionData.JUMP_NOT_ZERO, variables, InstructionType.BASIC, 0);
         this.jnzLabel = jnzLabel;
     }
 
     public JumpNotZeroInstruction(List<Variable> variables, Label jnzLabel, Label label) {
-        super(InstructionData.JUMP_NOT_ZERO, variables, label);
+        super(InstructionData.JUMP_NOT_ZERO, variables, label, InstructionType.BASIC, 0);
         this.jnzLabel = jnzLabel;
     }
 

@@ -9,11 +9,11 @@ import java.util.List;
 public class DecreaseInstruction extends AbstractInstruction {
 
     public DecreaseInstruction(List<Variable> variables) {
-        super(InstructionData.DECREASE, variables);
+        super(InstructionData.DECREASE, variables, InstructionType.BASIC, 0);
     }
 
     public DecreaseInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.DECREASE, variables, label);
+        super(InstructionData.DECREASE, variables, label, InstructionType.BASIC, 0);
     }
 
     @Override

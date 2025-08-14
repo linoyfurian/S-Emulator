@@ -33,17 +33,24 @@ public class ProgramImpl implements Program{
     @Override
     public boolean validate() {
         return false;
-    }
+    } ///to impl
 
     @Override
     public int calculateMaxDegree() {
-        // traverse all commands and find maximum degree
-        return 0;
+        if (instructions == null || instructions.isEmpty()) return 0;
+
+        return instructions.stream()
+                .mapToInt(Instruction::getExpansionDegree)
+                .max()
+                .orElse(0);
     }
 
     @Override
     public int calculateCycles() {
-        // traverse all commands and calculate cycles
-        return 0;
+        if (instructions == null || instructions.isEmpty()) return 0;
+
+        return instructions.stream()
+                .mapToInt(Instruction::cycles)
+                .sum();
     }
 }

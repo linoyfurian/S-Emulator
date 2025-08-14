@@ -10,11 +10,11 @@ import java.util.List;
 public class IncreaseInstruction extends AbstractInstruction {
 
     public IncreaseInstruction(List<Variable> variables) {
-        super(InstructionData.INCREASE, variables);
+        super(InstructionData.INCREASE, variables, InstructionType.BASIC,0);
     }
 
     public IncreaseInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.INCREASE, variables, label);
+        super(InstructionData.INCREASE, variables, label, InstructionType.BASIC,0);
     }
 
     @Override

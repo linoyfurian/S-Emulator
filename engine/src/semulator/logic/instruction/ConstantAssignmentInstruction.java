@@ -12,12 +12,12 @@ public class ConstantAssignmentInstruction extends AbstractInstruction {
     private final long constantValue;
 
     public ConstantAssignmentInstruction(List<Variable> variables, long constantValue) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variables);
+        super(InstructionData.CONSTANT_ASSIGNMENT, variables, InstructionType.SYNTHETIC, 2);
         this.constantValue = constantValue;
     }
 
     public ConstantAssignmentInstruction(List<Variable> variables, Label label, long constantValue) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variables, label);
+        super(InstructionData.CONSTANT_ASSIGNMENT, variables, label, InstructionType.SYNTHETIC, 2);
         this.constantValue = constantValue;
     }
 

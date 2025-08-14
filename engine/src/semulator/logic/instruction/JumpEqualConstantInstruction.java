@@ -12,13 +12,13 @@ public class JumpEqualConstantInstruction extends AbstractInstruction {
     private final Label JEConstantLabel;
 
     public JumpEqualConstantInstruction(List<Variable> variables, long constantValue, Label JEConstantLabel) {
-        super(InstructionData.JUMP_EQUAL_CONSTANT, variables);
+        super(InstructionData.JUMP_EQUAL_CONSTANT, variables, InstructionType.SYNTHETIC, 3);
         this.constantValue = constantValue;
         this.JEConstantLabel = JEConstantLabel;
     }
 
     public JumpEqualConstantInstruction(List<Variable> variables, Label label, long constantValue, Label JEConstantLabel) {
-        super(InstructionData.JUMP_EQUAL_CONSTANT, variables, label);
+        super(InstructionData.JUMP_EQUAL_CONSTANT, variables, label, InstructionType.SYNTHETIC, 3);
         this.constantValue = constantValue;
         this.JEConstantLabel = JEConstantLabel;
     }

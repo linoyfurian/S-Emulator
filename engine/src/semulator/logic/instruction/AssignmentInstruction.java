@@ -10,11 +10,11 @@ import java.util.List;
 public class AssignmentInstruction extends AbstractInstruction{
 
     public AssignmentInstruction(List<Variable> variables) {
-        super(InstructionData.ASSIGNMENT, variables);
+        super(InstructionData.ASSIGNMENT, variables, InstructionType.SYNTHETIC, 2);
     }
 
     public AssignmentInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.ASSIGNMENT, variables,  label);
+        super(InstructionData.ASSIGNMENT, variables,  label, InstructionType.SYNTHETIC, 2);
     }
 
     @Override

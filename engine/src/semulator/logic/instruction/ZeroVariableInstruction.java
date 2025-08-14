@@ -9,19 +9,17 @@ import java.util.List;
 
 public class ZeroVariableInstruction extends AbstractInstruction {
     public ZeroVariableInstruction(List<Variable> variables) {
-        super(InstructionData.ZERO_VARIABLE, variables);
+        super(InstructionData.ZERO_VARIABLE, variables, InstructionType.SYNTHETIC, 1);
     }
 
     public ZeroVariableInstruction(List<Variable> variables, Label label) {
-        super(InstructionData.ZERO_VARIABLE, variables, label);
+        super(InstructionData.ZERO_VARIABLE, variables, label, InstructionType.SYNTHETIC, 1);
     }
 
     @Override
     public Label execute(ExecutionContext context) {
 
-        long variableValue = context.getVariableValue(getVariables().get(0));
-        variableValue=0;
-        context.updateVariable(getVariables().get(0), variableValue);
+        context.updateVariable(getVariables().get(0), 0);
 
         return FixedLabel.EMPTY;
     }

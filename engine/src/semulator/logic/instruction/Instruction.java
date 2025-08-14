@@ -12,5 +12,6 @@ public interface Instruction {
     int cycles();
     Label getLabel();
     List<Variable> getVariables();
+    int getExpansionDegree();
 }
 
