@@ -1,17 +1,17 @@
 package semulator.core;
 
-
-import semulator.logic.program.ProgramImpl;
+import jakarta.xml.bind.JAXBException;
+import semulator.logic.program.Program;
+import semulator.logic.program.ProgramData;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 public interface SEmulatorEngine {
 
-    void loadProgramDetails(Path filePath);
-    ProgramImpl displayProgram();
+    void loadProgramDetails(Path filePath) throws JAXBException;
+    ProgramData displayProgram();
     //expand
-    //run
+    void runProgram();
     //history
     //exit
 }

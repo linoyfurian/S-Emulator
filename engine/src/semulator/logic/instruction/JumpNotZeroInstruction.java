@@ -5,7 +5,7 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class JumpNotZeroInstruction extends AbstractInstruction{
+public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction{
 
     private final Label jnzLabel;
 
@@ -43,5 +43,10 @@ public class JumpNotZeroInstruction extends AbstractInstruction{
     @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "!=0" + " GOTO " + jnzLabel.getLabelRepresentation());
+    }
+
+    @Override
+    public Label getTargetLabel() {
+        return jnzLabel;
     }
 }

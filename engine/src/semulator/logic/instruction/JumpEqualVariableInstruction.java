@@ -5,7 +5,7 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class JumpEqualVariableInstruction extends AbstractInstruction {
+public class JumpEqualVariableInstruction extends AbstractInstruction implements JumpInstruction{
 
     private final Label JEVariableLabel;
     private final Variable variableName;
@@ -47,5 +47,14 @@ public class JumpEqualVariableInstruction extends AbstractInstruction {
     @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "=" + variableName.getRepresentation() + " GOTO " + JEVariableLabel.getLabelRepresentation());
+    }
+
+    @Override
+    public Label getTargetLabel() {
+        return JEVariableLabel;
+    }
+
+    public Variable getVariableName() {
+        return variableName;
     }
 }

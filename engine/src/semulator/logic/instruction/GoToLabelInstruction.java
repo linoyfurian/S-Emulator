@@ -4,7 +4,7 @@ import semulator.logic.execution.ExecutionContext;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class GoToLabelInstruction extends AbstractInstruction {
+public class GoToLabelInstruction extends AbstractInstruction implements JumpInstruction {
 
     private final Label gotoLabel;
 
@@ -37,5 +37,10 @@ public class GoToLabelInstruction extends AbstractInstruction {
     @Override
     public String getInstructionDescription() {
         return ("GOTO " + gotoLabel.getLabelRepresentation());
+    }
+
+    @Override
+    public Label getTargetLabel() {
+        return gotoLabel;
     }
 }

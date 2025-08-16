@@ -44,4 +44,8 @@ public class AssignmentInstruction extends AbstractInstruction{
     public String getInstructionDescription(){
         return (getVariable().getRepresentation() + " <- " + assignedVariable.getRepresentation());
     }
+
+    public Variable getAssignedVariable() {
+        return assignedVariable;
+    }
 }

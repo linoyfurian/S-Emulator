@@ -4,7 +4,7 @@ public enum InstructionData {
 
     INCREASE("INCREASE", 1),
     DECREASE("DECREASE", 1),
-    NO_OP("NO_OP", 0),
+    NEUTRAL("NEUTRAL", 0),
     JUMP_NOT_ZERO("JUMP_NOT_ZERO ", 3),
     ZERO_VARIABLE("ZERO_VARIABLE", 1),
     GOTO_LABEL("GOTO_LABEL", 1),

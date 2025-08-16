@@ -5,7 +5,7 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class JumpEqualConstantInstruction extends AbstractInstruction {
+public class JumpEqualConstantInstruction extends AbstractInstruction implements JumpInstruction{
 
     private final long constantValue;
     private final Label JEConstantLabel;
@@ -47,5 +47,10 @@ public class JumpEqualConstantInstruction extends AbstractInstruction {
     @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "=" + constantValue + " GOTO " + JEConstantLabel.getLabelRepresentation());
+    }
+
+    @Override
+    public Label getTargetLabel() {
+        return JEConstantLabel;
     }
 }
