@@ -13,5 +13,6 @@ public interface Instruction {
     int getExpansionDegree();
     long getInstructionNumber();
     InstructionType getType();
+    String getInstructionDescription();
 }
 

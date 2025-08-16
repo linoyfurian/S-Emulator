@@ -24,14 +24,17 @@ public class ZeroVariableInstruction extends AbstractInstruction {
 
     @Override
     public String toString() {
-        String description = getVariable().getRepresentation() + " <- 0";
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
     }
-}
 
+    @Override
+    public String getInstructionDescription() {
+        return (getVariable().getRepresentation() + " <- 0");
+    }
+}

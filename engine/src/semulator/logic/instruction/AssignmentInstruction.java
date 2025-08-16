@@ -31,13 +31,17 @@ public class AssignmentInstruction extends AbstractInstruction{
 
     @Override
     public String toString() {
-        String description = getVariable().getRepresentation() + " <- " + assignedVariable.getRepresentation();
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
+    }
+
+    @Override
+    public String getInstructionDescription(){
+        return (getVariable().getRepresentation() + " <- " + assignedVariable.getRepresentation());
     }
 }

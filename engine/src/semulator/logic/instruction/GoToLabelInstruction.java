@@ -25,13 +25,17 @@ public class GoToLabelInstruction extends AbstractInstruction {
 
     @Override
     public String toString() {
-        String description = "GOTO " + gotoLabel.getLabelRepresentation();
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
+    }
+
+    @Override
+    public String getInstructionDescription() {
+        return ("GOTO " + gotoLabel.getLabelRepresentation());
     }
 }

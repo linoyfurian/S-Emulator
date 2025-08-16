@@ -22,14 +22,18 @@ public class NoOpInstruction extends AbstractInstruction {
 
     @Override
     public String toString() {
-        String variableRepresentation=getVariable().getRepresentation();
-        String description = variableRepresentation + " <- " + variableRepresentation;
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
+    }
+
+    @Override
+    public String getInstructionDescription() {
+        String variableRepresentation=getVariable().getRepresentation();
+        return (variableRepresentation + " <- " + variableRepresentation);
     }
 }

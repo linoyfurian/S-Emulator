@@ -35,14 +35,17 @@ public class JumpEqualVariableInstruction extends AbstractInstruction {
 
     @Override
     public String toString() {
-        String description = "IF " + getVariable().getRepresentation() + "=" + variableName.getRepresentation() + " GOTO " + JEVariableLabel.getLabelRepresentation();
-
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
+    }
+
+    @Override
+    public String getInstructionDescription() {
+        return ("IF " + getVariable().getRepresentation() + "=" + variableName.getRepresentation() + " GOTO " + JEVariableLabel.getLabelRepresentation());
     }
 }

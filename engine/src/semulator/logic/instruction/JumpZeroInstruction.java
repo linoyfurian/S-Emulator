@@ -31,13 +31,17 @@ public class JumpZeroInstruction extends AbstractInstruction{
 
     @Override
     public String toString() {
-        String description = "IF " + getVariable().getRepresentation() + "=0" + " GOTO " + jzLabel.getLabelRepresentation();
         return String.format(
                 "#%d (%s) [%s] %s (%d)",
                 getInstructionNumber(),
                 getType().getType(),
                 getLabel().getLabelRepresentation(),
-                description,
+                getInstructionDescription(),
                 cycles());
+    }
+
+    @Override
+    public String getInstructionDescription() {
+        return ("IF " + getVariable().getRepresentation() + "=0" + " GOTO " + jzLabel.getLabelRepresentation());
     }
 }
