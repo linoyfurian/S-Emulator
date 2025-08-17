@@ -1,11 +1,17 @@
 package semulator.logic.instruction;
 
 import semulator.logic.execution.ExecutionContext;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
+import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
 
-public class JumpZeroInstruction extends AbstractInstruction implements JumpInstruction{
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class JumpZeroInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction{
 
     private final Label jzLabel;
 
@@ -48,5 +54,39 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
     @Override
     public Label getTargetLabel() {
         return jzLabel;
+    }
+
+    @Override
+    public List<Label> getAllLabels(){
+        List<Label> allLabels = new ArrayList<>();
+        allLabels.add(this.getLabel());
+        allLabels.add(jzLabel);
+        return allLabels;
+    }
+
+
+    @Override
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber) {
+        List<Instruction> nextInstructions = new ArrayList<>();
+        int labelNumber1;
+        Label label1;
+        Instruction newInstruction;
+
+        labelNumber1= ExpansionUtils.findAvailableLabelNumber(usedLabelsNumbers); //L1
+        usedLabelsNumbers.add(labelNumber1);
+        label1 = new LabelImpl(labelNumber1);
+
+        newInstruction = new JumpNotZeroInstruction(getVariable(), label1, getLabel(), instructionNumber); //IF V!=0 GOTO L1
+        nextInstructions.add(newInstruction);
+        instructionNumber++;
+
+        newInstruction = new GoToLabelInstruction(null, getTargetLabel(), instructionNumber); //GOTO L
+        nextInstructions.add(newInstruction);
+        instructionNumber++;
+
+        newInstruction = new NeutralInstruction(Variable.RESULT, label1, instructionNumber); //L1 y<-y
+        nextInstructions.add(newInstruction);
+
+        return nextInstructions;
     }
 }

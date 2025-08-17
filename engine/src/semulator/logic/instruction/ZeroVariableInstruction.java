@@ -1,12 +1,16 @@
 package semulator.logic.instruction;
 
 import semulator.logic.execution.ExecutionContext;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
+import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ZeroVariableInstruction extends AbstractInstruction implements ExpandableInstruction {
     public ZeroVariableInstruction(Variable variable, long instructionNumber) {
@@ -42,8 +46,28 @@ public class ZeroVariableInstruction extends AbstractInstruction implements Expa
     }
 
     @Override
-    public List<Instruction> expand(){
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber){
         List<Instruction> nextInstructions = new ArrayList<>();
+        int newLabelNumber;
+        Label newLabel, currentLabel;
+
+        currentLabel = this.getLabel();
+        if(currentLabel != FixedLabel.EMPTY) {
+            newLabel=currentLabel;
+        }
+        else{
+            newLabelNumber = ExpansionUtils.findAvailableLabelNumber(usedLabelsNumbers);
+            usedLabelsNumbers.add(newLabelNumber);
+            newLabel = new LabelImpl(newLabelNumber);
+        }
+
+        Instruction newInstruction = new DecreaseInstruction(this.getVariable(), newLabel, instructionNumber);
+        nextInstructions.add(newInstruction);
+
+        instructionNumber++;
+
+        Instruction newInstruction2 = new JumpNotZeroInstruction(this.getVariable(), newLabel, instructionNumber);
+        nextInstructions.add(newInstruction2);
 
         return nextInstructions;
     }

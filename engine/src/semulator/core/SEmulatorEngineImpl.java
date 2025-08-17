@@ -110,9 +110,8 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public ExecutionContext runProgram(int desiredDegreeOfExpand, Long ... input){
-        ProgramExecutor programExecutor = new ProgramExecutorImpl(program);
-        Program programToRun = programExecutor.expand(desiredDegreeOfExpand);
-        programExecutor.setProgramToRun(programToRun);
+        Program programToRun = ProgramExecutorImpl.expand(desiredDegreeOfExpand, program);
+        ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
 
         ExecutionContext runResult = programExecutor.run(input);
 

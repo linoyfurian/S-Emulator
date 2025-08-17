@@ -5,6 +5,9 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction{
 
     private final Label jnzLabel;
@@ -48,5 +51,13 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
     @Override
     public Label getTargetLabel() {
         return jnzLabel;
+    }
+
+    @Override
+    public List<Label> getAllLabels(){
+        List<Label> allLabels = new ArrayList<>();
+        allLabels.add(this.getLabel());
+        allLabels.add(jnzLabel);
+        return allLabels;
     }
 }

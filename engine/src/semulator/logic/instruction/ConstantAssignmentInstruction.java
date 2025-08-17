@@ -5,7 +5,11 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class ConstantAssignmentInstruction extends AbstractInstruction {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class ConstantAssignmentInstruction extends AbstractInstruction implements ExpandableInstruction {
 
     private final long constantValue;
 
@@ -39,7 +43,30 @@ public class ConstantAssignmentInstruction extends AbstractInstruction {
     }
 
     @Override
-    public String getInstructionDescription(){
+    public String getInstructionDescription() {
         return (getVariable().getRepresentation() + " <- " + constantValue);
+    }
+
+    long getConstantValue() {
+        return constantValue;
+    }
+
+    @Override
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber) {
+        List<Instruction> nextInstructions = new ArrayList<>();
+        long k = this.constantValue;
+        Variable variable = getVariable();
+        Instruction newInstruction;
+
+        newInstruction = new ZeroVariableInstruction(variable, this.getLabel(), instructionNumber);
+        nextInstructions.add(newInstruction);
+        instructionNumber++;
+
+        for (long i = 0; i < k; ++i) {
+            newInstruction = new IncreaseInstruction(variable, instructionNumber);
+            nextInstructions.add(newInstruction);
+            instructionNumber++;
+        }
+        return nextInstructions;
     }
 }

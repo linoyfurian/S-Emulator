@@ -1,8 +1,10 @@
 package semulator.logic.program;
 
 import semulator.logic.instruction.Instruction;
+import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public interface Program {
@@ -13,5 +15,6 @@ public interface Program {
     boolean validate();
     int calculateMaxDegree();
     int calculateCycles();
-    List<V>
+    LinkedHashSet<Variable> getVariables();
+    LinkedHashSet<Label> getLabels();
 }

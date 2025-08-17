@@ -4,6 +4,9 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AbstractInstruction implements Instruction {
 
     private final InstructionData instructionData;
@@ -59,5 +62,19 @@ public abstract class AbstractInstruction implements Instruction {
     @Override
     public InstructionType getType() {
         return type;
+    }
+
+    @Override
+    public List<Variable> getAllVariables(){
+        List<Variable> allVariables = new ArrayList<>();
+        allVariables.add(variable);
+        return allVariables;
+    }
+
+    @Override
+    public List<Label> getAllLabels(){
+        List<Label> allLabels = new ArrayList<>();
+        allLabels.add(label);
+        return allLabels;
     }
 }
