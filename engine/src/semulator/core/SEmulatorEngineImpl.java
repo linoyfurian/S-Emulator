@@ -5,6 +5,9 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.core.loader.XmlProgramMapper;
 import semulator.core.loader.jaxb.schema.generated.SProgram;
+import semulator.logic.execution.ExecutionContext;
+import semulator.logic.execution.ProgramExecutor;
+import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.JumpInstruction;
 import semulator.logic.program.Program;
@@ -41,11 +44,9 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         }
 
         if (!Files.exists(filePath)) {
-            // file not found
+            // TODO: file not found
             return;
         }
-
-        //xml file
 
         try {
             JAXBContext ctx = JAXBContext.newInstance("semulator.core.loader.jaxb.schema.generated");
@@ -59,10 +60,12 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
                 this.isLoaded = true;
             }
             else {
-                //there is a reference to a label that doesnt exits
+                // TODO: there is a reference to a label that doesnt exits
             }
         }
-        catch (JAXBException e) {}
+        catch (JAXBException e) {
+            // TODO: handle exception
+        }
     }
 
     private static boolean hasXmlExtension(Path path){
@@ -106,8 +109,14 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
-    public void runProgram(){
+    public ExecutionContext runProgram(int desiredDegreeOfExpand, Long ... input){
+        ProgramExecutor programExecutor = new ProgramExecutorImpl(program);
+        Program programToRun = programExecutor.expand(desiredDegreeOfExpand);
+        programExecutor.setProgramToRun(programToRun);
 
+        ExecutionContext runResult = programExecutor.run(input);
+
+        return runResult;
     }
 }
 

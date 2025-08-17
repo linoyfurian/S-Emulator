@@ -5,7 +5,10 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class ZeroVariableInstruction extends AbstractInstruction {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ZeroVariableInstruction extends AbstractInstruction implements ExpandableInstruction {
     public ZeroVariableInstruction(Variable variable, long instructionNumber) {
         super(InstructionData.ZERO_VARIABLE, variable, InstructionType.SYNTHETIC, 1, instructionNumber);
     }
@@ -36,5 +39,12 @@ public class ZeroVariableInstruction extends AbstractInstruction {
     @Override
     public String getInstructionDescription() {
         return (getVariable().getRepresentation() + " <- 0");
+    }
+
+    @Override
+    public List<Instruction> expand(){
+        List<Instruction> nextInstructions = new ArrayList<>();
+
+        return nextInstructions;
     }
 }

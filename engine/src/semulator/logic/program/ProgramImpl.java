@@ -1,11 +1,12 @@
 package semulator.logic.program;
 
 import semulator.logic.instruction.Instruction;
+import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgramImpl implements Program{
+public class ProgramImpl implements Program {
 
     private final String name;
     private final List<Instruction> instructions;
@@ -33,7 +34,9 @@ public class ProgramImpl implements Program{
     @Override
     public boolean validate() {
         return false;
-    } ///to impl
+    }
+
+    /// to impl
 
     @Override
     public int calculateMaxDegree() {
@@ -53,4 +56,5 @@ public class ProgramImpl implements Program{
                 .mapToInt(Instruction::cycles)
                 .sum();
     }
+
 }

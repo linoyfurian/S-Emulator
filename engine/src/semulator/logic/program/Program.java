@@ -1,6 +1,8 @@
 package semulator.logic.program;
 
 import semulator.logic.instruction.Instruction;
+import semulator.logic.variable.Variable;
+
 import java.util.List;
 
 public interface Program {
@@ -11,4 +13,5 @@ public interface Program {
     boolean validate();
     int calculateMaxDegree();
     int calculateCycles();
+    List<V>
 }

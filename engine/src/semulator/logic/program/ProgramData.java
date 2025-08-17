@@ -1,15 +1,11 @@
 package semulator.logic.program;
 
-import semulator.logic.instruction.AbstractInstruction;
 import semulator.logic.instruction.AssignmentInstruction;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.JumpEqualVariableInstruction;
 import semulator.logic.label.FixedLabel;
-import semulator.logic.label.Label;
-import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -48,6 +44,7 @@ public class ProgramData {
 
         for (Instruction instruction : instructions) {
             allVars.add(instruction.getVariable().getRepresentation());
+            //TODO INTERFACE MORE THAN 1 VARIABLE
             if (instruction instanceof AssignmentInstruction ai) {
                 allVars.add(ai.getAssignedVariable().getRepresentation());
             } else if (instruction instanceof JumpEqualVariableInstruction jevI) {
