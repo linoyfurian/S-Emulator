@@ -15,8 +15,6 @@ import java.util.List;
 
 public class XmlProgramMapper {
 
-
-
     public static Program fromSProgramToProgramImpl(SProgram sProgram) {
         String programName = sProgram.getName();
         Program program = new ProgramImpl(programName);
@@ -35,12 +33,10 @@ public class XmlProgramMapper {
         return program;
     }
 
-
     private static Instruction instructionMapper(SInstruction instruction, long instructionNumber){
         Instruction instructionToReturn = null;
         String instructionName = instruction.getName();
-        //TODO to upper
-        //String instructionType = instruction.getType();
+        instructionName = instructionName.toUpperCase();
         String instructionVariable = instruction.getSVariable();  //TODO GOTO NULL
         Variable variable = variableMapper(instructionVariable);
         String instructionLabel = instruction.getSLabel();
@@ -54,9 +50,8 @@ public class XmlProgramMapper {
                 instructionToReturn = new DecreaseInstruction(variable, label, instructionNumber);
                 break;
             case "JUMP_NOT_ZERO":
-                Label jnzlabel; //TODO CHECK NULL
-                String argumentValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
-                jnzlabel = labelMapper(argumentValue);
+                Label jnzlabel;
+                jnzlabel = getTargetLabel(instruction.getSInstructionArguments().getSInstructionArgument(), "jnzLabel");
                 instructionToReturn = new JumpNotZeroInstruction(variable, jnzlabel, label, instructionNumber);
                 break;
             case "NEUTRAL":
@@ -67,42 +62,38 @@ public class XmlProgramMapper {
                 break;
             case "GOTO_LABEL":
                 Label gotoLabel;
-                String gotoLabelValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
-                gotoLabel = labelMapper(gotoLabelValue);
+                gotoLabel = getTargetLabel(instruction.getSInstructionArguments().getSInstructionArgument(), "gotoLabel");
                 instructionToReturn = new GoToLabelInstruction(variable, label, gotoLabel, instructionNumber);
                 break;
             case "ASSIGNMENT":
                 Variable assignedVariable;
-                String assignedVariableValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
-                assignedVariable = variableMapper(assignedVariableValue);
+                assignedVariable = getTargetVariable(instruction.getSInstructionArguments().getSInstructionArgument(), "assignedVariable");
                 instructionToReturn = new AssignmentInstruction(variable, label, instructionNumber, assignedVariable);
                 break;
             case "CONSTANT_ASSIGNMENT":
                 long constantValue;
-                String sConstantValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
-                constantValue = Long.parseLong(sConstantValue);
+                constantValue = getConstantValue(instruction.getSInstructionArguments().getSInstructionArgument(), "constantValue");
                 instructionToReturn = new ConstantAssignmentInstruction(variable, label, constantValue, instructionNumber);
                 break;
             case "JUMP_ZERO":
                 Label jzlabel;
-                String jzArgumentValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
-                jzlabel = labelMapper(jzArgumentValue);
+                jzlabel = getTargetLabel(instruction.getSInstructionArguments().getSInstructionArgument(), "jzLabel");
                 instructionToReturn = new JumpZeroInstruction(variable, jzlabel, label, instructionNumber);
                 break;
             case "JUMP_EQUAL_CONSTANT":
                 long JEConstantValue;
                 Label JEConstantLabel;
                 List<SInstructionArgument> JEConstantArguments = instruction.getSInstructionArguments().getSInstructionArgument();
-                JEConstantValue = getJEConstantValue(JEConstantArguments);
-                JEConstantLabel = getJEConstantLabel(JEConstantArguments);
+                JEConstantValue = getConstantValue(JEConstantArguments,  "JEConstantValue");
+                JEConstantLabel = getTargetLabel(JEConstantArguments, "JEConstantLabel");
                 instructionToReturn = new JumpEqualConstantInstruction(variable, label, JEConstantValue, JEConstantLabel, instructionNumber);
                 break;
             case "JUMP_EQUAL_VARIABLE":
                 Variable variableName;
                 Label JEVariableLabel;
                 List<SInstructionArgument> JEVariableArguments = instruction.getSInstructionArguments().getSInstructionArgument();
-                variableName = getVariableName(JEVariableArguments);
-                JEVariableLabel = getJEVariableLabel(JEVariableArguments);
+                variableName = getTargetVariable(JEVariableArguments, "variableName");
+                JEVariableLabel = getTargetLabel(JEVariableArguments,  "JEVariableLabel");
                 instructionToReturn = new JumpEqualVariableInstruction(variable, label, JEVariableLabel, variableName, instructionNumber);
                 break;
         }
@@ -121,7 +112,6 @@ public class XmlProgramMapper {
                 break;
             case 'y':
                 variableToReturn = Variable.RESULT;
-                //variableToReturn = new VariableImpl(VariableType.RESULT, number);
                 break;
             case 'z':
                 variableToReturn = new VariableImpl(VariableType.WORK, number);
@@ -154,20 +144,19 @@ public class XmlProgramMapper {
         return  labelToReturn;
     }
 
-    //JEConstantValue = getJEConstantValue(JEConstantArguments);
-    private static long getJEConstantValue(List<SInstructionArgument> JEConstantArguments){
-        for (SInstructionArgument argument : JEConstantArguments) {
-            if(argument.getName().equalsIgnoreCase("constantValue")){
+    private static long getConstantValue(List<SInstructionArgument> arguments, String nameOfArgument) {
+        for (SInstructionArgument argument : arguments) {
+            if(argument.getName().equalsIgnoreCase(nameOfArgument)){
                 return Long.parseLong(argument.getValue());
             }
         }
         return 0;
     }
 
-    private static Label getJEConstantLabel(List<SInstructionArgument> JEConstantArguments){
+    private static Label getTargetLabel(List<SInstructionArgument> arguments, String nameOfArgument){
         Label labelToReturn = null;
-        for (SInstructionArgument argument : JEConstantArguments) {
-            if(argument.getName().equalsIgnoreCase("JEConstantLabel")){
+        for (SInstructionArgument argument : arguments) {
+            if(argument.getName().equalsIgnoreCase(nameOfArgument)){
                 labelToReturn = labelMapper(argument.getValue());
                 break;
             }
@@ -175,28 +164,14 @@ public class XmlProgramMapper {
         return labelToReturn;
     }
 
-    private static Variable getVariableName(List<SInstructionArgument> JEConstantArguments){
+    private static Variable getTargetVariable(List<SInstructionArgument> arguments, String nameOfArgument){
         Variable variableToReturn = null;
-        for (SInstructionArgument argument : JEConstantArguments) {
-            if(argument.getName().equalsIgnoreCase("variableName")){
+        for (SInstructionArgument argument : arguments) {
+            if(argument.getName().equalsIgnoreCase(nameOfArgument)){
                 variableToReturn = variableMapper(argument.getValue());
                 break;
             }
         }
         return variableToReturn;
     }
-
-    private static Label getJEVariableLabel(List<SInstructionArgument> JEConstantArguments){
-        Label labelToReturn = null;
-        for (SInstructionArgument argument : JEConstantArguments) {
-            if(argument.getName().equalsIgnoreCase("JEVariableLabel")){
-                labelToReturn = labelMapper(argument.getValue());
-                break;
-            }
-        }
-        return labelToReturn;
-    }
 }
-
-
-
