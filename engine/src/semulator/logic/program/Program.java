@@ -17,4 +17,5 @@ public interface Program {
     int calculateCycles();
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();
+    Program expand(int degreeOfExpand);
 }

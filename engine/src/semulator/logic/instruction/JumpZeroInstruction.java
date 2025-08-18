@@ -36,17 +36,6 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
     }
 
     @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "=0" + " GOTO " + jzLabel.getLabelRepresentation());
     }

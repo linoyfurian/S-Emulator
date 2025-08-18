@@ -8,7 +8,7 @@ import semulator.logic.variable.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction{
+public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction, UnexpandableInstruction{
 
     private final Label jnzLabel;
 
@@ -33,17 +33,6 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
     }
 
     @Override
-    public String toString() {
-              return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "!=0" + " GOTO " + jnzLabel.getLabelRepresentation());
     }
@@ -59,5 +48,11 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
         allLabels.add(this.getLabel());
         allLabels.add(jnzLabel);
         return allLabels;
+    }
+
+    @Override
+    public Instruction cloneInstructionWithNewNumber(long number){
+        Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.jnzLabel, getLabel(), number);
+        return newInstruction;
     }
 }

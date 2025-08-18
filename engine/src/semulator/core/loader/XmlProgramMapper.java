@@ -5,6 +5,7 @@ import semulator.logic.instruction.*;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
+import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
@@ -14,9 +15,11 @@ import java.util.List;
 
 public class XmlProgramMapper {
 
-    public static ProgramImpl fromSProgramToProgramImpl(SProgram sProgram) {
+
+
+    public static Program fromSProgramToProgramImpl(SProgram sProgram) {
         String programName = sProgram.getName();
-        ProgramImpl program = new ProgramImpl(programName);
+        Program program = new ProgramImpl(programName);
 
         SInstructions instructions = sProgram.getSInstructions();
         long instructionCounter = 1;
@@ -36,8 +39,9 @@ public class XmlProgramMapper {
     private static Instruction instructionMapper(SInstruction instruction, long instructionNumber){
         Instruction instructionToReturn = null;
         String instructionName = instruction.getName();
-        String instructionType = instruction.getType();
-        String instructionVariable = instruction.getSVariable();
+        //TODO to upper
+        //String instructionType = instruction.getType();
+        String instructionVariable = instruction.getSVariable();  //TODO GOTO NULL
         Variable variable = variableMapper(instructionVariable);
         String instructionLabel = instruction.getSLabel();
         Label label = labelMapper(instructionLabel);
@@ -50,7 +54,7 @@ public class XmlProgramMapper {
                 instructionToReturn = new DecreaseInstruction(variable, label, instructionNumber);
                 break;
             case "JUMP_NOT_ZERO":
-                Label jnzlabel;
+                Label jnzlabel; //TODO CHECK NULL
                 String argumentValue = instruction.getSInstructionArguments().getSInstructionArgument().get(0).getValue();
                 jnzlabel = labelMapper(argumentValue);
                 instructionToReturn = new JumpNotZeroInstruction(variable, jnzlabel, label, instructionNumber);
@@ -116,7 +120,8 @@ public class XmlProgramMapper {
                 variableToReturn = new VariableImpl(VariableType.INPUT, number);
                 break;
             case 'y':
-                variableToReturn = new VariableImpl(VariableType.RESULT, number);
+                variableToReturn = Variable.RESULT;
+                //variableToReturn = new VariableImpl(VariableType.RESULT, number);
                 break;
             case 'z':
                 variableToReturn = new VariableImpl(VariableType.WORK, number);

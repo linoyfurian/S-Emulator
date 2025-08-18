@@ -24,7 +24,7 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
     }
 
     public AssignmentInstruction(Variable variable, Label label, long instructionNumber, Variable assignedVariable) {
-        super(InstructionData.ASSIGNMENT, variable,  label, InstructionType.SYNTHETIC, 2, instructionNumber);
+        super(InstructionData.ASSIGNMENT, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber);
         this.assignedVariable = assignedVariable;
     }
 
@@ -35,17 +35,6 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         context.updateVariable(getVariable(), assignedValue);
 
         return FixedLabel.EMPTY;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
     }
 
     @Override
@@ -65,7 +54,6 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         return allVariables;
     }
 
-
     @Override
     public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber){
         List<Instruction> nextInstructions = new ArrayList<>();
@@ -76,10 +64,10 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         int availableZnumber;
         Variable availableZvariable;
 
-        variable = getVariable();
-        assignedVariable = this.assignedVariable;
+        variable = getVariable(); //V
+        assignedVariable = this.assignedVariable; //V'
 
-        newInstruction = new ZeroVariableInstruction(variable, this.getLabel(), instructionNumber); //v<-0
+        newInstruction = new ZeroVariableInstruction(variable, this.getLabel(), instructionNumber); //V<-0
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
@@ -87,7 +75,7 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         usedLabelsNumbers.add(labelNumber1);
         label1 = new LabelImpl(labelNumber1);
 
-        newInstruction = new JumpNotZeroInstruction(assignedVariable, label1, instructionNumber); //IF V'!=0 GOTO L1
+        newInstruction = new JumpNotZeroInstruction(assignedVariable, label1, instructionNumber); //    IF V'!=0 GOTO L1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
@@ -131,7 +119,7 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new JumpNotZeroInstruction(availableZvariable, label3, instructionNumber); //IF z1!=0 GOTO L2
+        newInstruction = new JumpNotZeroInstruction(availableZvariable, label2, instructionNumber); //IF z1!=0 GOTO L2
         nextInstructions.add(newInstruction);
         instructionNumber++;
 

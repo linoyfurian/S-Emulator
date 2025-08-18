@@ -1,5 +1,7 @@
 package semulator.logic.variable;
 
+import java.util.Objects;
+
 public class VariableImpl implements Variable {
 
     private final VariableType type;
@@ -23,5 +25,22 @@ public class VariableImpl implements Variable {
     @Override
     public String getRepresentation() {
         return type.getVariableRepresentation(number);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Variable variable = (Variable) o;
+        return Objects.equals(this.getRepresentation(), variable.getRepresentation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getRepresentation());
     }
 }

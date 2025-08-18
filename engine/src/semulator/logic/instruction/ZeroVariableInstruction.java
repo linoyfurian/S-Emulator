@@ -6,7 +6,6 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
-import semulator.logic.instruction.expansion.ExpansionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +26,6 @@ public class ZeroVariableInstruction extends AbstractInstruction implements Expa
         context.updateVariable(getVariable(), 0);
 
         return FixedLabel.EMPTY;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
     }
 
     @Override

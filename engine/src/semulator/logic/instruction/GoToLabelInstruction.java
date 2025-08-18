@@ -31,17 +31,6 @@ public class GoToLabelInstruction extends AbstractInstruction implements JumpIns
     }
 
     @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         return ("GOTO " + gotoLabel.getLabelRepresentation());
     }

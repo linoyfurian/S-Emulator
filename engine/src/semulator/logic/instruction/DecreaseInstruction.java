@@ -5,7 +5,7 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class DecreaseInstruction extends AbstractInstruction {
+public class DecreaseInstruction extends AbstractInstruction implements UnexpandableInstruction {
 
     public DecreaseInstruction(Variable variable, long instructionNumber) {
         super(InstructionData.DECREASE, variable, InstructionType.BASIC, 0, instructionNumber);
@@ -26,19 +26,14 @@ public class DecreaseInstruction extends AbstractInstruction {
     }
 
     @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         String variableRepresentation = getVariable().getRepresentation();
         return (variableRepresentation + " <- " + variableRepresentation + " - 1");
+    }
+
+    @Override
+    public Instruction cloneInstructionWithNewNumber(long number){
+        Instruction newInstruction = new DecreaseInstruction(getVariable(), getLabel(), number);
+        return newInstruction;
     }
 }

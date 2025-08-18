@@ -11,8 +11,7 @@ import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.JumpInstruction;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramData;
-import semulator.logic.program.ProgramImpl;
+import semulator.logic.program.ProgramDto;
 
 import java.nio.file.Files;
 import java.util.HashSet;
@@ -28,8 +27,8 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
 
     @Override
-    public ProgramData displayProgram(){
-        return new ProgramData(program);
+    public ProgramDto displayProgram(){
+        return new ProgramDto(program);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             JAXBContext ctx = JAXBContext.newInstance("semulator.core.loader.jaxb.schema.generated");
             Unmarshaller u = ctx.createUnmarshaller();
             SProgram sProgram = (SProgram) u.unmarshal(filePath.toFile());
-            ProgramImpl mappedProgram;
+            Program mappedProgram;
             mappedProgram = XmlProgramMapper.fromSProgramToProgramImpl(sProgram);
             boolean isValidProgram = checkProgramValidation(mappedProgram);
             if (isValidProgram) {
@@ -110,12 +109,18 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public ExecutionContext runProgram(int desiredDegreeOfExpand, Long ... input){
-        Program programToRun = ProgramExecutorImpl.expand(desiredDegreeOfExpand, program);
+        Program programToRun = program.expand(desiredDegreeOfExpand);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
 
         ExecutionContext runResult = programExecutor.run(input);
 
         return runResult;
     }
-}
 
+    @Override
+    public ProgramDto expand(int desiredDegreeOfExpand){
+        Program expandedProgram = program.expand(desiredDegreeOfExpand);
+        ProgramDto programDto = new ProgramDto(expandedProgram);
+        return programDto;
+    }
+}

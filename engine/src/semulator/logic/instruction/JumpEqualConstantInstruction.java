@@ -42,17 +42,6 @@ public class JumpEqualConstantInstruction extends AbstractInstruction implements
     }
 
     @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         return ("IF " + getVariable().getRepresentation() + "=" + constantValue + " GOTO " + JEConstantLabel.getLabelRepresentation());
     }

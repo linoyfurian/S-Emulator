@@ -5,7 +5,7 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-public class NeutralInstruction extends AbstractInstruction {
+public class NeutralInstruction extends AbstractInstruction implements UnexpandableInstruction {
 
     public NeutralInstruction(Variable variable, long instructionNumber) {
         super(InstructionData.NEUTRAL, variable, InstructionType.BASIC, 0, instructionNumber);
@@ -21,19 +21,14 @@ public class NeutralInstruction extends AbstractInstruction {
     }
 
     @Override
-    public String toString() {
-        return String.format(
-                "#%d (%s) [%s] %s (%d)",
-                getInstructionNumber(),
-                getType().getType(),
-                getLabel().getLabelRepresentation(),
-                getInstructionDescription(),
-                cycles());
-    }
-
-    @Override
     public String getInstructionDescription() {
         String variableRepresentation=getVariable().getRepresentation();
         return (variableRepresentation + " <- " + variableRepresentation);
+    }
+
+    @Override
+    public Instruction cloneInstructionWithNewNumber(long number){
+        Instruction newInstruction = new NeutralInstruction(getVariable(), getLabel(), number);
+        return newInstruction;
     }
 }

@@ -1,20 +1,14 @@
 package semulator.logic.execution;
 
-import semulator.logic.instruction.ExpandableInstruction;
 import semulator.logic.instruction.Instruction;
-import semulator.logic.instruction.InstructionType;
-import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ProgramExecutorImpl implements ProgramExecutor{
 
@@ -69,37 +63,4 @@ public class ProgramExecutorImpl implements ProgramExecutor{
         return Map.of();
     }
 
-    public static Program expand(int degree, Program program){
-        Program expandedProgram = program;
-        if(degree==0)
-            return expandedProgram;
-
-        long instructionNumber;
-
-        while(degree>0){
-            Program nextExpandedProgram = new ProgramImpl(program.getName());
-            Set<Integer> zUsedNumbers, usedLabelsNumbers;
-
-            zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(program.getVariables());
-            usedLabelsNumbers = ExpansionUtils.getSetOfUsedLabels(program.getLabels());
-
-            instructionNumber = 1;
-
-            for(Instruction instruction : program.getInstructions()) {
-                if (instruction.getType() == InstructionType.BASIC) {
-                    nextExpandedProgram.addInstruction(instruction);
-                } else if (instruction instanceof ExpandableInstruction expandableInstruction) {
-                    List<Instruction> nextInstructions = expandableInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber);
-
-                    for (Instruction nextInstruction : nextInstructions) {
-                        nextExpandedProgram.addInstruction(nextInstruction);
-                    }
-                    instructionNumber = instructionNumber + nextInstructions.size();
-                }
-            }
-
-            degree--;
-        }
-        return expandedProgram;
-    }
 }
