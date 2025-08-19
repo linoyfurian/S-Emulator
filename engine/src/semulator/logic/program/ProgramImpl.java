@@ -1,17 +1,11 @@
 package semulator.logic.program;
 
-import semulator.logic.instruction.ExpandableInstruction;
-import semulator.logic.instruction.Instruction;
-import semulator.logic.instruction.InstructionType;
-import semulator.logic.instruction.UnexpandableInstruction;
+import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ProgramImpl implements Program {
 
@@ -54,11 +48,38 @@ public class ProgramImpl implements Program {
     }
 
     @Override
-    public boolean validate() { //TODO !!!!!! OR DELETE
-        return false;
+    public boolean validate() {
+        boolean valid = true;
+
+        if (this == null) {
+            return false;
+        }
+
+        Set<String> definedLabels = new HashSet<>();
+        List<Instruction> instructions = this.getInstructions();
+
+        for (Instruction instr : instructions) {
+            String rep = instr.getLabel().getLabelRepresentation();
+            if (!rep.isEmpty()) {
+                definedLabels.add(rep);
+            }
+        }
+
+        for (Instruction instr : instructions) {
+            if (instr instanceof JumpInstruction ji) {
+                String target = ji.getTargetLabel().getLabelRepresentation();
+                if (target.isEmpty()) {
+                    valid = false;
+                    break;
+                }
+                if (!definedLabels.contains(target)) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        return valid;
     }
-
-
 
     @Override
     public int calculateMaxDegree() {
