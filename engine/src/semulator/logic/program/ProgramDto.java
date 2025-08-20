@@ -50,7 +50,17 @@ public class ProgramDto {
         this.instructions = new ArrayList<>();
 
         for (Instruction instruction : programInstructions) {
-          this.instructions.add(new InstructionDto(instruction));
+            Instruction parent = instruction.getParent();
+            if(parent == null){
+                this.instructions.add(new InstructionDto(instruction));
+            }
+            else{
+                while(parent != null){
+                  //todo !!!  p
+
+                }
+            }
+            this.instructions.add(new InstructionDto(instruction, ));
         }
     }
 }

@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 public class ZeroVariableInstruction extends AbstractInstruction implements ExpandableInstruction {
-    public ZeroVariableInstruction(Variable variable, long instructionNumber) {
-        super(InstructionData.ZERO_VARIABLE, variable, InstructionType.SYNTHETIC, 1, instructionNumber);
+    public ZeroVariableInstruction(Variable variable, long instructionNumber, Instruction parent) {
+        super(InstructionData.ZERO_VARIABLE, variable, InstructionType.SYNTHETIC, 1, instructionNumber, parent);
     }
 
-    public ZeroVariableInstruction(Variable variable, Label label, long instructionNumber) {
-        super(InstructionData.ZERO_VARIABLE, variable, label, InstructionType.SYNTHETIC, 1, instructionNumber);
+    public ZeroVariableInstruction(Variable variable, Label label, long instructionNumber, Instruction parent) {
+        super(InstructionData.ZERO_VARIABLE, variable, label, InstructionType.SYNTHETIC, 1, instructionNumber, parent);
     }
 
     @Override
@@ -49,12 +49,12 @@ public class ZeroVariableInstruction extends AbstractInstruction implements Expa
             newLabel = new LabelImpl(newLabelNumber);
         }
 
-        Instruction newInstruction = new DecreaseInstruction(this.getVariable(), newLabel, instructionNumber);
+        Instruction newInstruction = new DecreaseInstruction(this.getVariable(), newLabel, instructionNumber, this);
         nextInstructions.add(newInstruction);
 
         instructionNumber++;
 
-        Instruction newInstruction2 = new JumpNotZeroInstruction(this.getVariable(), newLabel, instructionNumber);
+        Instruction newInstruction2 = new JumpNotZeroInstruction(this.getVariable(), newLabel, instructionNumber, this);
         nextInstructions.add(newInstruction2);
 
         return nextInstructions;

@@ -15,13 +15,13 @@ public class GoToLabelInstruction extends AbstractInstruction implements JumpIns
 
     private final Label gotoLabel;
 
-    public GoToLabelInstruction(Variable variable, Label gotoLabel, long instructionNumber) {
-        super(InstructionData.GOTO_LABEL, variable, InstructionType.SYNTHETIC, 1, instructionNumber);
+    public GoToLabelInstruction(Variable variable, Label gotoLabel, long instructionNumber, Instruction parent) {
+        super(InstructionData.GOTO_LABEL, variable, InstructionType.SYNTHETIC, 1, instructionNumber, parent);
         this.gotoLabel = gotoLabel;
     }
 
-    public GoToLabelInstruction(Variable variable, Label label, Label gotoLabel, long instructionNumber) {
-        super(InstructionData.GOTO_LABEL, variable, label, InstructionType.SYNTHETIC, 1, instructionNumber);
+    public GoToLabelInstruction(Variable variable, Label label, Label gotoLabel, long instructionNumber, Instruction parent) {
+        super(InstructionData.GOTO_LABEL, variable, label, InstructionType.SYNTHETIC, 1, instructionNumber, parent);
         this.gotoLabel = gotoLabel;
     }
 
@@ -52,17 +52,16 @@ public class GoToLabelInstruction extends AbstractInstruction implements JumpIns
     public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber){
         List<Instruction> nextInstructions = new ArrayList<>();
 
-        //generate new z that isnt used
         int newZ;
         newZ= ExpansionUtils.findAvailableZNumber(zUsedNumbers);
         zUsedNumbers.add(newZ);
-        Variable newVariable = new VariableImpl(VariableType.WORK, newZ);
+        Variable newVariable = new VariableImpl(VariableType.WORK, newZ); //z1
 
-        Instruction newInstruction = new IncreaseInstruction(newVariable, this.getLabel(), instructionNumber);
+        Instruction newInstruction = new IncreaseInstruction(newVariable, this.getLabel(), instructionNumber, this); //z1<-z1+1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        Instruction newInstruction2 = new JumpNotZeroInstruction(newVariable, this.getTargetLabel(), instructionNumber);
+        Instruction newInstruction2 = new JumpNotZeroInstruction(newVariable, this.getTargetLabel(), instructionNumber, this); //IF z1!=0 GOTO L
         nextInstructions.add(newInstruction2);
 
         return nextInstructions;

@@ -7,12 +7,12 @@ import semulator.logic.variable.Variable;
 
 public class IncreaseInstruction extends AbstractInstruction implements UnexpandableInstruction {
 
-    public IncreaseInstruction(Variable variable, long instructionNumber) {
-        super(InstructionData.INCREASE, variable, InstructionType.BASIC,0, instructionNumber);
+    public IncreaseInstruction(Variable variable, long instructionNumber, Instruction parent) {
+        super(InstructionData.INCREASE, variable, InstructionType.BASIC,0, instructionNumber, parent);
     }
 
-    public IncreaseInstruction(Variable variable, Label label, long instructionNumber) {
-        super(InstructionData.INCREASE, variable, label, InstructionType.BASIC,0, instructionNumber);
+    public IncreaseInstruction(Variable variable, Label label, long instructionNumber, Instruction parent) {
+        super(InstructionData.INCREASE, variable, label, InstructionType.BASIC,0, instructionNumber, parent);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class IncreaseInstruction extends AbstractInstruction implements Unexpand
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new IncreaseInstruction(getVariable(), getLabel(), number);
+        Instruction newInstruction = new IncreaseInstruction(getVariable(), getLabel(), number, null);
         return newInstruction;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface ProgramExecutor {
 
-    ExecutionContext run(Long... inputs);
+    ExecutionRunDto run(int degreeOfExpansion, long runNumber, long... inputs);
     Map<Variable, Long> variableState();
     //Program expand(int degree, Program program);
 }

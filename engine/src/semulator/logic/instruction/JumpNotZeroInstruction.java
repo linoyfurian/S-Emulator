@@ -10,16 +10,16 @@ import java.util.List;
 
 public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction, UnexpandableInstruction{
 
-    private final Label jnzLabel;
+    private final Label JNZLabel;
 
-    public JumpNotZeroInstruction(Variable variable, Label jnzLabel, long instructionNumber) {
-        super(InstructionData.JUMP_NOT_ZERO, variable, InstructionType.BASIC, 0, instructionNumber);
-        this.jnzLabel = jnzLabel;
+    public JumpNotZeroInstruction(Variable variable, Label JNZLabel, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_NOT_ZERO, variable, InstructionType.BASIC, 0, instructionNumber, parent);
+        this.JNZLabel = JNZLabel;
     }
 
-    public JumpNotZeroInstruction(Variable variable, Label jnzLabel, Label label, long instructionNumber) {
-        super(InstructionData.JUMP_NOT_ZERO, variable, label, InstructionType.BASIC, 0, instructionNumber);
-        this.jnzLabel = jnzLabel;
+    public JumpNotZeroInstruction(Variable variable, Label JNZLabel, Label label, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_NOT_ZERO, variable, label, InstructionType.BASIC, 0, instructionNumber, parent);
+        this.JNZLabel = JNZLabel;
     }
 
     @Override
@@ -27,32 +27,32 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
         long variableValue = context.getVariableValue(getVariable());
 
         if (variableValue != 0) {
-            return jnzLabel;
+            return JNZLabel;
         }
         return FixedLabel.EMPTY;
     }
 
     @Override
     public String getInstructionDescription() {
-        return ("IF " + getVariable().getRepresentation() + "!=0" + " GOTO " + jnzLabel.getLabelRepresentation());
+        return ("IF " + getVariable().getRepresentation() + "!=0" + " GOTO " + JNZLabel.getLabelRepresentation());
     }
 
     @Override
     public Label getTargetLabel() {
-        return jnzLabel;
+        return JNZLabel;
     }
 
     @Override
     public List<Label> getAllLabels(){
         List<Label> allLabels = new ArrayList<>();
         allLabels.add(this.getLabel());
-        allLabels.add(jnzLabel);
+        allLabels.add(JNZLabel);
         return allLabels;
     }
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.jnzLabel, getLabel(), number);
+        Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.JNZLabel, getLabel(), number, null);
         return newInstruction;
     }
 }

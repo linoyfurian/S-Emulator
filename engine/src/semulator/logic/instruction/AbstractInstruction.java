@@ -15,18 +15,20 @@ public abstract class AbstractInstruction implements Instruction {
     private final InstructionType type;
     private final int degreeOfExpansion;
     private final long instructionNumber;
+    private final Instruction parent;
 
-    public AbstractInstruction(InstructionData instructionData, Variable variable, InstructionType type, int degreeOfExpansion, long instructionNumber) {
-        this(instructionData, variable, FixedLabel.EMPTY, type, degreeOfExpansion, instructionNumber);
+    public AbstractInstruction(InstructionData instructionData, Variable variable, InstructionType type, int degreeOfExpansion, long instructionNumber, Instruction parent) {
+        this(instructionData, variable, FixedLabel.EMPTY, type, degreeOfExpansion, instructionNumber, parent);
     }
 
-    public AbstractInstruction(InstructionData instructionData, Variable variable, Label label, InstructionType type, int degreeOfExpansion, long instructionNumber) {
+    public AbstractInstruction(InstructionData instructionData, Variable variable, Label label, InstructionType type, int degreeOfExpansion, long instructionNumber,  Instruction parent) {
         this.instructionData = instructionData;
         this.label = label;
         this.variable = variable;
         this.type = type;
         this.degreeOfExpansion = degreeOfExpansion;
         this.instructionNumber = instructionNumber;
+        this.parent = parent;
     }
 
     @Override
@@ -76,5 +78,10 @@ public abstract class AbstractInstruction implements Instruction {
         List<Label> allLabels = new ArrayList<>();
         allLabels.add(label);
         return allLabels;
+    }
+
+    @Override
+    public Instruction getParent(){
+        return parent;
     }
 }

@@ -13,13 +13,13 @@ public class ConstantAssignmentInstruction extends AbstractInstruction implement
 
     private final long constantValue;
 
-    public ConstantAssignmentInstruction(Variable variable, long constantValue, long instructionNumber) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variable, InstructionType.SYNTHETIC, 2, instructionNumber);
+    public ConstantAssignmentInstruction(Variable variable, long constantValue, long instructionNumber, Instruction parent) {
+        super(InstructionData.CONSTANT_ASSIGNMENT, variable, InstructionType.SYNTHETIC, 2, instructionNumber, parent);
         this.constantValue = constantValue;
     }
 
-    public ConstantAssignmentInstruction(Variable variable, Label label, long constantValue, long instructionNumber) {
-        super(InstructionData.CONSTANT_ASSIGNMENT, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber);
+    public ConstantAssignmentInstruction(Variable variable, Label label, long constantValue, long instructionNumber, Instruction parent) {
+        super(InstructionData.CONSTANT_ASSIGNMENT, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber, parent);
         this.constantValue = constantValue;
     }
 
@@ -47,12 +47,12 @@ public class ConstantAssignmentInstruction extends AbstractInstruction implement
         Variable variable = getVariable();
         Instruction newInstruction;
 
-        newInstruction = new ZeroVariableInstruction(variable, this.getLabel(), instructionNumber);
+        newInstruction = new ZeroVariableInstruction(variable, this.getLabel(), instructionNumber, this);
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
         for (long i = 0; i < k; ++i) {
-            newInstruction = new IncreaseInstruction(variable, instructionNumber);
+            newInstruction = new IncreaseInstruction(variable, instructionNumber, this);
             nextInstructions.add(newInstruction);
             instructionNumber++;
         }

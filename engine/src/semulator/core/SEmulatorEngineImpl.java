@@ -6,19 +6,22 @@ import jakarta.xml.bind.Unmarshaller;
 import semulator.core.loader.LoadReport;
 import semulator.core.loader.XmlProgramMapper;
 import semulator.core.loader.jaxb.schema.generated.SProgram;
-import semulator.logic.execution.ExecutionContext;
+import semulator.logic.execution.ExecutionRunDto;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramDto;
 
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.nio.file.Path;
 
 public class SEmulatorEngineImpl implements SEmulatorEngine {
     private Program program = null;
     private boolean isLoaded = false;
+    private List<ExecutionRunDto> programRuns = new ArrayList<>();
 
     @Override
     public ProgramDto displayProgram(){
@@ -73,11 +76,13 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
-    public ExecutionContext runProgram(int desiredDegreeOfExpand, Long ... input){
+    public ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input){
         Program programToRun = program.expand(desiredDegreeOfExpand);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
+        long runNumber = this.programRuns.size()+1;
 
-        ExecutionContext runResult = programExecutor.run(input);
+        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, runNumber, input);
+        this.programRuns.add(runResult);
 
         return runResult;
     }
@@ -87,5 +92,10 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         Program expandedProgram = program.expand(desiredDegreeOfExpand);
         ProgramDto programDto = new ProgramDto(expandedProgram);
         return programDto;
+    }
+
+    @Override
+    public List<ExecutionRunDto> historyDisplay(){
+        return programRuns;
     }
 }

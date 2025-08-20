@@ -13,16 +13,16 @@ import java.util.Set;
 
 public class JumpZeroInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction{
 
-    private final Label jzLabel;
+    private final Label JZLabel;
 
-    public JumpZeroInstruction(Variable variable, Label jzLabel, long instructionNumber) {
-        super(InstructionData.JUMP_ZERO, variable, InstructionType.SYNTHETIC, 2, instructionNumber);
-        this.jzLabel = jzLabel;
+    public JumpZeroInstruction(Variable variable, Label JZLabel, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_ZERO, variable, InstructionType.SYNTHETIC, 2, instructionNumber, parent);
+        this.JZLabel = JZLabel;
     }
 
-    public JumpZeroInstruction(Variable variable, Label jzLabel, Label label, long instructionNumber) {
-        super(InstructionData.JUMP_ZERO, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber);
-        this.jzLabel = jzLabel;
+    public JumpZeroInstruction(Variable variable, Label JZLabel, Label label, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_ZERO, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber, parent);
+        this.JZLabel = JZLabel;
     }
 
     @Override
@@ -30,26 +30,26 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
         long variableValue = context.getVariableValue(getVariable());
 
         if (variableValue == 0) {
-            return jzLabel;
+            return JZLabel;
         }
         return FixedLabel.EMPTY;
     }
 
     @Override
     public String getInstructionDescription() {
-        return ("IF " + getVariable().getRepresentation() + "=0" + " GOTO " + jzLabel.getLabelRepresentation());
+        return ("IF " + getVariable().getRepresentation() + "=0" + " GOTO " + JZLabel.getLabelRepresentation());
     }
 
     @Override
     public Label getTargetLabel() {
-        return jzLabel;
+        return JZLabel;
     }
 
     @Override
     public List<Label> getAllLabels(){
         List<Label> allLabels = new ArrayList<>();
         allLabels.add(this.getLabel());
-        allLabels.add(jzLabel);
+        allLabels.add(JZLabel);
         return allLabels;
     }
 
@@ -65,15 +65,15 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
         usedLabelsNumbers.add(labelNumber1);
         label1 = new LabelImpl(labelNumber1);
 
-        newInstruction = new JumpNotZeroInstruction(getVariable(), label1, getLabel(), instructionNumber); //IF V!=0 GOTO L1
+        newInstruction = new JumpNotZeroInstruction(getVariable(), label1, getLabel(), instructionNumber, this); //IF V!=0 GOTO L1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new GoToLabelInstruction(null, getTargetLabel(), instructionNumber); //GOTO L
+        newInstruction = new GoToLabelInstruction(null, getTargetLabel(), instructionNumber, this); //GOTO L
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new NeutralInstruction(Variable.RESULT, label1, instructionNumber); //L1 y<-y
+        newInstruction = new NeutralInstruction(Variable.RESULT, label1, instructionNumber, this); //L1 y<-y
         nextInstructions.add(newInstruction);
 
         return nextInstructions;

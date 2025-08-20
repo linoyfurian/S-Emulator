@@ -18,6 +18,7 @@ public interface Instruction {
     String getInstructionDescription();
     List<Variable> getAllVariables();
     List<Label> getAllLabels();
+    Instruction getParent();
 }
 
 

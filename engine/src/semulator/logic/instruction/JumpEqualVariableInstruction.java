@@ -18,14 +18,14 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
     private final Label JEVariableLabel;
     private final Variable variableName;
 
-    public JumpEqualVariableInstruction(Variable variable, Label JEVariableLabel, Variable variableName, long instructionNumber) {
-        super(InstructionData.JUMP_EQUAL_VARIABLE, variable, InstructionType.SYNTHETIC, 3, instructionNumber);
+    public JumpEqualVariableInstruction(Variable variable, Label JEVariableLabel, Variable variableName, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_EQUAL_VARIABLE, variable, InstructionType.SYNTHETIC, 3, instructionNumber, parent);
         this.JEVariableLabel = JEVariableLabel;
         this.variableName = variableName;
     }
 
-    public JumpEqualVariableInstruction(Variable variable, Label label, Label JEVariableLabel, Variable variableName, long instructionNumber) {
-        super(InstructionData.JUMP_EQUAL_VARIABLE, variable, label, InstructionType.SYNTHETIC, 3, instructionNumber);
+    public JumpEqualVariableInstruction(Variable variable, Label label, Label JEVariableLabel, Variable variableName, long instructionNumber, Instruction parent) {
+        super(InstructionData.JUMP_EQUAL_VARIABLE, variable, label, InstructionType.SYNTHETIC, 3, instructionNumber, parent);
         this.JEVariableLabel = JEVariableLabel;
         this.variableName = variableName;
     }
@@ -84,7 +84,7 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
         zUsedNumbers.add(availableZNumber1);
         availableZVariable1 = new VariableImpl(VariableType.WORK, availableZNumber1);
 
-        newInstruction = new AssignmentInstruction(availableZVariable1, this.getLabel(), instructionNumber, this.getVariable()); //z1<-V
+        newInstruction = new AssignmentInstruction(availableZVariable1, this.getLabel(), instructionNumber, this.getVariable(), this); //z1<-V
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
@@ -92,7 +92,7 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
         zUsedNumbers.add(availableZNumber2);
         availableZVariable2 = new VariableImpl(VariableType.WORK, availableZNumber2);
 
-        newInstruction = new AssignmentInstruction(availableZVariable2, instructionNumber, this.variableName); //z2<-V'
+        newInstruction = new AssignmentInstruction(availableZVariable2, instructionNumber, this.variableName, this); //z2<-V'
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
@@ -104,7 +104,7 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
         usedLabelsNumbers.add(labelNumber3);
         label3 = new LabelImpl(labelNumber3);
 
-        newInstruction = new JumpZeroInstruction(availableZVariable1, label3, label2, instructionNumber); //L2 IF z1=0 GOTO L3
+        newInstruction = new JumpZeroInstruction(availableZVariable1, label3, label2, instructionNumber, this); //L2 IF z1=0 GOTO L3
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
@@ -112,27 +112,27 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
         usedLabelsNumbers.add(labelNumber1);
         label1 = new LabelImpl(labelNumber1);
 
-        newInstruction = new JumpZeroInstruction(availableZVariable2, label1, instructionNumber); //IF z2=0 GOTO L1
+        newInstruction = new JumpZeroInstruction(availableZVariable2, label1, instructionNumber, this); //IF z2=0 GOTO L1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new DecreaseInstruction(availableZVariable1, instructionNumber); //z1<-z1-1
+        newInstruction = new DecreaseInstruction(availableZVariable1, instructionNumber, this); //z1<-z1-1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new DecreaseInstruction(availableZVariable2, instructionNumber); //z2<-z2-1
+        newInstruction = new DecreaseInstruction(availableZVariable2, instructionNumber, this); //z2<-z2-1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new GoToLabelInstruction(null, label2, instructionNumber); //GOTO L2
+        newInstruction = new GoToLabelInstruction(null, label2, instructionNumber, this); //GOTO L2
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new JumpZeroInstruction(availableZVariable2, this.JEVariableLabel, label3, instructionNumber); //L3 IF z2=0 GOTO L
+        newInstruction = new JumpZeroInstruction(availableZVariable2, this.JEVariableLabel, label3, instructionNumber, this); //L3 IF z2=0 GOTO L
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new NeutralInstruction(Variable.RESULT, label1, instructionNumber); //L1 y<-y
+        newInstruction = new NeutralInstruction(Variable.RESULT, label1, instructionNumber, this); //L1 y<-y
         nextInstructions.add(newInstruction);
 
         return nextInstructions;

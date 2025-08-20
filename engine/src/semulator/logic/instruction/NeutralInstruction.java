@@ -7,12 +7,12 @@ import semulator.logic.variable.Variable;
 
 public class NeutralInstruction extends AbstractInstruction implements UnexpandableInstruction {
 
-    public NeutralInstruction(Variable variable, long instructionNumber) {
-        super(InstructionData.NEUTRAL, variable, InstructionType.BASIC, 0, instructionNumber);
+    public NeutralInstruction(Variable variable, long instructionNumber, Instruction parent) {
+        super(InstructionData.NEUTRAL, variable, InstructionType.BASIC, 0, instructionNumber, parent);
     }
 
-    public NeutralInstruction(Variable variable, Label label, long instructionNumber) {
-        super(InstructionData.NEUTRAL, variable, label, InstructionType.BASIC, 0, instructionNumber);
+    public NeutralInstruction(Variable variable, Label label, long instructionNumber, Instruction parent) {
+        super(InstructionData.NEUTRAL, variable, label, InstructionType.BASIC, 0, instructionNumber, parent);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class NeutralInstruction extends AbstractInstruction implements Unexpanda
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new NeutralInstruction(getVariable(), getLabel(), number);
+        Instruction newInstruction = new NeutralInstruction(getVariable(), getLabel(), number, null);
         return newInstruction;
     }
 }

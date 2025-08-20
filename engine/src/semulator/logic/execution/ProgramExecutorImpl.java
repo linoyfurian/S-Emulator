@@ -4,9 +4,12 @@ import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
+import semulator.logic.program.ProgramDto;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +22,9 @@ public class ProgramExecutorImpl implements ProgramExecutor{
     }
 
     @Override
-    public ExecutionContext run(Long... inputs) {
-//TODO :
-        ExecutionContext context = new ExecutionContextImpl();
+    public ExecutionRunDto run(int degreeOfExpansion, long runNumber, long... inputs) {
 
+        ExecutionContext context = new ExecutionContextImpl();
         //TODO ask if user can insert less arguments
         int inputIndex = 0;
         for (Variable v : programToRun.getVariables()) {
@@ -34,9 +36,9 @@ public class ProgramExecutorImpl implements ProgramExecutor{
             else
                 context.updateVariable(v, 0L);
         }
-        long pc = 0;
+        int pc = 0;
         List<Instruction> instructions = programToRun.getInstructions();
-        Instruction currentInstruction = instructions.get((int) pc); //first instruction
+        Instruction currentInstruction = instructions.get(pc); //first instruction
         Label nextLabel;
         do {
             nextLabel = currentInstruction.execute(context);
@@ -52,10 +54,15 @@ public class ProgramExecutorImpl implements ProgramExecutor{
                         pc++;
                 }
             }
-            currentInstruction = instructions.get((int) pc);
-        } while (nextLabel != FixedLabel.EXIT);
+            currentInstruction = instructions.get(pc);
+        } while ((nextLabel != FixedLabel.EXIT)||pc!=instructions.size());
 
-        return context;
+        long y = context.getVariableValue(Variable.RESULT);
+        Map<String, Long> variablesValues = context.getAllValues();
+        ProgramDto programInfo = new ProgramDto(programToRun);
+
+        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputs, programToRun.calculateCycles(), variablesValues, programInfo);
+        return result;
     }
 
     @Override
