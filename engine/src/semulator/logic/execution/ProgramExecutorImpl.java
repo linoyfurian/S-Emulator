@@ -4,16 +4,13 @@ import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramDto;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProgramExecutorImpl implements ProgramExecutor{
+public class ProgramExecutorImpl implements ProgramExecutor {
 
     private final Program programToRun;
 
@@ -27,15 +24,18 @@ public class ProgramExecutorImpl implements ProgramExecutor{
         ExecutionContext context = new ExecutionContextImpl();
         //TODO ask if user can insert less arguments
         int inputIndex = 0;
-        for (Variable v : programToRun.getVariables()) {
-            if (v.getType() == VariableType.INPUT) {
-                long value = (inputIndex < inputs.length) ? inputs[inputIndex] : 0L;
-                context.updateVariable(v, value);
-                inputIndex++;
+        for (Variable variable : programToRun.getVariables()) {
+            if(variable != null){
+                if (variable.getType() == VariableType.INPUT) {
+                    long value = (inputIndex < inputs.length) ? inputs[inputIndex] : 0L;
+                    context.updateVariable(variable, value);
+                    inputIndex++;
+                } else
+                    context.updateVariable(variable, 0L);
             }
-            else
-                context.updateVariable(v, 0L);
+
         }
+
         int pc = 0;
         List<Instruction> instructions = programToRun.getInstructions();
         Instruction currentInstruction = instructions.get(pc); //first instruction
@@ -55,19 +55,12 @@ public class ProgramExecutorImpl implements ProgramExecutor{
                 }
             }
             currentInstruction = instructions.get(pc);
-        } while ((nextLabel != FixedLabel.EXIT)||pc!=instructions.size());
+        } while ((nextLabel != FixedLabel.EXIT) && (pc != instructions.size()));
 
         long y = context.getVariableValue(Variable.RESULT);
         Map<String, Long> variablesValues = context.getAllValues();
-        ProgramDto programInfo = new ProgramDto(programToRun);
 
-        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputs, programToRun.calculateCycles(), variablesValues, programInfo);
+        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputs, programToRun.calculateCycles(), variablesValues);
         return result;
     }
-
-    @Override
-    public Map<Variable, Long> variableState() {
-        return Map.of();
-    }
-
 }

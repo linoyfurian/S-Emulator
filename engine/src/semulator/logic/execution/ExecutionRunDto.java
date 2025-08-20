@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ExecutionRunDto {
-    private final ProgramDto programInfo;
     private final long runNumber;
     private final int expansionDegree;
     private final long result;
@@ -17,14 +16,13 @@ public class ExecutionRunDto {
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
 
-    ExecutionRunDto(long runNumber, int expansionDegree, long result, long[] inputs, int cycles, Map<String, Long> variables,  ProgramDto programInfo) {
+    ExecutionRunDto(long runNumber, int expansionDegree, long result, long[] inputs, int cycles, Map<String, Long> variables) {
         this.runNumber = runNumber;
         this.expansionDegree = expansionDegree;
         this.result = result;
         this.inputs = inputs;
         this.cycles = cycles;
         this.variables = sortVarsForDisplay(variables);
-        this.programInfo = programInfo;
     }
 
     private static LinkedHashMap<String, Long> sortVarsForDisplay(Map<String, Long> vars) {
@@ -54,5 +52,29 @@ public class ExecutionRunDto {
         if (c == 'x') return 1;
         if (c == 'z') return 2;
         return 3;
+    }
+
+    public long getResult() {
+        return result;
+    }
+
+    public int getCycles() {
+        return cycles;
+    }
+
+    public LinkedHashMap<String, Long> getVariables() {
+        return variables;
+    }
+
+    public long getRunNumber() {
+        return runNumber;
+    }
+
+    public int getExpansionDegree() {
+        return expansionDegree;
+    }
+
+    public long[] getInputs() {
+        return inputs;
     }
 }

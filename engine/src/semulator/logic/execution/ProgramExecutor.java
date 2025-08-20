@@ -8,6 +8,4 @@ import java.util.Map;
 public interface ProgramExecutor {
 
     ExecutionRunDto run(int degreeOfExpansion, long runNumber, long... inputs);
-    Map<Variable, Long> variableState();
-    //Program expand(int degree, Program program);
 }

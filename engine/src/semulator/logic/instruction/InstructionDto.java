@@ -25,4 +25,28 @@ public class InstructionDto {
             parent = parent.getParent();
         }
     }
+
+    public long getNumber() {
+        return number;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public int getCycles() {
+        return cycles;
+    }
+
+    public List<ParentInstructionDto> getParents() {
+        return parents;
+    }
 }

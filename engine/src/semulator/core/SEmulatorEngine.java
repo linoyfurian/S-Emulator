@@ -13,6 +13,11 @@ public interface SEmulatorEngine {
     LoadReport loadProgramDetails(Path filePath) throws JAXBException;
     ProgramDto displayProgram();
     ProgramDto expand(int desiredDegreeOfExpand);
-    ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input);
+    ExecutionRunDto runProgram(int desiredDegreeOfExpand, long... input);
     List<ExecutionRunDto> historyDisplay();
+    void setLoaded(boolean isLoaded);
+    boolean isLoaded();
+    int getMaxDegreeOfExpand();
+    String getProgramName();
+    public void resetProgramRuns();
 }

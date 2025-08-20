@@ -33,8 +33,10 @@ public class ExpansionUtils {
     public static Set<Integer> getSetOfUsedZNumbers(LinkedHashSet<Variable> variables) {
         Set<Integer> usedZNumbers = new HashSet<>();
         for (Variable variable : variables) {
-            if(variable.getType() == VariableType.WORK){
-                usedZNumbers.add(variable.getNumber());
+            if(variable!=null){
+                if(variable.getType() == VariableType.WORK){
+                    usedZNumbers.add(variable.getNumber());
+                }
             }
         }
         return usedZNumbers;

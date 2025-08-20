@@ -37,9 +37,13 @@ public class XmlProgramMapper {
         Instruction instructionToReturn = null;
         String instructionName = instruction.getName().trim();
         instructionName = instructionName.toUpperCase();
-        String instructionVariable = instruction.getSVariable().trim();
+        String instructionVariable = instruction.getSVariable();
+        if(instructionVariable!=null)
+            instructionVariable = instructionVariable.trim();
         Variable variable = variableMapper(instructionVariable);
-        String instructionLabel = instruction.getSLabel().trim();
+        String instructionLabel = instruction.getSLabel();
+        if(instructionLabel!=null)
+            instructionLabel = instructionLabel.trim();
         Label label = labelMapper(instructionLabel);
 
         switch (instructionName) {
@@ -104,16 +108,18 @@ public class XmlProgramMapper {
     private static Variable variableMapper(String sVariable) {
         Variable variableToReturn = null;
         char type = sVariable.charAt(0);
-        int number = Integer.parseInt(sVariable.substring(1));
+        int number;
 
         switch (type) {
             case 'x':
+                number = Integer.parseInt(sVariable.substring(1));
                 variableToReturn = new VariableImpl(VariableType.INPUT, number);
                 break;
             case 'y':
                 variableToReturn = Variable.RESULT;
                 break;
             case 'z':
+                number = Integer.parseInt(sVariable.substring(1));
                 variableToReturn = new VariableImpl(VariableType.WORK, number);
                 break;
         }

@@ -17,4 +17,24 @@ public class ParentInstructionDto {
         this.number = instruction.getInstructionNumber();
         this.cycles = instruction.cycles();
     }
+
+    public long getNumber() {
+        return number;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public int getCycles() {
+        return cycles;
+    }
 }

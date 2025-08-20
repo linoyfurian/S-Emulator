@@ -96,6 +96,31 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public List<ExecutionRunDto> historyDisplay(){
-        return programRuns;
+        return this.programRuns;
+    }
+
+    @Override
+    public void setLoaded(boolean isLoaded){
+        this.isLoaded = isLoaded;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    @Override
+    public int getMaxDegreeOfExpand(){
+        return this.program.calculateMaxDegree();
+    }
+
+    @Override
+    public String getProgramName(){
+        return this.program.getName();
+    }
+
+    @Override
+    public void resetProgramRuns(){
+        this.programRuns = new ArrayList<>();
     }
 }

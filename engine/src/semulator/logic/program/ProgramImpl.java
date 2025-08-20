@@ -72,7 +72,7 @@ public class ProgramImpl implements Program {
                     valid = false;
                     break;
                 }
-                if (!definedLabels.contains(target)) {
+                if ((!definedLabels.contains(target)) && (!target.equals("EXIT"))) {
                     valid = false;
                     break;
                 }
