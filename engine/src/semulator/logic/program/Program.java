@@ -18,4 +18,5 @@ public interface Program {
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();
     Program expand(int degreeOfExpand);
+    void addVariable(Variable variable);
 }

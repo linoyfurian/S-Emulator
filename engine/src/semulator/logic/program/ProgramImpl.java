@@ -150,4 +150,8 @@ public class ProgramImpl implements Program {
         expandedProgram = programToExpand;
         return expandedProgram;
     }
+
+    public void addVariable(Variable variable) {
+        variables.add(variable);
+    }
 }

@@ -3,6 +3,7 @@ package app.menu;
 public class Menu {
 
     public static void printMenu() {
+        System.out.println("*********************************** Menu **************************************");
         System.out.println("Please select the desired option (enter the number corresponding to your choice)");
         System.out.println("1. Load program from xml file ");
         System.out.println("2. Display program");

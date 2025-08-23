@@ -4,6 +4,7 @@ import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.InstructionDto;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
+import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
@@ -13,7 +14,6 @@ public class ProgramDto {
     private final String programName;
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
-    private final List<String> inputVariablesSorted;
     private final List<String> labelsInOrder;
 
 
@@ -23,16 +23,24 @@ public class ProgramDto {
         this.inputVariablesInOrder =  new ArrayList<>();
         this.labelsInOrder = new ArrayList<>();
 
+        List<Integer> labelsNumbers = new ArrayList<>();
+        List<Integer> variablesNumbers = new ArrayList<>();
+
         LinkedHashSet<Variable> allVars = program.getVariables();
         LinkedHashSet<Label> labels = program.getLabels();
 
         boolean sawExit = false;
 
         for(Label label : labels) {
-            if ((label != FixedLabel.EMPTY) && (label != FixedLabel.EXIT))
-                labelsInOrder.add(label.getLabelRepresentation());
+            if (label instanceof LabelImpl labelImpl)
+                labelsNumbers.add(labelImpl.getNumber());
             if (label == FixedLabel.EXIT)
                 sawExit = true;
+        }
+
+        Collections.sort(labelsNumbers);
+        for(Integer number : labelsNumbers) {
+            labelsInOrder.add(("L" + number));
         }
 
         if (sawExit)
@@ -42,12 +50,15 @@ public class ProgramDto {
         for(Variable variable : allVars) {
             if(variable!=null){
                 if (variable.getType() == VariableType.INPUT) {
-                    inputVariablesInOrder.add(variable.getRepresentation());
+                    variablesNumbers.add(variable.getNumber());
                 }
             }
         }
 
-        this.inputVariablesSorted = sortInputVariablesByNumber(inputVariablesInOrder);
+        Collections.sort(variablesNumbers);
+        for(Integer number : variablesNumbers) {
+            inputVariablesInOrder.add(("x" + number));
+        }
 
         List<Instruction> programInstructions = program.getInstructions();
         this.instructions = new ArrayList<>();
@@ -71,18 +82,6 @@ public class ProgramDto {
 
     public List<InstructionDto> getInstructions() {
         return instructions;
-    }
-
-    private List<String> sortInputVariablesByNumber(List<String> inputVariablesInOrder){
-        List<String> sortedInputVariables = new ArrayList<>(inputVariablesInOrder);
-        Collections.sort(sortedInputVariables, Comparator.comparingInt(s -> {
-            return Integer.parseInt(s.substring(1));
-        }));
-        return sortedInputVariables;
-    }
-
-    public List<String> getInputVariablesSorted() {
-        return inputVariablesSorted;
     }
 }
 

@@ -4,12 +4,8 @@ import semulator.logic.execution.ExecutionRunDto;
 import semulator.logic.instruction.InstructionDto;
 import semulator.logic.instruction.ParentInstructionDto;
 import semulator.logic.program.ProgramDto;
-import semulator.logic.variable.Variable;
-import semulator.logic.variable.VariableType;
 
-import java.sql.SQLOutput;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DisplayManager {
     public static void displayProgram(ProgramDto programToDisplay) {
@@ -87,25 +83,18 @@ public class DisplayManager {
     }
 
     public static void displayRunDetails(ExecutionRunDto runResult) {
-        String lineSeparator = System.lineSeparator();
-
         System.out.println("y = " + runResult.getResult());
 
         LinkedHashMap<String, Long> programVariable = runResult.getVariables();
-        printVariablesInOneLineInFormat(programVariable);
-        System.out.print(lineSeparator);
+        printVariablesInFormat(programVariable);
 
         System.out.println("Number of cycles: " + runResult.getCycles());
     }
 
-    private static void printVariablesInOneLineInFormat(LinkedHashMap<String, Long> variables) {
-        boolean firstInLine = true;
+    private static void printVariablesInFormat(LinkedHashMap<String, Long> variables) {
         for (var entry : variables.entrySet()) {
-            if (firstInLine) {
-                System.out.print(entry.getKey() + " = " + entry.getValue());
-                firstInLine = false;
-            } else
-                System.out.print(", " + entry.getKey() + " = " + entry.getValue());
+            System.out.println(entry.getKey() + " = " + entry.getValue());
+
         }
     }
 
@@ -133,24 +122,30 @@ public class DisplayManager {
         }
 
         System.out.println("Execution History:");
+        System.out.println("********************");
         for (ExecutionRunDto run : historyOfProgramRuns) {
             System.out.println("Run number: #" + run.getRunNumber());
             System.out.println("Run degree: " + run.getExpansionDegree());
-            long [] inputs = run.getInputs();
+            LinkedHashMap<String,Long> inputs = run.getInputs();
             System.out.print("Inputs: ");
-            boolean firstInLine = true;
-            for (long input : inputs) {
-                if (firstInLine) {
-                    System.out.print(input);
-                    firstInLine = false;
+
+            if(inputs.size() == 0)
+                System.out.print("No input data");
+
+            boolean isFirstInput = true;
+            for (Map.Entry<String, Long> entry : inputs.entrySet()) {
+                if (isFirstInput) {
+                    System.out.print(entry.getKey() + " = " + entry.getValue());
+                    isFirstInput = false;
                 }
                 else
-                    System.out.print(", " + input);
-
+                    System.out.print(", " + entry.getKey() + " = " + entry.getValue());
             }
+
             System.out.print(lineSeparator);
             System.out.println("y = " + run.getResult());
             System.out.println("Cycles: " + run.getCycles());
+            System.out.print(lineSeparator);
         }
         System.out.print(lineSeparator);
     }
