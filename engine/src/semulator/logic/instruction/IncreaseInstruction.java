@@ -33,7 +33,7 @@ public class IncreaseInstruction extends AbstractInstruction implements Unexpand
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new IncreaseInstruction(getVariable(), getLabel(), number, null);
+        Instruction newInstruction = new IncreaseInstruction(getVariable(), getLabel(), number, this.getParent());
         return newInstruction;
     }
 }

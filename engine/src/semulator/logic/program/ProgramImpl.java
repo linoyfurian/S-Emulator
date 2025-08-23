@@ -92,15 +92,6 @@ public class ProgramImpl implements Program {
     }
 
     @Override
-    public int calculateCycles() {
-        if (instructions == null || instructions.isEmpty()) return 0;
-
-        return instructions.stream()
-                .mapToInt(Instruction::cycles)
-                .sum();
-    }
-
-    @Override
     public LinkedHashSet<Variable> getVariables() {
         return variables;
     }
@@ -149,9 +140,5 @@ public class ProgramImpl implements Program {
 
         expandedProgram = programToExpand;
         return expandedProgram;
-    }
-
-    public void addVariable(Variable variable) {
-        variables.add(variable);
     }
 }

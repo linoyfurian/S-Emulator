@@ -4,12 +4,10 @@ import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramDto;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
 import semulator.logic.variable.VariableType;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,17 +21,13 @@ public class ProgramExecutorImpl implements ProgramExecutor {
 
     @Override
     public ExecutionRunDto run(int degreeOfExpansion, long runNumber, long... inputs) {
-
+        int cycles = 0;
         ExecutionContext context = new ExecutionContextImpl();
-        LinkedHashMap<Integer, Long> inputVars = new LinkedHashMap<>();
 
         //add input variables
         for (int i=0; i<inputs.length; i++) {
             Variable variable = new VariableImpl(VariableType.INPUT,i+1);
             context.updateVariable(variable, inputs[i]);
-            this.programToRun.addVariable(variable);
-
-            inputVars.put((i+1), inputs[i]);
         }
 
         for (Variable variable : programToRun.getVariables()) {
@@ -41,7 +35,6 @@ public class ProgramExecutorImpl implements ProgramExecutor {
                 if (variable.getType() == VariableType.INPUT) {
                     if(variable.getNumber()>inputs.length) {
                         context.updateVariable(variable, 0L);
-                        inputVars.put(variable.getNumber(), 0L);
                     }
                 } else
                     context.updateVariable(variable, 0L);
@@ -51,9 +44,13 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         int pc = 0;
         List<Instruction> instructions = programToRun.getInstructions();
         Instruction currentInstruction = instructions.get(pc); //first instruction
+
+
+
         Label nextLabel;
         do {
             nextLabel = currentInstruction.execute(context);
+            cycles = cycles + currentInstruction.cycles();
 
             if (nextLabel == FixedLabel.EMPTY) {//next instruction
                 pc++;
@@ -75,8 +72,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         long y = context.getVariableValue(Variable.RESULT);
         Map<String, Long> variablesValues = context.getAllValues();
 
-        ProgramDto programDetails = new ProgramDto(this.programToRun);
-        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputVars, programToRun.calculateCycles(), variablesValues, programDetails);
+        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputs, cycles, variablesValues);
         return result;
     }
 }

@@ -28,7 +28,7 @@ public class NeutralInstruction extends AbstractInstruction implements Unexpanda
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new NeutralInstruction(getVariable(), getLabel(), number, null);
+        Instruction newInstruction = new NeutralInstruction(getVariable(), getLabel(), number, this.getParent());
         return newInstruction;
     }
 }

@@ -7,21 +7,19 @@ import java.util.stream.Collectors;
 
 public class ExecutionRunDto {
     private final long runNumber;
-    private final ProgramDto programDetails;
     private final int expansionDegree;
     private final long result;
-    private final LinkedHashMap<String, Long> inputs;
+    private final long [] inputs;
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
 
-    ExecutionRunDto(long runNumber, int expansionDegree, long result, LinkedHashMap<Integer, Long> inputs, int cycles, Map<String, Long> variables, ProgramDto programDetails) {
+    ExecutionRunDto(long runNumber, int expansionDegree, long result, long [] inputs, int cycles, Map<String, Long> variables) {
         this.runNumber = runNumber;
         this.expansionDegree = expansionDegree;
         this.result = result;
-        this.inputs = sortInputVariables(inputs);
+        this.inputs = inputs;
         this.cycles = cycles;
         this.variables = sortVarsForDisplay(variables);
-        this.programDetails = programDetails;
     }
 
     private static LinkedHashMap<String, Long> sortVarsForDisplay(Map<String, Long> vars) {
@@ -38,18 +36,6 @@ public class ExecutionRunDto {
                         (a, b) -> a,
                         LinkedHashMap::new
                 ));
-    }
-
-    private static LinkedHashMap<String, Long> sortInputVariables(LinkedHashMap<Integer, Long> inputs) {
-        LinkedHashMap<String, Long> result = new LinkedHashMap<>();
-        List<Integer> keys = new ArrayList<>(inputs.keySet());
-        Collections.sort(keys);
-        for (int i = 0; i < keys.size(); i++) {
-            int key = keys.get(i);
-            long value = inputs.get(key);
-            result.put(("x" + key), value);
-        }
-        return result;
     }
 
     private static int numericIndex(String k) {
@@ -85,11 +71,7 @@ public class ExecutionRunDto {
         return expansionDegree;
     }
 
-    public LinkedHashMap<String, Long> getInputs() {
+    public long [] getInputs() {
         return inputs;
-    }
-
-    public ProgramDto getProgramDetails() {
-        return programDetails;
     }
 }

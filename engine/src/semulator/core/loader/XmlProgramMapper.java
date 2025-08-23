@@ -107,21 +107,23 @@ public class XmlProgramMapper {
 
     private static Variable variableMapper(String sVariable) {
         Variable variableToReturn = null;
-        char type = sVariable.charAt(0);
+        char type;
+        if(sVariable==null){
+            return null;
+        }
+        type = sVariable.charAt(0);
         int number;
 
-        switch (type) {
-            case 'x':
-                number = Integer.parseInt(sVariable.substring(1));
-                variableToReturn = new VariableImpl(VariableType.INPUT, number);
-                break;
-            case 'y':
-                variableToReturn = Variable.RESULT;
-                break;
-            case 'z':
-                number = Integer.parseInt(sVariable.substring(1));
-                variableToReturn = new VariableImpl(VariableType.WORK, number);
-                break;
+        if(type == 'x' || type == 'X'){
+            number = Integer.parseInt(sVariable.substring(1));
+            variableToReturn = new VariableImpl(VariableType.INPUT, number);
+        }
+        else if(type == 'y' || type == 'Y'){
+            variableToReturn = Variable.RESULT;
+        }
+        else if(type == 'z' || type == 'Z'){
+            number = Integer.parseInt(sVariable.substring(1));
+            variableToReturn = new VariableImpl(VariableType.WORK, number);
         }
 
         return variableToReturn;
@@ -146,8 +148,12 @@ public class XmlProgramMapper {
             int number = Integer.parseInt(sLabel.substring(1));
             return new LabelImpl(number);
         }
-
-        return  labelToReturn;
+        else{ //TODO DELETE
+            int number = Integer.parseInt(sLabel.substring(1));
+            return new LabelImpl(number);
+        }
+        //TODO RETURN
+        //return  labelToReturn;
     }
 
     private static long getConstantValue(List<SInstructionArgument> arguments, String nameOfArgument) {

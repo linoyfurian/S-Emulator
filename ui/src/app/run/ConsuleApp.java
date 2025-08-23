@@ -102,7 +102,6 @@ public class ConsuleApp {
 
                 ExecutionRunDto runResult = this.semulatorEngine.runProgram(desiredDegreeOfExpand, inputs);
 
-                programToRunDetails = runResult.getProgramDetails(); //TODO maybe delete
                 DisplayManager.displayProgram(programToRunDetails);
                 DisplayManager.displayRunDetails(runResult);
                 System.out.print(lineSeparator);

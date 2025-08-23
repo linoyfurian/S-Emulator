@@ -90,6 +90,8 @@ public class UserInputHandler {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
+
+
         }
         return desiredDegreeOfExpand;
     }

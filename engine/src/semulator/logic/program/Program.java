@@ -14,9 +14,7 @@ public interface Program {
     List<Instruction> getInstructions();
     boolean validate();
     int calculateMaxDegree();
-    int calculateCycles();
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();
     Program expand(int degreeOfExpand);
-    void addVariable(Variable variable);
 }

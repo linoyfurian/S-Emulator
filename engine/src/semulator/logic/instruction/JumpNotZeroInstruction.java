@@ -52,7 +52,7 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
 
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
-        Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.JNZLabel, getLabel(), number, null);
+        Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.JNZLabel, getLabel(), number, this.getParent());
         return newInstruction;
     }
 }

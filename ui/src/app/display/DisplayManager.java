@@ -17,7 +17,10 @@ public class DisplayManager {
         System.out.println("Program name: " + programToDisplay.getProgramName());
 
         inputVariablesInOrder = programToDisplay.getInputVariablesInOrder();
-        System.out.println("Input variables in order: ");
+        System.out.print("Input variables in order: ");
+        if(inputVariablesInOrder.isEmpty()) {
+            System.out.println("no input variables");
+        }
         for (String variableName : inputVariablesInOrder) {
             if (firstInLine) {
                 System.out.print(variableName);
@@ -29,7 +32,10 @@ public class DisplayManager {
 
         firstInLine = true;
         labelsInOrder = programToDisplay.getLabelsInOrder();
-        System.out.println("Labels in order: ");
+        System.out.print("Labels in order: ");
+        if(labelsInOrder.isEmpty()) {
+            System.out.println("no labels");
+        }
         for (String labelName : labelsInOrder) {
             if (firstInLine) {
                 System.out.print(labelName);
@@ -83,7 +89,7 @@ public class DisplayManager {
     }
 
     public static void displayRunDetails(ExecutionRunDto runResult) {
-        System.out.println("y = " + runResult.getResult());
+        System.out.println("Run result: y = " + runResult.getResult());
 
         LinkedHashMap<String, Long> programVariable = runResult.getVariables();
         printVariablesInFormat(programVariable);
@@ -92,6 +98,7 @@ public class DisplayManager {
     }
 
     private static void printVariablesInFormat(LinkedHashMap<String, Long> variables) {
+        System.out.println("Program variables after program run: ");
         for (var entry : variables.entrySet()) {
             System.out.println(entry.getKey() + " = " + entry.getValue());
 
@@ -126,20 +133,17 @@ public class DisplayManager {
         for (ExecutionRunDto run : historyOfProgramRuns) {
             System.out.println("Run number: #" + run.getRunNumber());
             System.out.println("Run degree: " + run.getExpansionDegree());
-            LinkedHashMap<String,Long> inputs = run.getInputs();
+            long [] inputs = run.getInputs();
             System.out.print("Inputs: ");
 
-            if(inputs.size() == 0)
+            if(inputs.length == 0)
                 System.out.print("No input data");
 
-            boolean isFirstInput = true;
-            for (Map.Entry<String, Long> entry : inputs.entrySet()) {
-                if (isFirstInput) {
-                    System.out.print(entry.getKey() + " = " + entry.getValue());
-                    isFirstInput = false;
-                }
+            for(int i = 0; i < inputs.length; i++){
+                if(i==0)
+                    System.out.print("x" + (i+1) + " = " + inputs[i]);
                 else
-                    System.out.print(", " + entry.getKey() + " = " + entry.getValue());
+                    System.out.print(", x" + (i+1) + " = " + inputs[i]);
             }
 
             System.out.print(lineSeparator);
