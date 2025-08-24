@@ -31,7 +31,7 @@ public enum Command {
                 return cmd;
             }
         }
-        return null; // or throw IllegalArgumentException
+        return null;
     }
 
     @Override

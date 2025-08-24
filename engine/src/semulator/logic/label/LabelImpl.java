@@ -1,7 +1,5 @@
 package semulator.logic.label;
 
-import semulator.logic.variable.Variable;
-
 import java.util.Objects;
 
 public class LabelImpl implements Label{

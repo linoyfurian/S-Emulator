@@ -1,7 +1,5 @@
 package semulator.logic.execution;
 
-import semulator.logic.program.ProgramDto;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

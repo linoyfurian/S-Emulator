@@ -1,8 +1,5 @@
 package semulator.logic.instruction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ParentInstructionDto {
     private final String label;
     private final String command;
