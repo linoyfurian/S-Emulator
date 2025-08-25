@@ -65,11 +65,11 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
         usedLabelsNumbers.add(labelNumber1);
         label1 = new LabelImpl(labelNumber1);
 
-        newInstruction = new JumpNotZeroInstruction(getVariable(), label1, getLabel(), instructionNumber, this); //IF V!=0 GOTO L1
+        newInstruction = new JumpNotZeroInstruction(this.getVariable(), label1, this.getLabel(), instructionNumber, this); //IF V!=0 GOTO L1
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new GoToLabelInstruction(null, getTargetLabel(), instructionNumber, this); //GOTO L
+        newInstruction = new GoToLabelInstruction(null, this.getTargetLabel(), instructionNumber, this); //GOTO L
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
