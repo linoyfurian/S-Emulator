@@ -125,6 +125,7 @@ public class DisplayManager {
 
         if(historyOfProgramRuns.size() == 0){
             System.out.println("No runs have been executed for this program yet");
+            System.out.print(lineSeparator);
             return;
         }
 
@@ -138,16 +139,13 @@ public class DisplayManager {
 
             if(inputs.length == 0)
                 System.out.print("No input data");
+            System.out.print(lineSeparator);
 
             for(int i = 0; i < inputs.length; i++){
-                if(i==0)
-                    System.out.print("x" + (i+1) + " = " + inputs[i]);
-                else
-                    System.out.print(", x" + (i+1) + " = " + inputs[i]);
+                System.out.println("x" + (i+1) + " = " + inputs[i]);
             }
 
-            System.out.print(lineSeparator);
-            System.out.println("y = " + run.getResult());
+            System.out.println("Result: y = " + run.getResult());
             System.out.println("Cycles: " + run.getCycles());
             System.out.print(lineSeparator);
         }

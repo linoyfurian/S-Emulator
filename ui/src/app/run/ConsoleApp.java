@@ -14,11 +14,11 @@ import jakarta.xml.bind.JAXBException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class ConsuleApp {
+public class ConsoleApp {
     private final SEmulatorEngine semulatorEngine;
     private boolean isExit;
 
-    public ConsuleApp() {
+    public ConsoleApp() {
         this.semulatorEngine = new SEmulatorEngineImpl();
         this.isExit = false;
     }
@@ -51,21 +51,27 @@ public class ConsuleApp {
                 System.out.print(lineSeparator);
                 System.out.println("******************************* Load program **********************************");
                 Path filePath;
-                filePath = UserInputHandler.readFullPathFromUser();
-                try {
-                    LoadReport loadReport = semulatorEngine.loadProgramDetails(filePath);
+                try{
+                    filePath = UserInputHandler.readFullPathFromUser();
+                    try {
+                        LoadReport loadReport = semulatorEngine.loadProgramDetails(filePath);
 
-                    if (loadReport.isSuccess()) {
-                        System.out.println(loadReport.getMessage());
-                        this.semulatorEngine.setLoaded(true);
-                        this.semulatorEngine.resetProgramRuns();
-                    } else {
-                        System.out.println("Program loading failed: " + loadReport.getMessage());
+                        if (loadReport.isSuccess()) {
+                            System.out.println(loadReport.getMessage());
+                            this.semulatorEngine.setLoaded(true);
+                            this.semulatorEngine.resetProgramRuns();
+                        } else {
+                            System.out.println("Program loading failed: " + loadReport.getMessage());
+                            System.out.println("If you want to try again, select option 1 in the menu.");
+                        }
+                    }
+                    catch (JAXBException e) {
+                        System.out.println("Unexpected error while loading XML: " + e.getMessage());
                         System.out.println("If you want to try again, select option 1 in the menu.");
                     }
                 }
-                catch (JAXBException e) {
-                    System.out.println("Unexpected error while loading XML: " + e.getMessage());
+                catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
                     System.out.println("If you want to try again, select option 1 in the menu.");
                 }
                 System.out.print(lineSeparator);

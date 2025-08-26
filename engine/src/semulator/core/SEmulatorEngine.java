@@ -19,5 +19,5 @@ public interface SEmulatorEngine {
     boolean isLoaded();
     int getMaxDegreeOfExpand();
     String getProgramName();
-    public void resetProgramRuns();
+    void resetProgramRuns();
 }

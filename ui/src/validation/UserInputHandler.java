@@ -40,35 +40,23 @@ public class UserInputHandler {
     }
 
     public static Path readFullPathFromUser() {
-        while (true) {
-            System.out.print("Enter full XML file path: ");
-            String inputPath = scanner.nextLine().trim();
+        Path path = null;
+        System.out.print("Enter full XML file path: ");
+        String inputPath = scanner.nextLine().trim();
 
-            if (inputPath.isEmpty()) {
-                System.out.println("Error: path cannot be empty. Please enter a full path.");
-                continue;
-            }
-
-            if (!inputPath.matches("[A-Za-z0-9\\\\/.:_\\- ]+")) {
-                System.out.println("Error: path contains invalid characters. The path must use English letters.");
-                continue;
-            }
-
-            final Path path;
-            try {
-                path = Paths.get(inputPath);
-            } catch (InvalidPathException e) {
-                System.out.println("Error: invalid path syntax. Please enter a valid full path.");
-                continue;
-            }
-
-            if (!path.isAbsolute()) {
-                System.out.println("Error: please enter a full (absolute) path");
-                continue;
-            }
-
-            return path;
+        if (inputPath.isEmpty())
+            throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
+        if (!inputPath.matches("[A-Za-z0-9\\\\/.:_\\- ]+"))
+            throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
+        try {
+            path = Paths.get(inputPath);
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Error: invalid path syntax. You need to enter a valid full path.");
         }
+        if (!path.isAbsolute())
+            throw new IllegalArgumentException("Error: You need to enter a full (absolute) path");
+
+        return path;
     }
 
     public static int getDegreeFromUser(int maxDegreeOfExpand) {
