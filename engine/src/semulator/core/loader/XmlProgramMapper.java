@@ -148,12 +148,8 @@ public class XmlProgramMapper {
             int number = Integer.parseInt(sLabel.substring(1));
             return new LabelImpl(number);
         }
-        else{ //TODO DELETE
-            int number = Integer.parseInt(sLabel.substring(1));
-            return new LabelImpl(number);
-        }
-        //TODO RETURN
-        //return  labelToReturn;
+
+        return  labelToReturn;
     }
 
     private static long getConstantValue(List<SInstructionArgument> arguments, String nameOfArgument) {

@@ -63,7 +63,10 @@ public class UserInputHandler {
         int desiredDegreeOfExpand;
         while (true) {
             System.out.println("Max Degree of Expand: " + maxDegreeOfExpand);
-            System.out.print("Please enter desired expand degree (0 - " + maxDegreeOfExpand + "): ");
+            if(maxDegreeOfExpand == 0)
+                System.out.print("Only expansion 0 is available. Please enter 0 to display the program: ");
+            else
+                System.out.print("Please enter desired expand degree (0 - " + maxDegreeOfExpand + "): ");
 
             String input = scanner.nextLine().trim();
 

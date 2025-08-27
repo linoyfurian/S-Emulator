@@ -70,7 +70,7 @@ public class DisplayManager {
         List<ParentInstructionDto> parentsOfInstruction = instructionToDisplay.getParents();
         for (ParentInstructionDto parent : parentsOfInstruction) {
             formattedParentInstruction = String.format(
-                    " <<< #%d (%s) [%s] %s (%d)",
+                    " >>> #%d (%s) [%s] %s (%d)",
                     parent.getNumber(),
                     parent.getType(),
                     formatLabel(parent.getLabel()),
@@ -82,10 +82,20 @@ public class DisplayManager {
     }
 
     private static String formatLabel(String label) {
+        int left;
         if (label == null || label.isBlank()) {
             return String.format("%-5s", "");
         }
-        return String.format("%-5s", label);
+        int labelLength = label.length();
+        int space = 5 - labelLength;
+        if (space > 0)
+            left = space / 2;
+        else
+            left = 0;
+
+        String result = String.format("%" + (labelLength + left) + "s", label);
+        result = String.format("%-" + 5 + "s", result);
+        return result;
     }
 
     public static void displayRunDetails(ExecutionRunDto runResult) {
