@@ -3,9 +3,9 @@ package app.run;
 import app.display.DisplayManager;
 import app.menu.Command;
 import app.menu.Menu;
-import semulator.core.loader.LoadReport;
-import semulator.logic.execution.ExecutionRunDto;
-import semulator.logic.program.ProgramDto;
+import semulator.api.LoadReport;
+import semulator.api.dto.ExecutionRunDto;
+import semulator.api.dto.ProgramDto;
 import validation.UserInputHandler;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
@@ -133,14 +133,14 @@ public class ConsoleApp {
                         System.out.println("The current system state was successfully saved to the requested file.");
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
-                        System.out.println("If you want to try again, select option 1 in the menu.");
+                        System.out.println("If you want to try again, select option 6 in the menu.");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                        System.out.println("If you want to try again, select option 1 in the menu.");
+                        System.out.println("If you want to try again, select option 6 in the menu.");
                     }
                 } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("If you want to try again, select option 1 in the menu.");
+                    System.out.println("If you want to try again, select option 6 in the menu.");
                 }
                 System.out.print(lineSeparator);
                 break;
@@ -156,14 +156,14 @@ public class ConsoleApp {
                         System.out.println("The system state was successfully loaded from the requested file.");
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
-                        System.out.println("If you want to try again, select option 1 in the menu.");
+                        System.out.println("If you want to try again, select option 7 in the menu.");
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                        System.out.println("If you want to try again, select option 1 in the menu.");
+                        System.out.println("If you want to try again, select option 7 in the menu.");
                     }
                 } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("If you want to try again, select option 1 in the menu.");
+                    System.out.println("If you want to try again, select option 7 in the menu.");
                 }
                 System.out.print(lineSeparator);
                 break;

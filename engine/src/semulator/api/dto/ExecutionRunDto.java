@@ -1,4 +1,4 @@
-package semulator.logic.execution;
+package semulator.api.dto;
 
 import java.io.Serializable;
 import java.util.*;
@@ -12,7 +12,7 @@ public class ExecutionRunDto implements Serializable {
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
 
-    ExecutionRunDto(long runNumber, int expansionDegree, long result, long [] inputs, int cycles, Map<String, Long> variables) {
+    public ExecutionRunDto(long runNumber, int expansionDegree, long result, long [] inputs, int cycles, Map<String, Long> variables) {
         this.runNumber = runNumber;
         this.expansionDegree = expansionDegree;
         this.result = result;

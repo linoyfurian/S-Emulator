@@ -1,4 +1,6 @@
-package semulator.logic.instruction;
+package semulator.api.dto;
+
+import semulator.logic.instruction.Instruction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package semulator.logic.execution;
 
+import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;

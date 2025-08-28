@@ -2,7 +2,7 @@ package semulator.core;
 
 import java.io.Serializable;
 import java.util.List;
-import semulator.logic.execution.ExecutionRunDto;
+import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.program.Program;
 
 public class EngineState implements Serializable {

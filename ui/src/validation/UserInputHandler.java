@@ -46,7 +46,7 @@ public class UserInputHandler {
 
         if (inputPath.isEmpty())
             throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
-        if (!inputPath.matches("[A-Za-z0-9\\\\/.:_\\- ]+"))
+        if (inputPath.matches(".*[\\u0590-\\u05FF].*"))
             throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
         try {
             path = Paths.get(inputPath);
@@ -137,7 +137,7 @@ public class UserInputHandler {
 
         if (inputPath.isEmpty())
             throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
-        if (!inputPath.matches("[A-Za-z0-9\\\\/.:_\\- ]+"))
+        if (inputPath.matches(".*[\\u0590-\\u05FF].*"))
             throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
         try {
             path = Paths.get(inputPath);

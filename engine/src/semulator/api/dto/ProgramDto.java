@@ -1,10 +1,10 @@
-package semulator.logic.program;
+package semulator.api.dto;
 
 import semulator.logic.instruction.Instruction;
-import semulator.logic.instruction.InstructionDto;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
+import semulator.logic.program.Program;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 

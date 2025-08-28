@@ -1,4 +1,4 @@
-package semulator.core.loader;
+package semulator.api;
 
 public class LoadReport {
     private final boolean success;

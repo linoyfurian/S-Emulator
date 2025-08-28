@@ -3,14 +3,14 @@ package semulator.core;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import semulator.core.loader.LoadReport;
+import semulator.api.LoadReport;
 import semulator.core.loader.XmlProgramMapper;
 import semulator.core.loader.jaxb.schema.generated.SProgram;
-import semulator.logic.execution.ExecutionRunDto;
+import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramDto;
+import semulator.api.dto.ProgramDto;
 
 import java.io.*;
 import java.nio.file.Files;
