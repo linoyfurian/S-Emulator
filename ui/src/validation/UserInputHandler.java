@@ -15,18 +15,18 @@ public class UserInputHandler {
         Command userChoice = null;
 
         while (true) {
-            System.out.print("Enter your choice (1-6): ");
+            System.out.print("Enter your choice (1-8): ");
             String choiceInput = scanner.nextLine().trim();
 
             int choice;
             try {
                 choice = Integer.parseInt(choiceInput);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number between 1 and 6. Please try again.");
+                System.out.println("Invalid input. Please enter a number between 1 and 8. Please try again.");
                 continue;
             }
-            if (choice < 1 || choice > 6) {
-                System.out.println("Error: choice must be a number between 1 and 6. Please try again.");
+            if (choice < 1 || choice > 8) {
+                System.out.println("Error: choice must be a number between 1 and 8. Please try again.");
                 continue;
             }
 
@@ -127,5 +127,25 @@ public class UserInputHandler {
                 System.out.println("Input is invalid. Please enter non-negative integers separated by commas (for example: 1,2,3)");
             }
         }
+    }
+
+
+    public static Path readFullPathFromUserToSaveOrToLoadState() {
+        Path path = null;
+        System.out.print("Please enter the full path (without extension): ");
+        String inputPath = scanner.nextLine().trim();
+
+        if (inputPath.isEmpty())
+            throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
+        if (!inputPath.matches("[A-Za-z0-9\\\\/.:_\\- ]+"))
+            throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
+        try {
+            path = Paths.get(inputPath);
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Error: invalid path syntax. You need to enter a valid full path.");
+        }
+        if (!path.isAbsolute())
+            throw new IllegalArgumentException("Error: You need to enter a full (absolute) path");
+        return path;
     }
 }

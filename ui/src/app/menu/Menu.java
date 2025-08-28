@@ -10,6 +10,8 @@ public class Menu {
         System.out.println("3. Expand program");
         System.out.println("4. Run program");
         System.out.println("5. Display run history/statistics");
-        System.out.println("6. Exit");
+        System.out.println("6. Save current emulator state to file");
+        System.out.println("7. Load emulator state from file");
+        System.out.println("8. Exit");
     }
 }

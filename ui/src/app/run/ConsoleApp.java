@@ -11,6 +11,7 @@ import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 import jakarta.xml.bind.JAXBException;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -29,13 +30,17 @@ public class ConsoleApp {
         while(!this.isExit){
             Menu.printMenu();
             choice = UserInputHandler.getUserChoice();
-            if((choice != Command.EXIT && choice != Command.LOAD_XML) && (!this.semulatorEngine.isLoaded())){
+            if(choice == Command.LOAD_STATE)
+                this.isExit = handleCommand(choice);
+            else if((choice != Command.EXIT && choice != Command.LOAD_XML) && (!this.semulatorEngine.isLoaded())){
                 System.out.println("This option is available only after successfully loading a program into the system (command 1).");
                 System.out.print(lineSeparator);
             }
             else
                 this.isExit = handleCommand(choice);
         }
+        System.out.print(lineSeparator);
+        System.out.println("Exiting...");
     }
 
     private boolean handleCommand(Command command){
@@ -43,7 +48,7 @@ public class ConsoleApp {
         int desiredDegreeOfExpand, maxDegreeOfExpand;
         String lineSeparator = System.lineSeparator();
 
-        switch (command){
+        switch (command) {
             case Command.EXIT:
                 isExit = true;
                 break;
@@ -51,7 +56,7 @@ public class ConsoleApp {
                 System.out.print(lineSeparator);
                 System.out.println("******************************* Load program **********************************");
                 Path filePath;
-                try{
+                try {
                     filePath = UserInputHandler.readFullPathFromUser();
                     try {
                         LoadReport loadReport = semulatorEngine.loadProgramDetails(filePath);
@@ -64,13 +69,11 @@ public class ConsoleApp {
                             System.out.println("Program loading failed: " + loadReport.getMessage());
                             System.out.println("If you want to try again, select option 1 in the menu.");
                         }
-                    }
-                    catch (JAXBException e) {
+                    } catch (JAXBException e) {
                         System.out.println("Unexpected error while loading XML: " + e.getMessage());
                         System.out.println("If you want to try again, select option 1 in the menu.");
                     }
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     System.out.println(e.getMessage());
                     System.out.println("If you want to try again, select option 1 in the menu.");
                 }
@@ -118,8 +121,53 @@ public class ConsoleApp {
                 List<ExecutionRunDto> historyOfProgramRuns = this.semulatorEngine.historyDisplay();
                 DisplayManager.displayRunHistory(historyOfProgramRuns);
                 break;
-        }
+            case Command.SAVE_STATE:
+                System.out.print(lineSeparator);
+                System.out.println("******************** Save current emulator state to file **********************");
 
+                Path pathToSave;
+                try {
+                    pathToSave = UserInputHandler.readFullPathFromUserToSaveOrToLoadState();
+                    try {
+                        this.semulatorEngine.saveState(pathToSave);
+                        System.out.println("The current system state was successfully saved to the requested file.");
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("If you want to try again, select option 1 in the menu.");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("If you want to try again, select option 1 in the menu.");
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("If you want to try again, select option 1 in the menu.");
+                }
+                System.out.print(lineSeparator);
+                break;
+            case Command.LOAD_STATE:
+                System.out.print(lineSeparator);
+                System.out.println("************************* Load emulator state from file ***********************");
+
+                Path pathToLoadFrom;
+                try {
+                    pathToLoadFrom = UserInputHandler.readFullPathFromUserToSaveOrToLoadState();
+                    try {
+                        this.semulatorEngine.loadState(pathToLoadFrom);
+                        System.out.println("The system state was successfully loaded from the requested file.");
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("If you want to try again, select option 1 in the menu.");
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("If you want to try again, select option 1 in the menu.");
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("If you want to try again, select option 1 in the menu.");
+                }
+                System.out.print(lineSeparator);
+                break;
+        }
         return isExit;
     }
 }

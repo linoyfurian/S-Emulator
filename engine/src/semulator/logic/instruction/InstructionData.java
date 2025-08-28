@@ -1,6 +1,8 @@
 package semulator.logic.instruction;
 
-public enum InstructionData {
+import java.io.Serializable;
+
+public enum InstructionData implements Serializable {
 
     INCREASE("INCREASE", 1),
     DECREASE("DECREASE", 1),

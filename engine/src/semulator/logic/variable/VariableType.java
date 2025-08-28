@@ -1,6 +1,8 @@
 package semulator.logic.variable;
 
-public enum VariableType {
+import java.io.Serializable;
+
+public enum VariableType implements Serializable {
     RESULT {
         @Override
         public String getVariableRepresentation(int number) {

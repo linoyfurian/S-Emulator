@@ -5,9 +5,10 @@ import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ProgramImpl implements Program {
+public class ProgramImpl implements Program, Serializable {
 
     private final String name;
     private final List<Instruction> instructions;

@@ -1,6 +1,8 @@
 package semulator.logic.instruction;
 
-public enum InstructionType {
+import java.io.Serializable;
+
+public enum InstructionType implements Serializable {
     BASIC('B', "basic"),
     SYNTHETIC('S',"synthetic")
     ;

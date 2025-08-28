@@ -6,7 +6,9 @@ public enum Command {
     EXPAND(3, "Expand program"),
     RUN_PROGRAM(4, "Run program"),
     DISPLAY_HISTORY(5, "Show run history"),
-    EXIT(6, "Exit");
+    SAVE_STATE(6, "Save current state to file"),
+    LOAD_STATE(7, "Load emulator state from file"),
+    EXIT(8, "Exit");
 
     private final int code;
     private final String description;

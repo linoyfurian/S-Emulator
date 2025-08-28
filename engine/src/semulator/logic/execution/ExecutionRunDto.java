@@ -1,9 +1,10 @@
 package semulator.logic.execution;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ExecutionRunDto {
+public class ExecutionRunDto implements Serializable {
     private final long runNumber;
     private final int expansionDegree;
     private final long result;

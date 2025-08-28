@@ -1,8 +1,9 @@
 package semulator.logic.label;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class LabelImpl implements Label{
+public class LabelImpl implements Label, Serializable {
 
     private final String label;
     private final int number;

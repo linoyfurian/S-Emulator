@@ -36,10 +36,6 @@ public class ConstantAssignmentInstruction extends AbstractInstruction implement
         return (getVariable().getRepresentation() + " <- " + constantValue);
     }
 
-    long getConstantValue() {
-        return constantValue;
-    }
-
     @Override
     public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber) {
         List<Instruction> nextInstructions = new ArrayList<>();

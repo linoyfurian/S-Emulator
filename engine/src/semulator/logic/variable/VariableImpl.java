@@ -1,8 +1,9 @@
 package semulator.logic.variable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class VariableImpl implements Variable {
+public class VariableImpl implements Variable, Serializable {
 
     private final VariableType type;
     private final int number;

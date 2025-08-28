@@ -12,6 +12,7 @@ import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramDto;
 
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,5 +123,37 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     @Override
     public void resetProgramRuns(){
         this.programRuns = new ArrayList<>();
+    }
+
+    @Override
+    public void saveState(Path filePath) throws IOException {
+        if (filePath == null) {
+            throw new IOException("Error: Path is null");
+        }
+        EngineState currentState = new EngineState(this.program, this.isLoaded, this.programRuns);
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(Files.newOutputStream(filePath)))) {
+            oos.writeObject(currentState);
+            oos.flush();
+        }
+    }
+
+    @Override
+    public void loadState(Path filePath) throws IOException, ClassNotFoundException {
+        if (filePath == null) {
+            throw new IOException("Error: Path is null");
+        }
+        if (!Files.exists(filePath)) {
+            throw new FileNotFoundException("Error: File not found: " + filePath);
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(Files.newInputStream(filePath)))) {
+            Object obj = ois.readObject();
+            EngineState state = (EngineState) obj;
+
+            this.program = state.getProgram();
+            this.isLoaded = state.getLoadedState();
+            this.programRuns = new ArrayList<>(state.getProgramRuns());
+        }
     }
 }
