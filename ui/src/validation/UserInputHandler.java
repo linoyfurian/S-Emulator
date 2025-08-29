@@ -41,13 +41,11 @@ public class UserInputHandler {
 
     public static Path readFullPathFromUser() {
         Path path = null;
-        System.out.print("Enter full XML file path: ");
+        System.out.print("Please enter full XML file path: ");
         String inputPath = scanner.nextLine().trim();
 
         if (inputPath.isEmpty())
             throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
-        if (inputPath.matches(".*[\\u0590-\\u05FF].*"))
-            throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
         try {
             path = Paths.get(inputPath);
         } catch (InvalidPathException e) {
@@ -64,7 +62,7 @@ public class UserInputHandler {
         while (true) {
             System.out.println("Max Degree of Expand: " + maxDegreeOfExpand);
             if(maxDegreeOfExpand == 0)
-                System.out.print("Only expansion 0 is available. Please enter 0 to display the program: ");
+                System.out.print("Only expansion 0 is available. Please enter 0: ");
             else
                 System.out.print("Please enter desired expand degree (0 - " + maxDegreeOfExpand + "): ");
 
@@ -137,8 +135,6 @@ public class UserInputHandler {
 
         if (inputPath.isEmpty())
             throw new IllegalArgumentException("Error: path cannot be empty. You need to enter a full path.");
-        if (inputPath.matches(".*[\\u0590-\\u05FF].*"))
-            throw new IllegalArgumentException("Error: path contains invalid characters. The path must use English letters.");
         try {
             path = Paths.get(inputPath);
         } catch (InvalidPathException e) {
