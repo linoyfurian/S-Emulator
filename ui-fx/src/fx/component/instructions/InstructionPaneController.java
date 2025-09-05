@@ -47,6 +47,7 @@ public class InstructionPaneController {
     }
 
     public void displayProgram(ProgramDto programDetails){
+        instructionData.clear();
         List<InstructionDto> instructions = programDetails.getInstructions();
         instructionData.addAll(instructions);
     }

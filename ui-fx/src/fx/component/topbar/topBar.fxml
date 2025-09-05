@@ -29,8 +29,8 @@
          <children>
             <ComboBox prefWidth="150.0" promptText="Program / function selector" />
             <Button mnemonicParsing="false" styleClass="command-button" text="Collapse" />
-            <Label text="Curren/max degree" />
-            <Button mnemonicParsing="false" styleClass="command-button" text="Expand" />
+            <Label fx:id="degreeLabel" text="Curren/max degree" />
+            <Button mnemonicParsing="false" onAction="#btnExpandListener" styleClass="command-button" text="Expand" />
             <Label text="Highlight selection" />
          </children>
          <padding>

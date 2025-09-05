@@ -15,6 +15,7 @@ public class ProgramDto {
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
     private final List<String> labelsInOrder;
+    private final int programDegree;
 
 
     public ProgramDto(Program program) {
@@ -66,6 +67,8 @@ public class ProgramDto {
         for (Instruction instruction : programInstructions) {
             this.instructions.add(new InstructionDto(instruction));
         }
+
+        this.programDegree = program.getDegree();
     }
 
     public String getProgramName() {
@@ -82,6 +85,10 @@ public class ProgramDto {
 
     public List<InstructionDto> getInstructions() {
         return instructions;
+    }
+
+    public int getProgramDegree() {
+        return programDegree;
     }
 }
 

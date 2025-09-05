@@ -14,12 +14,14 @@ public class ProgramImpl implements Program, Serializable {
     private final List<Instruction> instructions;
     private final LinkedHashSet<Variable> variables;
     private final LinkedHashSet<Label> labels;
+    private final int degree;
 
-    public ProgramImpl(String name) {
+    public ProgramImpl(String name, int degree) {
         this.name = name;
         instructions = new ArrayList<>();
         variables = new LinkedHashSet<>();
         labels = new LinkedHashSet<>();
+        this.degree = degree;
 
     }
 
@@ -111,9 +113,10 @@ public class ProgramImpl implements Program, Serializable {
         long instructionNumber;
         Program nextExpandedProgram;
         Program programToExpand = expandedProgram;
+        int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new ProgramImpl(programToExpand.getName()); //new program
+            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
@@ -141,5 +144,9 @@ public class ProgramImpl implements Program, Serializable {
 
         expandedProgram = programToExpand;
         return expandedProgram;
+    }
+
+    public int getDegree() {
+        return degree;
     }
 }

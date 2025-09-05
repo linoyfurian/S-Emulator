@@ -1,23 +1,24 @@
 package fx.component.topbar;
 
-import jakarta.xml.bind.JAXBException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import semulator.api.LoadReport;
 import fx.system.SEmulatorSystemController;
-import semulator.api.dto.ProgramDto;
-import semulator.core.SEmulatorEngine;
-import semulator.core.SEmulatorEngineImpl;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
+
 
 public class TopBarController {
     private SEmulatorSystemController mainController;
 
     @FXML
     private TextField loadFileTextField;
+
+
+    @FXML
+    private Label degreeLabel;
+
 
     public void setMainController(SEmulatorSystemController mainController) {
         this.mainController = mainController;
@@ -26,18 +27,12 @@ public class TopBarController {
 
     public void btnLoadFileListener(ActionEvent event) {
         String fileName = loadFileTextField.getText().trim();
-        System.out.println("Loading file: " + fileName);
         if (fileName.isEmpty()) {
             return;
         }
 
         if (mainController != null) {
             mainController.btnLoadFileListener(fileName);
-            System.out.println("!!!!!!! ");
-        }
-
-        if(mainController==null) {
-            System.out.println("NULLLLLL ");
         }
     }
 
@@ -45,32 +40,28 @@ public class TopBarController {
         loadFileTextField.setText(newText);
     }
 
-//
-//    public ProgramDto btnLoadFileListener(ActionEvent event) {
-//        LoadReport loadReport = null;
-//        Path path = null;
-//
-//        String fileName = loadFileTextField.getText();
-//        path = Paths.get(fileName);
-//        System.out.println(path);
-//        try {
-//            loadReport = engine.loadProgramDetails(path);
-//        }
-//        catch(JAXBException e){
-//            loadFileTextField.setText("Error");
-//        }
-//        if(loadReport == null){
-//            return null;
-//        }
-//        if(loadReport.isSuccess()) {
-//            loadFileTextField.setText("Program Loaded successfully");
-//            ProgramDto programDetails = engine.displayProgram();
-//            System.out.println("programDetails");
-//            return programDetails;
-//        }
-//        else{
-//            loadFileTextField.setText(loadReport.getMessage());
-//        }
-//        return null;
-//    }
+    public void updateDegreeLabel(int programDegree, int maxDegree){
+        degreeLabel.setText(programDegree + "/" + maxDegree);
+    }
+
+    public void btnExpandListener(ActionEvent event) {
+        String degree = degreeLabel.getText();
+        String[] degreeValues = degree.split("/");
+        if (degreeValues.length != 2) {
+            return; // Invalid format
+        }
+        int currentDegree;
+        int maxDegree;
+        try {
+            currentDegree = Integer.parseInt(degreeValues[0].trim());
+            maxDegree = Integer.parseInt(degreeValues[1].trim());
+        } catch (NumberFormatException e) {
+            return; // Invalid numbers
+        }
+
+        if (currentDegree < maxDegree && mainController != null) {
+            mainController.btnExpandListener(currentDegree + 1);
+        }
+    }
+
 }
