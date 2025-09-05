@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="480.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
+   <children>
+      <Label id="debugger-title" text="Debugger\Execution" textAlignment="CENTER">
+         <padding>
+            <Insets bottom="5.0" left="170.0" top="5.0" />
+         </padding>
+         <opaqueInsets>
+            <Insets left="80.0" />
+         </opaqueInsets>
+      </Label>
+      <HBox maxHeight="30.0" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" spacing="3.0">
+         <children>
+            <Button mnemonicParsing="false" prefWidth="144.0" text="Start Regular Execution" />
+            <Button mnemonicParsing="false" text="Start Debug Execution" />
+            <Button mnemonicParsing="false" text="Stop" />
+            <Button mnemonicParsing="false" text="Resume" />
+            <Button mnemonicParsing="false" text="Step over" />
+         </children>
+         <padding>
+            <Insets left="3.0" />
+         </padding>
+      </HBox>
+      <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0">
+         <items>
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="panel-left">
+               <children>
+                  <Label styleClass="panel-title" text="Variables:">
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </Label>
+                  <TableView prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="name" />
+                      <TableColumn prefWidth="75.0" text="value" />
+                    </columns>
+                  </TableView>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label styleClass="sub-title-panel" text="Cycles: " />
+                        <Label id="cycles-value" text="0" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="5.0" top="3.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="panel-right">
+               <children>
+                  <Label styleClass="panel-title" text="Execution Inputs:">
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </Label>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>

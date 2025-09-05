@@ -1,0 +1,20 @@
+#debugger-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.sub-title-panel {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+}
+
+#cycles-value {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a5bd7;
+    -fx-padding: 0 15 0 3;
+}
+
+.panel-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}

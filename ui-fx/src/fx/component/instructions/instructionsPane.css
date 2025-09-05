@@ -1,0 +1,50 @@
+/* Root container */
+.instructions-root {
+    -fx-padding: 8;
+    -fx-spacing: 6;
+    -fx-background-color: #fafafa;
+}
+
+/* ====== TableView styling ====== */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-table-cell-border-color: #eaeaea;
+    -fx-padding: 4;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #f9f9f9, #eaeaea);
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #444;
+}
+
+.table-row-cell {
+    -fx-cell-size: 28px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fcfcfc;
+}
+.table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d0e6ff;
+    -fx-text-fill: black;
+}
+
+
