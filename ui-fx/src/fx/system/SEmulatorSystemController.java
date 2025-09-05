@@ -5,7 +5,6 @@ import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
 import fx.component.topbar.TopBarController;
 import jakarta.xml.bind.JAXBException;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import semulator.api.LoadReport;
 import semulator.api.dto.ProgramDto;
@@ -25,7 +24,6 @@ public class SEmulatorSystemController {
 
     @FXML
     public void initialize() {
-        System.out.println(this);
         if (topBarController != null) {
             topBarController.setMainController(this);
         }
@@ -70,6 +68,16 @@ public class SEmulatorSystemController {
     }
 
     public void btnExpandListener(int degreeToExpand) {
+        ProgramDto programDetails = engine.expand(degreeToExpand);
+        if(programDetails != null) {
+            instructionsController.displayProgram(programDetails);
+            int programDegree = programDetails.getProgramDegree();
+            int maxDegree = engine.getMaxDegreeOfExpand();
+            topBarController.updateDegreeLabel(programDegree, maxDegree);
+        }
+    }
+
+    public void btnCollapseListener(int degreeToExpand) {
         ProgramDto programDetails = engine.expand(degreeToExpand);
         if(programDetails != null) {
             instructionsController.displayProgram(programDetails);

@@ -64,4 +64,24 @@ public class TopBarController {
         }
     }
 
+    public void btnCollapseListener(ActionEvent event) {
+        String degree = degreeLabel.getText();
+        String[] degreeValues = degree.split("/");
+        if (degreeValues.length != 2) {
+            return; // Invalid format
+        }
+        int currentDegree;
+        int maxDegree;
+        try {
+            currentDegree = Integer.parseInt(degreeValues[0].trim());
+            maxDegree = Integer.parseInt(degreeValues[1].trim());
+        } catch (NumberFormatException e) {
+            return; // Invalid numbers
+        }
+
+        if (currentDegree > 0 && mainController != null) {
+            mainController.btnCollapseListener(currentDegree - 1);
+        }
+    }
+
 }
