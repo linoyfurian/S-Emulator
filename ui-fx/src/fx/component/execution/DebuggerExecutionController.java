@@ -2,7 +2,6 @@ package fx.component.execution;
 
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ProgramDto;
 
 import java.util.HashMap;
@@ -38,6 +36,8 @@ public class DebuggerExecutionController {
     @FXML private TableColumn<VariableRow, String> nameCol;
     @FXML private TableColumn<VariableRow, String> valueCol;
     @FXML private TableView<VariableRow> variablesTable;
+
+    @FXML private Label cyclesLabel;
 
     @FXML
     private void initialize() {
@@ -203,6 +203,8 @@ public class DebuggerExecutionController {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
+
+        cyclesLabel.setText(String.valueOf(runResult.getCycles()));
 
     }
 }
