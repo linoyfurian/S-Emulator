@@ -8,6 +8,7 @@ import fx.component.topbar.TopBarController;
 import jakarta.xml.bind.JAXBException;
 import javafx.fxml.FXML;
 import semulator.api.LoadReport;
+import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ProgramDto;
 import semulator.core.SEmulatorEngine;
@@ -65,6 +66,7 @@ public class SEmulatorSystemController {
                 int maxDegree = engine.getMaxDegreeOfExpand();
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
                 topBarController.refreshHighlightOptions(programDetails);
+                debuggerController.setProgram(programDetails);
             }
         }
         else{
@@ -80,6 +82,7 @@ public class SEmulatorSystemController {
             int maxDegree = engine.getMaxDegreeOfExpand();
             topBarController.updateDegreeLabel(programDegree, maxDegree);
             topBarController.refreshHighlightOptions(programDetails);
+            debuggerController.setProgram(programDetails);
         }
     }
 
@@ -91,11 +94,20 @@ public class SEmulatorSystemController {
             int maxDegree = engine.getMaxDegreeOfExpand();
             topBarController.updateDegreeLabel(programDegree, maxDegree);
             topBarController.refreshHighlightOptions(programDetails);
+            debuggerController.setProgram(programDetails);
         }
     }
 
     public void onHighlightChangedListener(String highlightSelected){
         instructionsController.highlightSelectionOnTable(highlightSelected);
+    }
+
+    public void btnStartRegularExecutionListener(long... inputs){
+        int degreeOfRun = topBarController.getCurrentDegree();
+        ExecutionRunDto runResult= engine.runProgram(degreeOfRun,inputs);
+        if(runResult!=null){
+            debuggerController.updateRunResult(runResult);
+        }
     }
 
 }

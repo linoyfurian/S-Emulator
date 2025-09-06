@@ -6,18 +6,16 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ParentInstructionDto;
 import semulator.api.dto.ProgramDto;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +73,7 @@ public class InstructionPaneController {
                 new SimpleIntegerProperty(cellData.getValue().getCycles()).asObject());
 
         tblChainInstructions.setItems(instructionChainData);
+
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
@@ -123,7 +122,7 @@ public class InstructionPaneController {
 
         List<InstructionDto> tableRows = tblInstructions.getItems();
         Set<Long> instructionsNumbersToHighlight = new HashSet<>();
-        Set<InstructionDto> selectedInstructionsToHighlight = new HashSet<>();
+       // Set<InstructionDto> selectedInstructionsToHighlight = new HashSet<>();
 
         if (tableRows == null || tableRows.isEmpty()) {
             return;
@@ -145,6 +144,7 @@ public class InstructionPaneController {
         tblInstructions.applyCss();
         tblInstructions.layout();
 
+        //clear all visible rows
         for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
             if (row instanceof TableRow tableRow)
                 tableRow.getStyleClass().remove(HIGHLIGHT_STYLE_CLASS);

@@ -19,8 +19,8 @@
                     <fx:include fx:id="instructions" source="../component/instructions/instructionsPane.fxml" VBox.vgrow="ALWAYS" />
                 </VBox>
                 <VBox alignment="TOP_LEFT">
-                    <fx:include fx:id="debugger" source="../component/execution/debuggerExecution.fxml" VBox.vgrow="ALWAYS" />
-                 <fx:include fx:id="history" source="../component/history/history.fxml" />
+                    <fx:include fx:id="debugger" maxHeight="700.0" maxWidth="500.0" source="../component/execution/debuggerExecution.fxml" VBox.vgrow="ALWAYS" />
+                 <fx:include fx:id="history" source="../component/history/history.fxml" VBox.vgrow="ALWAYS" />
                 </VBox>
             </items>
         </SplitPane>

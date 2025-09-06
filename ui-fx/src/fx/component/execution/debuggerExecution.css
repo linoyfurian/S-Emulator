@@ -18,3 +18,8 @@
     -fx-font-weight: bold;
     -fx-text-fill: #333;
 }
+
+.input-variable {
+    -fx-font-weight: bold;
+    -fx-text-fill: #193d5c;
+}
