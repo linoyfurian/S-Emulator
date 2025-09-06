@@ -8,12 +8,15 @@ import fx.component.topbar.TopBarController;
 import jakarta.xml.bind.JAXBException;
 import javafx.fxml.FXML;
 import semulator.api.LoadReport;
+import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ProgramDto;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.List;
 
 public class SEmulatorSystemController {
 
@@ -61,9 +64,7 @@ public class SEmulatorSystemController {
                 int programDegree = programDetails.getProgramDegree();
                 int maxDegree = engine.getMaxDegreeOfExpand();
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
-
-
-
+                topBarController.refreshHighlightOptions(programDetails);
             }
         }
         else{
@@ -78,6 +79,7 @@ public class SEmulatorSystemController {
             int programDegree = programDetails.getProgramDegree();
             int maxDegree = engine.getMaxDegreeOfExpand();
             topBarController.updateDegreeLabel(programDegree, maxDegree);
+            topBarController.refreshHighlightOptions(programDetails);
         }
     }
 
@@ -88,6 +90,12 @@ public class SEmulatorSystemController {
             int programDegree = programDetails.getProgramDegree();
             int maxDegree = engine.getMaxDegreeOfExpand();
             topBarController.updateDegreeLabel(programDegree, maxDegree);
+            topBarController.refreshHighlightOptions(programDetails);
         }
     }
+
+    public void onHighlightChangedListener(String highlightSelected){
+        instructionsController.highlightSelectionOnTable(highlightSelected);
+    }
+
 }

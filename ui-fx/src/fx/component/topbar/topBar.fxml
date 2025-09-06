@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="top-bar-grid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="600.0" stylesheets="@topBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.topbar.TopBarController">
+<GridPane id="top-bar-grid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="700.0" stylesheets="@topBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.topbar.TopBarController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -31,7 +31,7 @@
             <Button mnemonicParsing="false" onAction="#btnCollapseListener" styleClass="command-button" text="Collapse" />
             <Label fx:id="degreeLabel" text="Curren/max degree" />
             <Button mnemonicParsing="false" onAction="#btnExpandListener" styleClass="command-button" text="Expand" />
-            <Label text="Highlight selection" />
+            <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="159.0" promptText="Highlight selection" />
          </children>
          <padding>
             <Insets left="5.0" top="1.0" />

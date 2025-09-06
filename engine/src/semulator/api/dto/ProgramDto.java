@@ -14,6 +14,7 @@ public class ProgramDto {
     private final String programName;
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
+    private final List<String> allVariablesInOrder;
     private final List<String> labelsInOrder;
     private final int programDegree;
 
@@ -23,14 +24,17 @@ public class ProgramDto {
 
         this.inputVariablesInOrder =  new ArrayList<>();
         this.labelsInOrder = new ArrayList<>();
+        this.allVariablesInOrder = new ArrayList<>();
 
         List<Integer> labelsNumbers = new ArrayList<>();
-        List<Integer> variablesNumbers = new ArrayList<>();
+        List<Integer> inputVariablesNumbers = new ArrayList<>();
+        List<Integer> workVariablesNumbers = new ArrayList<>();
 
         LinkedHashSet<Variable> allVars = program.getVariables();
         LinkedHashSet<Label> labels = program.getLabels();
 
         boolean sawExit = false;
+        boolean sawY = false;
 
         for(Label label : labels) {
             if (label instanceof LabelImpl labelImpl)
@@ -51,14 +55,31 @@ public class ProgramDto {
         for(Variable variable : allVars) {
             if(variable!=null){
                 if (variable.getType() == VariableType.INPUT) {
-                    variablesNumbers.add(variable.getNumber());
+                    inputVariablesNumbers.add(variable.getNumber());
+                }
+                if (variable.getType() == VariableType.WORK) {
+                    workVariablesNumbers.add(variable.getNumber());
+                }
+                if (variable==Variable.RESULT) {
+                    sawY = true;
                 }
             }
         }
 
-        Collections.sort(variablesNumbers);
-        for(Integer number : variablesNumbers) {
+        Collections.sort(inputVariablesNumbers);
+        Collections.sort(workVariablesNumbers);
+
+        if(sawY){
+            allVariablesInOrder.add("y");
+        }
+
+        for(Integer number : inputVariablesNumbers) {
             inputVariablesInOrder.add(("x" + number));
+            allVariablesInOrder.add(("x" + number));
+        }
+
+        for(Integer number : workVariablesNumbers) {
+            allVariablesInOrder.add(("z" + number));
         }
 
         List<Instruction> programInstructions = program.getInstructions();
@@ -89,6 +110,10 @@ public class ProgramDto {
 
     public int getProgramDegree() {
         return programDegree;
+    }
+
+    public List<String> getAllVariablesInOrder() {
+        return allVariablesInOrder;
     }
 }
 

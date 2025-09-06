@@ -7,20 +7,27 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ParentInstructionDto;
 import semulator.api.dto.ProgramDto;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InstructionPaneController {
     private SEmulatorSystemController mainController;
     private ObservableList<InstructionDto> instructionData = FXCollections.observableArrayList();
     private ObservableList<ParentInstructionDto> instructionChainData = FXCollections.observableArrayList();
+    private static final String HIGHLIGHT_STYLE_CLASS = "highlight-row";
+    private static final String NO_SELECTION_TEXT = "— choose —";
 
     @FXML private TableView<InstructionDto> tblInstructions;
     @FXML private TableColumn<InstructionDto, String> colNumber;
@@ -88,6 +95,8 @@ public class InstructionPaneController {
         lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
         lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
 
+        clearAllRowHighlights();
+
     }
 
     private void showParentChain(InstructionDto selected) {
@@ -106,5 +115,86 @@ public class InstructionPaneController {
     @FXML void onInstructionSelectedListener(MouseEvent event) {
         InstructionDto sel = tblInstructions.getSelectionModel().getSelectedItem();
         showParentChain(sel);
+    }
+
+
+
+    public void highlightSelectionOnTable(String highlightSelected) {
+
+        List<InstructionDto> tableRows = tblInstructions.getItems();
+        Set<Long> instructionsNumbersToHighlight = new HashSet<>();
+        Set<InstructionDto> selectedInstructionsToHighlight = new HashSet<>();
+
+        if (tableRows == null || tableRows.isEmpty()) {
+            return;
+        }
+
+        tblInstructions.applyCss();
+        tblInstructions.layout();
+
+        clearAllRowHighlights();
+
+        boolean isInstructionToHighlight;
+        for (InstructionDto instruction : tableRows) {
+            isInstructionToHighlight = isInstructionContainsHighlightSelected(instruction, highlightSelected);
+            if (isInstructionToHighlight) {
+                instructionsNumbersToHighlight.add(instruction.getNumber());
+            }
+        }
+        tblInstructions.refresh();
+        tblInstructions.applyCss();
+        tblInstructions.layout();
+
+        for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
+            if (row instanceof TableRow tableRow)
+                tableRow.getStyleClass().remove(HIGHLIGHT_STYLE_CLASS);
+        }
+
+        for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
+            if (row instanceof TableRow tableRow) {
+                Object item = tableRow.getItem();
+                if (item instanceof InstructionDto instruction) {
+                    if (instruction != null) {
+                        if(instructionsNumbersToHighlight.contains(instruction.getNumber())) {
+                            tableRow.getStyleClass().add(HIGHLIGHT_STYLE_CLASS);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean isInstructionContainsHighlightSelected(InstructionDto instructionToCheck, String highlightSelected) {
+        boolean result = false;
+        List<String> allVariables = instructionToCheck.getAllVariables();
+        List<String> allLabels = instructionToCheck.getAllLabels();
+
+        for (String variable : allVariables) {
+            if(variable.equals(highlightSelected)) {
+                if(!(instructionToCheck.getCommand().startsWith("GOTO"))) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        for (String label : allLabels) {
+            if(label.equals(highlightSelected)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private void clearAllRowHighlights() {
+        // Make sure rows are realized before lookup
+        tblInstructions.applyCss();
+        tblInstructions.layout();
+
+        for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
+            if (row instanceof TableRow tableRow)
+                tableRow.getStyleClass().remove(HIGHLIGHT_STYLE_CLASS);
+        }
     }
 }

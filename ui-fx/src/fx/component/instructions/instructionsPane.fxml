@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="400.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="420.0" stylesheets="@instructionsPane.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.instructions.InstructionPaneController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="420.0" stylesheets="@instructionsPane.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.instructions.InstructionPaneController">
    <children>
       <TableView fx:id="tblInstructions" maxHeight="400.0" onMouseClicked="#onInstructionSelectedListener" prefHeight="300.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
