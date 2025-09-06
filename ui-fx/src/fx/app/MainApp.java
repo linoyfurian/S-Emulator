@@ -20,7 +20,7 @@ public class MainApp extends Application {
         // אם צריך להזרים תלותים לתוך ה-root (לא חובה אם ה-root יוצר engine בעצמו)
         // system.setEngine(new SEmulatorEngineImpl());
 
-        Scene scene = new Scene(root, 1000, 500);
+        Scene scene = new Scene(root, 1100, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

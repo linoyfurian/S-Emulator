@@ -1,5 +1,6 @@
 package fx.system;
 
+import fx.app.util.DisplayUtils;
 import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
@@ -60,6 +61,9 @@ public class SEmulatorSystemController {
                 int programDegree = programDetails.getProgramDegree();
                 int maxDegree = engine.getMaxDegreeOfExpand();
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
+
+
+
             }
         }
         else{
