@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ParentInstructionDto;
 import semulator.api.dto.ProgramDto;
@@ -76,6 +77,8 @@ public class InstructionPaneController {
     public void displayProgram(ProgramDto programDetails){
         int numberOfBasicInstruction, numberOfSyntheticInstruction;
         instructionData.clear();
+        instructionChainData.clear();
+
         List<InstructionDto> instructions = programDetails.getInstructions();
         instructionData.addAll(instructions);
 
@@ -85,5 +88,23 @@ public class InstructionPaneController {
         lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
         lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
 
+    }
+
+    private void showParentChain(InstructionDto selected) {
+        instructionChainData.clear();
+        if (selected == null) {
+            return; // nothing selected
+        }
+        List<ParentInstructionDto> parents = selected.getParents();
+        if (parents == null || parents.isEmpty()) {
+            // leave table empty; placeholder will be shown
+            return;
+        }
+        instructionChainData.addAll(parents);
+    }
+
+    @FXML void onInstructionSelectedListener(MouseEvent event) {
+        InstructionDto sel = tblInstructions.getSelectionModel().getSelectedItem();
+        showParentChain(sel);
     }
 }

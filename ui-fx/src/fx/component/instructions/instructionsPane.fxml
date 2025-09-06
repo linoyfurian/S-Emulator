@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.geometry.Insets?>
 <VBox maxHeight="400.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="420.0" stylesheets="@instructionsPane.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.instructions.InstructionPaneController">
    <children>
-      <TableView fx:id="tblInstructions" maxHeight="400.0" prefHeight="300.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="tblInstructions" maxHeight="400.0" onMouseClicked="#onInstructionSelectedListener" prefHeight="300.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn id="instructions-table-number" fx:id="colNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" text="number" />
           <TableColumn id="instructions-table-bs" fx:id="colType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" text="B\S" />
