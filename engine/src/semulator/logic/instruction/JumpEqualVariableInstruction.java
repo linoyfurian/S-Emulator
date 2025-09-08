@@ -11,9 +11,10 @@ import semulator.logic.variable.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class JumpEqualVariableInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction{
+public class JumpEqualVariableInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction, SimpleInstruction {
 
     private final Label JEVariableLabel;
     private final Variable variableName;
@@ -82,7 +83,8 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
 
         availableZNumber1 = ExpansionUtils.findAvailableZNumber(zUsedNumbers); //z1
         zUsedNumbers.add(availableZNumber1);
-        availableZVariable1 = new VariableImpl(VariableType.WORK, availableZNumber1);
+        String zVariableName = "z" + availableZNumber1;
+        availableZVariable1 = new VariableImpl(VariableType.WORK, availableZNumber1, zVariableName);
 
         newInstruction = new AssignmentInstruction(availableZVariable1, this.getLabel(), instructionNumber, this.getVariable(), this); //z1<-V
         nextInstructions.add(newInstruction);
@@ -90,7 +92,8 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
 
         availableZNumber2 = ExpansionUtils.findAvailableZNumber(zUsedNumbers); //z2
         zUsedNumbers.add(availableZNumber2);
-        availableZVariable2 = new VariableImpl(VariableType.WORK, availableZNumber2);
+        zVariableName = "z" + availableZNumber2;
+        availableZVariable2 = new VariableImpl(VariableType.WORK, availableZNumber2, zVariableName);
 
         newInstruction = new AssignmentInstruction(availableZVariable2, instructionNumber, this.variableName, this); //z2<-V'
         nextInstructions.add(newInstruction);
@@ -136,5 +139,37 @@ public class JumpEqualVariableInstruction extends AbstractInstruction implements
         nextInstructions.add(newInstruction);
 
         return nextInstructions;
+    }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl, newJEVariableLabel;
+        Variable variable, newVariableImpl, newJEVariable;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check JEV label
+        newJEVariableLabel = ExpansionUtils.validateOrCreateLabel(this.JEVariableLabel, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        //check JEV variable
+        newJEVariable = ExpansionUtils.validateOrCreateVariable(this.variableName, zUsedNumbers, oldAndNew);
+
+        newInstruction = new JumpEqualVariableInstruction(newVariableImpl, newLabelImpl, newJEVariableLabel, newJEVariable, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new JumpEqualVariableInstruction(this.getVariable(),this.getLabel(), this.JEVariableLabel, this.variableName, number, this.getParent());
+        return newInstruction;
     }
 }

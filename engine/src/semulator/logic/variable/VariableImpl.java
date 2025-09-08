@@ -7,10 +7,12 @@ public class VariableImpl implements Variable, Serializable {
 
     private final VariableType type;
     private final int number;
+    private final String variableName;
 
-    public VariableImpl(VariableType type, int number) {
+    public VariableImpl(VariableType type, int number, String VariableName) {
         this.type = type;
         this.number = number;
+        this.variableName = VariableName;
     }
 
     @Override
@@ -25,7 +27,10 @@ public class VariableImpl implements Variable, Serializable {
 
     @Override
     public String getRepresentation() {
-        return type.getVariableRepresentation(number);
+        if(type==VariableType.FUNCTION)
+            return variableName;
+        else
+            return type.getVariableRepresentation(number);
     }
 
     @Override

@@ -1,14 +1,17 @@
 package semulator.logic.instruction;
 
 import semulator.logic.execution.ExecutionContext;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction, UnexpandableInstruction{
+public class JumpNotZeroInstruction extends AbstractInstruction implements JumpInstruction, UnexpandableInstruction, SimpleInstruction {
 
     private final Label JNZLabel;
 
@@ -53,6 +56,36 @@ public class JumpNotZeroInstruction extends AbstractInstruction implements JumpI
     @Override
     public Instruction cloneInstructionWithNewNumber(long number){
         Instruction newInstruction = new JumpNotZeroInstruction(getVariable(), this.JNZLabel, getLabel(), number, this.getParent());
+        return newInstruction;
+    }
+
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl, newJNZLabel;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        //check JNZ label
+        newJNZLabel = ExpansionUtils.validateOrCreateLabel(this.JNZLabel, usedLabelsNumbers, oldAndNew);
+
+        newInstruction = new JumpNotZeroInstruction(newVariableImpl, newJNZLabel, newLabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new JumpNotZeroInstruction(this.getVariable(),this.JNZLabel, this.getLabel(), number, this.getParent());
         return newInstruction;
     }
 }

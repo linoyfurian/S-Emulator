@@ -1,17 +1,21 @@
 package semulator.logic.instruction;
 
+import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.instruction.expansion.ExpansionUtils;
+import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
+import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
 import semulator.logic.variable.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class GoToLabelInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction {
+public class GoToLabelInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction, SimpleInstruction {
 
     private final Label gotoLabel;
 
@@ -55,7 +59,8 @@ public class GoToLabelInstruction extends AbstractInstruction implements JumpIns
         int newZ;
         newZ= ExpansionUtils.findAvailableZNumber(zUsedNumbers);
         zUsedNumbers.add(newZ);
-        Variable newVariable = new VariableImpl(VariableType.WORK, newZ); //z1
+        String zVariableName = "z" + newZ;
+        Variable newVariable = new VariableImpl(VariableType.WORK, newZ, zVariableName); //z1
 
         Instruction newInstruction = new IncreaseInstruction(newVariable, this.getLabel(), instructionNumber, this); //z1<-z1+1
         nextInstructions.add(newInstruction);
@@ -65,5 +70,31 @@ public class GoToLabelInstruction extends AbstractInstruction implements JumpIns
         nextInstructions.add(newInstruction2);
 
         return nextInstructions;
+    }
+
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl, gotoLabel, newGotoLabelImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check goto label
+        gotoLabel = this.gotoLabel;
+        newGotoLabelImpl = ExpansionUtils.validateOrCreateLabel(gotoLabel, usedLabelsNumbers, oldAndNew);
+
+        newInstruction = new GoToLabelInstruction(null, newLabelImpl, newGotoLabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new GoToLabelInstruction(this.getVariable(),this.getLabel(), this.gotoLabel,  number, this.getParent());
+        return newInstruction;
     }
 }

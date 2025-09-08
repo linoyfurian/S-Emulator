@@ -18,8 +18,12 @@ public enum VariableType implements Serializable {
     WORK {
         @Override
         public String getVariableRepresentation(int number) {
-            return "z" + number;
-        }
+            return "z" + number;}
+    },
+    FUNCTION {
+        @Override
+        public String getVariableRepresentation(int number) {
+            return "f" + number;}
     };
 
     public abstract String getVariableRepresentation(int number);

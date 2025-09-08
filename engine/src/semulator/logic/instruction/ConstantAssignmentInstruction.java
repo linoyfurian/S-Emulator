@@ -1,15 +1,20 @@
 package semulator.logic.instruction;
 
+import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.execution.ExecutionContext;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
+import semulator.logic.label.LabelImpl;
 import semulator.logic.variable.Variable;
+import semulator.logic.variable.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class ConstantAssignmentInstruction extends AbstractInstruction implements ExpandableInstruction {
+public class ConstantAssignmentInstruction extends AbstractInstruction implements ExpandableInstruction, SimpleInstruction {
 
     private final long constantValue;
 
@@ -53,5 +58,31 @@ public class ConstantAssignmentInstruction extends AbstractInstruction implement
             instructionNumber++;
         }
         return nextInstructions;
+    }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Variable variable, newVariableImpl;
+        Label label, newLabelImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        newInstruction = new ConstantAssignmentInstruction(newVariableImpl, newLabelImpl, this.constantValue, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new ConstantAssignmentInstruction(this.getVariable(),this.getLabel(), this.constantValue, number, this.getParent());
+        return newInstruction;
     }
 }

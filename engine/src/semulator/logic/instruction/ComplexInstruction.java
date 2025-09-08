@@ -1,0 +1,15 @@
+package semulator.logic.instruction;
+
+import semulator.logic.execution.ExecutionContext;
+import semulator.logic.label.Label;
+import semulator.logic.program.Program;
+import semulator.logic.program.ProgramImpl;
+
+import java.util.List;
+import java.util.Set;
+
+public interface ComplexInstruction {
+    Label execute(ExecutionContext context, ProgramImpl program);
+    List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, ProgramImpl program);
+    String getInstructionDescription(ProgramImpl program);
+}

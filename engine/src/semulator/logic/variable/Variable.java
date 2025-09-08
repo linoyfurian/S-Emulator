@@ -5,5 +5,5 @@ public interface Variable {
     String getRepresentation();
     int getNumber();
 
-    Variable RESULT = new VariableImpl(VariableType.RESULT, 0);
+    Variable RESULT = new VariableImpl(VariableType.RESULT, 0,"y");
 }

@@ -1,5 +1,6 @@
 package semulator.logic.instruction;
 
+import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
@@ -11,10 +12,11 @@ import semulator.logic.variable.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
-public class AssignmentInstruction extends AbstractInstruction implements ExpandableInstruction {
+public class AssignmentInstruction extends AbstractInstruction implements ExpandableInstruction, SimpleInstruction {
 
     private final Variable assignedVariable;
 
@@ -93,7 +95,8 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
 
         availableZnumber = ExpansionUtils.findAvailableZNumber(zUsedNumbers);
         zUsedNumbers.add(availableZnumber);
-        availableZvariable = new VariableImpl(VariableType.WORK, availableZnumber); //z1
+        String zVariableName = "z" + availableZnumber;
+        availableZvariable = new VariableImpl(VariableType.WORK, availableZnumber, zVariableName); //z1
 
         newInstruction = new IncreaseInstruction(availableZvariable, instructionNumber, this); //z1<-z1+1
         nextInstructions.add(newInstruction);
@@ -127,5 +130,35 @@ public class AssignmentInstruction extends AbstractInstruction implements Expand
         nextInstructions.add(newInstruction);
 
         return nextInstructions;
+    }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Variable variable, assignedVariable, newVariableImpl, newAssignedVariableImpl;
+        Label label, newLabelImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        //check assigned variable
+        assignedVariable= this.assignedVariable;
+        newAssignedVariableImpl = ExpansionUtils.validateOrCreateVariable(assignedVariable, zUsedNumbers, oldAndNew);
+
+        newInstruction = new AssignmentInstruction(newVariableImpl, newLabelImpl, instructionNumber, newAssignedVariableImpl, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new AssignmentInstruction(this.getVariable(),this.getLabel(), number, this.assignedVariable, this.getParent());
+        return newInstruction;
     }
 }

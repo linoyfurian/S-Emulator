@@ -9,9 +9,10 @@ import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class JumpZeroInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction{
+public class JumpZeroInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction, SimpleInstruction {
 
     private final Label JZLabel;
 
@@ -77,5 +78,35 @@ public class JumpZeroInstruction extends AbstractInstruction implements JumpInst
         nextInstructions.add(newInstruction);
 
         return nextInstructions;
+    }
+
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl, newJZLabel;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        //check JZ label
+        newJZLabel = ExpansionUtils.validateOrCreateLabel(this.JZLabel, usedLabelsNumbers, oldAndNew);
+
+        newInstruction = new JumpZeroInstruction(newVariableImpl, newJZLabel, newLabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new JumpZeroInstruction(this.getVariable(),this.JZLabel, this.getLabel(), number, this.getParent());
+        return newInstruction;
     }
 }

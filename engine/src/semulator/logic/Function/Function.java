@@ -1,31 +1,32 @@
-package semulator.logic.program;
+package semulator.logic.Function;
 
-import semulator.logic.Function.Function;
-import semulator.logic.instruction.*;
+import semulator.logic.instruction.ExpandableInstruction;
+import semulator.logic.instruction.Instruction;
+import semulator.logic.instruction.JumpInstruction;
+import semulator.logic.instruction.UnexpandableInstruction;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
+import semulator.logic.program.Program;
 import semulator.logic.variable.Variable;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class ProgramImpl implements Program, Serializable {
-
+public class Function implements Program, Serializable {
     private final String name;
     private final List<Instruction> instructions;
     private final LinkedHashSet<Variable> variables;
     private final LinkedHashSet<Label> labels;
     private final int degree;
-    private final List<Program> functions;
+    private final String userString;
 
-    public ProgramImpl(String name, int degree) {
+    public Function(String name, String userString, int degree) {
         this.name = name;
+        this.userString = userString;
         instructions = new ArrayList<>();
         variables = new LinkedHashSet<>();
         labels = new LinkedHashSet<>();
         this.degree = degree;
-        functions = new ArrayList<>();
-
     }
 
     @Override
@@ -46,10 +47,6 @@ public class ProgramImpl implements Program, Serializable {
         for (Label label : instructionLabels) {
             this.labels.add(label);
         }
-    }
-
-    public void addFunction(Program function){
-        this.functions.add(function);
     }
 
     @Override
@@ -123,7 +120,7 @@ public class ProgramImpl implements Program, Serializable {
         int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
+            nextExpandedProgram = new semulator.logic.program.ProgramImpl(programToExpand.getName(), programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
@@ -157,7 +154,7 @@ public class ProgramImpl implements Program, Serializable {
         return degree;
     }
 
-    public List<Program> getFunctions() {
-        return functions;
+    public String getUserString() {
+        return userString;
     }
 }

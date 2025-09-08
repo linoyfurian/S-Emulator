@@ -1,6 +1,8 @@
 package semulator.core.loader;
 
-import semulator.core.loader.jaxb.schema.generated.*;
+import semulator.core.loader.jaxb.schema.version2.generated.*;
+
+import semulator.logic.Function.Function;
 import semulator.logic.instruction.*;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
@@ -10,11 +12,9 @@ import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
 import semulator.logic.variable.VariableType;
-
 import java.util.List;
 
-public class XmlProgramMapper {
-
+public class XmlProgramMapperV2 {
     public static Program fromSProgramToProgramImpl(SProgram sProgram) {
         String programName = sProgram.getName().trim();
         Program program = new ProgramImpl(programName, 0);
@@ -30,8 +30,18 @@ public class XmlProgramMapper {
             instructionCounter++;
         }
 
+        List<SFunction> functions = sProgram.getSFunctions().getSFunction();
+
+        for (SFunction function : functions) {
+            Program newProgram = fromSFunctionToFunction(function);
+            if(program instanceof ProgramImpl programImpl) {
+                programImpl.addFunction(newProgram);
+            }
+        }
+
         return program;
     }
+
 
     private static Instruction instructionMapper(SInstruction instruction, long instructionNumber){
         Instruction instructionToReturn = null;
@@ -105,7 +115,7 @@ public class XmlProgramMapper {
         return instructionToReturn;
     }
 
-    private static Variable variableMapper(String sVariable) {
+    public static Variable variableMapper(String sVariable) {
         Variable variableToReturn = null;
         char type;
         if(sVariable==null){
@@ -116,7 +126,7 @@ public class XmlProgramMapper {
 
         if(type == 'x' || type == 'X'){
             number = Integer.parseInt(sVariable.substring(1));
-            variableToReturn = new VariableImpl(VariableType.INPUT, number,sVariable);
+            variableToReturn = new VariableImpl(VariableType.INPUT, number, sVariable);
         }
         else if(type == 'y' || type == 'Y'){
             variableToReturn = Variable.RESULT;
@@ -125,11 +135,14 @@ public class XmlProgramMapper {
             number = Integer.parseInt(sVariable.substring(1));
             variableToReturn = new VariableImpl(VariableType.WORK, number, sVariable);
         }
+        else if(type == '('){
+            variableToReturn = new VariableImpl(VariableType.FUNCTION, 0, sVariable);
+        }
 
         return variableToReturn;
     }
 
-    private static Label labelMapper(String sLabel) {
+    public static Label labelMapper(String sLabel) {
         Label labelToReturn = null;
 
         if(sLabel == null){
@@ -151,6 +164,7 @@ public class XmlProgramMapper {
 
         return  labelToReturn;
     }
+
 
     private static long getConstantValue(List<SInstructionArgument> arguments, String nameOfArgument) {
         for (SInstructionArgument argument : arguments) {
@@ -181,5 +195,24 @@ public class XmlProgramMapper {
             }
         }
         return variableToReturn;
+    }
+
+
+    public static Program fromSFunctionToFunction(SFunction sFunction) {
+        String functionName = sFunction.getName().trim();
+        String userString = sFunction.getUserString().trim();
+        Program program = new Function(functionName, userString, 0);
+
+        SInstructions instructions = sFunction.getSInstructions();
+        long instructionCounter = 1;
+
+        List<SInstruction> instructionsList = instructions.getSInstruction();
+        for (SInstruction instruction : instructionsList) {
+            Instruction mapInstruction;
+            mapInstruction = instructionMapper(instruction, instructionCounter);
+            program.addInstruction(mapInstruction);
+            instructionCounter++;
+        }
+        return program;
     }
 }

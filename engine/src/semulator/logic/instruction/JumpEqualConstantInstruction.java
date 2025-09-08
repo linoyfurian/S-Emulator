@@ -11,9 +11,10 @@ import semulator.logic.variable.VariableType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class JumpEqualConstantInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction{
+public class JumpEqualConstantInstruction extends AbstractInstruction implements JumpInstruction, ExpandableInstruction, SimpleInstruction {
 
     private final long constantValue;
     private final Label JEConstantLabel;
@@ -71,7 +72,8 @@ public class JumpEqualConstantInstruction extends AbstractInstruction implements
 
         availableZNumber = ExpansionUtils.findAvailableZNumber(zUsedNumbers); //z1
         zUsedNumbers.add(availableZNumber);
-        availableZVariable = new VariableImpl(VariableType.WORK, availableZNumber);
+        String zVariableName = "z" + availableZNumber;
+        availableZVariable = new VariableImpl(VariableType.WORK, availableZNumber, zVariableName);
 
         newInstruction = new AssignmentInstruction(availableZVariable, this.getLabel(), instructionNumber, this.getVariable(), this); //z1<-V
         nextInstructions.add(newInstruction);
@@ -103,5 +105,34 @@ public class JumpEqualConstantInstruction extends AbstractInstruction implements
         nextInstructions.add(newInstruction);
 
         return nextInstructions;
+    }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl, newJEConstantLabel;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check JEC label
+        newJEConstantLabel = ExpansionUtils.validateOrCreateLabel(this.JEConstantLabel, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        newInstruction = new JumpEqualConstantInstruction(newVariableImpl, newLabelImpl, this.constantValue, newJEConstantLabel, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new JumpEqualConstantInstruction(this.getVariable(),this.getLabel(), this.constantValue, this.JEConstantLabel, number, this.getParent());
+        return newInstruction;
     }
 }

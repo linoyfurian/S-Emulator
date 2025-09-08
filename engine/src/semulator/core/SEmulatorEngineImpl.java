@@ -4,8 +4,8 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.api.LoadReport;
-import semulator.core.loader.XmlProgramMapper;
-import semulator.core.loader.jaxb.schema.generated.SProgram;
+import semulator.core.loader.XmlProgramMapperV2;
+import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
@@ -47,11 +47,11 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         }
 
         try {
-            JAXBContext ctx = JAXBContext.newInstance("semulator.core.loader.jaxb.schema.generated");
+            JAXBContext ctx = JAXBContext.newInstance("semulator.core.loader.jaxb.schema.version2.generated");
             Unmarshaller u = ctx.createUnmarshaller();
             SProgram sProgram = (SProgram) u.unmarshal(filePath.toFile());
             Program mappedProgram;
-            mappedProgram = XmlProgramMapper.fromSProgramToProgramImpl(sProgram);
+            mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram);
             boolean isValidProgram = mappedProgram.validate();
             if (isValidProgram) {
                 this.program = mappedProgram;

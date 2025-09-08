@@ -9,9 +9,10 @@ import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class ZeroVariableInstruction extends AbstractInstruction implements ExpandableInstruction {
+public class ZeroVariableInstruction extends AbstractInstruction implements ExpandableInstruction, SimpleInstruction {
     public ZeroVariableInstruction(Variable variable, long instructionNumber, Instruction parent) {
         super(InstructionData.ZERO_VARIABLE, variable, InstructionType.SYNTHETIC, 1, instructionNumber, parent);
     }
@@ -58,5 +59,31 @@ public class ZeroVariableInstruction extends AbstractInstruction implements Expa
         nextInstructions.add(newInstruction2);
 
         return nextInstructions;
+    }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent){
+        Instruction newInstruction;
+        Label label, newLabelImpl;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        newInstruction = new ZeroVariableInstruction(newVariableImpl, newLabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long number){
+        Instruction newInstruction;
+        newInstruction = new ZeroVariableInstruction(this.getVariable(), this.getLabel(), number, this.getParent());
+        return newInstruction;
     }
 }
