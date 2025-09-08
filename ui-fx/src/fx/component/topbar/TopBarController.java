@@ -6,16 +6,21 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import fx.system.SEmulatorSystemController;
+import javafx.stage.FileChooser;
 import semulator.api.dto.ProgramDto;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 
 public class TopBarController {
     private SEmulatorSystemController mainController;
-
+    private ProgressBar inlineProgressBar; //todo !!!!!!!!!!!
 
 
     @FXML private TextField loadFileTextField;
@@ -34,13 +39,17 @@ public class TopBarController {
 
 
     public void btnLoadFileListener(ActionEvent event) {
-        String fileName = loadFileTextField.getText().trim();
-        if (fileName.isEmpty()) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select program xml file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(loadFileTextField.getScene().getWindow());
+        if (selectedFile == null) {
             return;
         }
+        String xmlFile = selectedFile.getAbsolutePath();
 
         if (mainController != null) {
-            mainController.btnLoadFileListener(fileName);
+            mainController.btnLoadFileListener(xmlFile);
         }
     }
 

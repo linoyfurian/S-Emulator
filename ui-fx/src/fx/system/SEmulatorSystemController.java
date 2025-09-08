@@ -58,7 +58,6 @@ public class SEmulatorSystemController {
             return;
         }
         if(loadReport.isSuccess()) {
-            topBarController.setLoadFileText("Program Loaded successfully");
             ProgramDto programDetails = engine.displayProgram();
             if(programDetails!=null) {
                 instructionsController.displayProgram(programDetails);
@@ -67,10 +66,8 @@ public class SEmulatorSystemController {
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
                 topBarController.refreshHighlightOptions(programDetails);
                 debuggerController.setProgram(programDetails);
+                topBarController.setLoadFileText(fileName);
             }
-        }
-        else{
-            topBarController.setLoadFileText(loadReport.getMessage());
         }
     }
 
