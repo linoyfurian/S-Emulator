@@ -27,7 +27,7 @@
    <children>
       <HBox prefHeight="200.0" prefWidth="96.0" spacing="7.0" GridPane.columnSpan="6" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
          <children>
-            <ComboBox prefWidth="150.0" promptText="Program / function selector" />
+            <ComboBox fx:id="cmbProgramOrFunction" prefWidth="150.0" promptText="Program / function selector" />
             <Button mnemonicParsing="false" onAction="#btnCollapseListener" styleClass="command-button" text="Collapse" />
             <Label fx:id="degreeLabel" text="Curren/max degree" />
             <Button mnemonicParsing="false" onAction="#btnExpandListener" styleClass="command-button" text="Expand" />

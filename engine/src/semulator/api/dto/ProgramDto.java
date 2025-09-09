@@ -127,5 +127,9 @@ public class ProgramDto {
     public List<String> getAllVariablesInOrder() {
         return allVariablesInOrder;
     }
+
+    public List<FunctionDto> getFunctions() {
+        return functions;
+    }
 }
 

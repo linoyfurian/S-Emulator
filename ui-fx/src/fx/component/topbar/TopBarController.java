@@ -10,11 +10,13 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import fx.system.SEmulatorSystemController;
 import javafx.stage.FileChooser;
+import semulator.api.dto.FunctionDto;
 import semulator.api.dto.ProgramDto;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,11 +28,14 @@ public class TopBarController {
     @FXML private TextField loadFileTextField;
     @FXML private Label degreeLabel;
     @FXML private ComboBox<String> cmbHighlight;
+    @FXML private ComboBox<String> cmbProgramOrFunction;
 
     private final ObservableList<String> highlightOptions = FXCollections.observableArrayList();
+    private final ObservableList<String> programOrFunctionOptions = FXCollections.observableArrayList();
 
     @FXML private void initialize() {
         cmbHighlight.setItems(highlightOptions);
+        cmbProgramOrFunction.setItems(programOrFunctionOptions);
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
@@ -137,5 +142,21 @@ public class TopBarController {
         }
 
         return currentDegree;
+    }
+
+
+    public void refreshProgramOrFunctionOptions(ProgramDto program) {
+        int i;
+        programOrFunctionOptions.clear();
+        programOrFunctionOptions.add(program.getProgramName());
+
+        List<FunctionDto> functions = program.getFunctions();
+
+
+        for (i = 0; i < functions.size(); i++) {
+            programOrFunctionOptions.add(functions.get(i).getFunctionName());
+        }
+
+        cmbProgramOrFunction.getSelectionModel().select(programOrFunctionOptions.get(0));
     }
 }

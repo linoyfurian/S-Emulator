@@ -67,6 +67,7 @@ public class SEmulatorSystemController {
                 topBarController.refreshHighlightOptions(programDetails);
                 debuggerController.setProgram(programDetails);
                 topBarController.setLoadFileText(fileName);
+                topBarController.refreshProgramOrFunctionOptions(programDetails);
             }
         }
     }
