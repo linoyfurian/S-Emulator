@@ -4,6 +4,7 @@ import jakarta.xml.bind.JAXBException;
 import semulator.api.LoadReport;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramDto;
+import semulator.api.dto.ProgramFunctionDto;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,7 +14,7 @@ public interface SEmulatorEngine {
 
     LoadReport loadProgramDetails(Path filePath) throws JAXBException;
     ProgramDto displayProgram();
-    ProgramDto expand(int desiredDegreeOfExpand);
+    ProgramFunctionDto expand(String programToRunName, int desiredDegreeOfExpand);
     ExecutionRunDto runProgram(int desiredDegreeOfExpand, long... input);
     List<ExecutionRunDto> historyDisplay();
     void setLoaded(boolean isLoaded);

@@ -11,9 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import semulator.api.dto.InstructionDto;
-import semulator.api.dto.ParentInstructionDto;
-import semulator.api.dto.ProgramDto;
+import semulator.api.dto.*;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -80,22 +78,36 @@ public class InstructionPaneController {
         this.mainController = mainController;
     }
 
-    public void displayProgram(ProgramDto programDetails){
+    public void displayProgram(String programToDisplayName, ProgramFunctionDto programDetails){
         int numberOfBasicInstruction, numberOfSyntheticInstruction;
         instructionData.clear();
         instructionChainData.clear();
 
-        List<InstructionDto> instructions = programDetails.getInstructions();
-        instructionData.addAll(instructions);
+        if(programToDisplayName.equals(programDetails.getName())){
+            List<InstructionDto> instructions = programDetails.getInstructions();
+            instructionData.addAll(instructions);
 
-        numberOfBasicInstruction = DisplayUtils.getNumberOfBasicInstructions(programDetails);
-        numberOfSyntheticInstruction = instructions.size() -  numberOfBasicInstruction;
+            numberOfBasicInstruction = DisplayUtils.getNumberOfBasicInstructions(programDetails);
+            numberOfSyntheticInstruction = instructions.size() -  numberOfBasicInstruction;
 
-        lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
-        lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
+            lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
+            lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
+
+        }
+        else{
+            ProgramDto programDto = (ProgramDto) programDetails;
+            FunctionDto functionToDisplay = DisplayUtils.findFunctionToDisplay(programToDisplayName, programDto);
+            List<InstructionDto> instructions = functionToDisplay.getInstructions();
+            instructionData.addAll(instructions);
+
+            numberOfBasicInstruction = DisplayUtils.getNumberOfBasicInstructions(functionToDisplay);
+            numberOfSyntheticInstruction = instructions.size() -  numberOfBasicInstruction;
+
+            lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
+            lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
+        }
 
         clearAllRowHighlights();
-
     }
 
     private void showParentChain(InstructionDto selected) {

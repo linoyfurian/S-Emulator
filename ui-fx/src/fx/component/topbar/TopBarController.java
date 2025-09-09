@@ -1,5 +1,6 @@
 package fx.component.topbar;
 
+import fx.app.util.ProgramUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import fx.system.SEmulatorSystemController;
 import javafx.stage.FileChooser;
 import semulator.api.dto.FunctionDto;
 import semulator.api.dto.ProgramDto;
+import semulator.api.dto.ProgramFunctionDto;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -104,18 +106,19 @@ public class TopBarController {
         }
     }
 
-    public void refreshHighlightOptions(ProgramDto program) {
+    public void refreshHighlightOptions(String displayedProgramName, ProgramFunctionDto program) {
         int i;
         highlightOptions.clear();
         highlightOptions.add("— choose —");
 
-        List<String> variables = new java.util.ArrayList<String>(program.getAllVariablesInOrder());
+
+        List<String> variables = ProgramUtil.getDisplayedProgramVariables(displayedProgramName, program);
 
         for (i = 0; i < variables.size(); i++) {
             highlightOptions.add(variables.get(i));
         }
 
-        List<String> labels = new java.util.ArrayList<String>(program.getLabelsInOrder());
+        List<String> labels = ProgramUtil.getDisplayedProgramLabels(displayedProgramName, program);
 
         for (i = 0; i < labels.size(); i++) {
             highlightOptions.add(labels.get(i));
@@ -148,15 +151,22 @@ public class TopBarController {
     public void refreshProgramOrFunctionOptions(ProgramDto program) {
         int i;
         programOrFunctionOptions.clear();
-        programOrFunctionOptions.add(program.getProgramName());
+        programOrFunctionOptions.add(program.getName());
 
         List<FunctionDto> functions = program.getFunctions();
 
 
         for (i = 0; i < functions.size(); i++) {
-            programOrFunctionOptions.add(functions.get(i).getFunctionName());
+            programOrFunctionOptions.add(functions.get(i).getName());
         }
 
         cmbProgramOrFunction.getSelectionModel().select(programOrFunctionOptions.get(0));
+    }
+
+    @FXML void onProgramFunctionChangedListener(ActionEvent event) {
+        String programFunctionSelected = cmbProgramOrFunction.getSelectionModel().getSelectedItem();
+        if(mainController != null) {
+            mainController.onProgramFunctionChangedListener(programFunctionSelected);
+        }
     }
 }

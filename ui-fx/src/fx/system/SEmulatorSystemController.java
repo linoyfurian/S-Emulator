@@ -1,6 +1,7 @@
 package fx.system;
 
 import fx.app.util.DisplayUtils;
+import fx.app.util.ProgramUtil;
 import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
@@ -11,6 +12,7 @@ import semulator.api.LoadReport;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ProgramDto;
+import semulator.api.dto.ProgramFunctionDto;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
@@ -26,6 +28,8 @@ public class SEmulatorSystemController {
     @FXML private InstructionPaneController instructionsController;
     @FXML private DebuggerExecutionController debuggerController;
     @FXML private HistoryController historyController;
+
+    private String currentProgramName;
 
     @FXML
     public void initialize() {
@@ -45,7 +49,7 @@ public class SEmulatorSystemController {
 
     public void btnLoadFileListener(String fileName) {
         LoadReport loadReport = null;
-        Path path = null;
+        Path path;
         path = Paths.get(fileName);
 
         try {
@@ -60,12 +64,17 @@ public class SEmulatorSystemController {
         if(loadReport.isSuccess()) {
             ProgramDto programDetails = engine.displayProgram();
             if(programDetails!=null) {
-                instructionsController.displayProgram(programDetails);
-                int programDegree = programDetails.getProgramDegree();
-                int maxDegree = engine.getMaxDegreeOfExpand();
+                if(currentProgramName==null) {
+                    currentProgramName = programDetails.getName();
+                }
+                instructionsController.displayProgram(currentProgramName, programDetails);
+
+                int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDetails);
+                int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
-                topBarController.refreshHighlightOptions(programDetails);
-                debuggerController.setProgram(programDetails);
+                topBarController.refreshHighlightOptions(currentProgramName, programDetails);
+
+                //debuggerController.setProgram(programDetails); //todo
                 topBarController.setLoadFileText(fileName);
                 topBarController.refreshProgramOrFunctionOptions(programDetails);
             }
@@ -73,26 +82,28 @@ public class SEmulatorSystemController {
     }
 
     public void btnExpandListener(int degreeToExpand) {
-        ProgramDto programDetails = engine.expand(degreeToExpand);
-        if(programDetails != null) {
-            instructionsController.displayProgram(programDetails);
-            int programDegree = programDetails.getProgramDegree();
-            int maxDegree = engine.getMaxDegreeOfExpand();
+        ProgramFunctionDto programFunctionDto = engine.expand(currentProgramName, degreeToExpand);
+        if(programFunctionDto != null) {
+            instructionsController.displayProgram(currentProgramName, programFunctionDto);
+            int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programFunctionDto);
+            ProgramDto programDetails = engine.displayProgram();
+            int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
             topBarController.updateDegreeLabel(programDegree, maxDegree);
-            topBarController.refreshHighlightOptions(programDetails);
-            debuggerController.setProgram(programDetails);
+            topBarController.refreshHighlightOptions(currentProgramName, programFunctionDto);
+            //debuggerController.setProgram(programFunctionDto);
         }
     }
 
     public void btnCollapseListener(int degreeToExpand) {
-        ProgramDto programDetails = engine.expand(degreeToExpand);
-        if(programDetails != null) {
-            instructionsController.displayProgram(programDetails);
-            int programDegree = programDetails.getProgramDegree();
-            int maxDegree = engine.getMaxDegreeOfExpand();
+        ProgramFunctionDto programDto = engine.expand(currentProgramName, degreeToExpand);
+        if(programDto != null) {
+            instructionsController.displayProgram(currentProgramName, programDto);
+            ProgramDto programDetails = engine.displayProgram();
+            int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDto);
+            int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
             topBarController.updateDegreeLabel(programDegree, maxDegree);
-            topBarController.refreshHighlightOptions(programDetails);
-            debuggerController.setProgram(programDetails);
+            topBarController.refreshHighlightOptions(currentProgramName, programDetails);
+            //debuggerController.setProgram(programDetails);
         }
     }
 
@@ -107,5 +118,18 @@ public class SEmulatorSystemController {
             debuggerController.updateRunResult(runResult);
         }
     }
+
+    public void onProgramFunctionChangedListener(String ProgramFunctionSelected){
+        currentProgramName = ProgramFunctionSelected;
+        ProgramDto programDetails = engine.displayProgram();
+        instructionsController.displayProgram(currentProgramName,programDetails);
+        int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDetails);
+        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
+        topBarController.updateDegreeLabel(programDegree, maxDegree);
+        topBarController.refreshHighlightOptions(currentProgramName, programDetails);
+
+        debuggerController.setProgram(programDetails); //todo
+    }
+
 
 }

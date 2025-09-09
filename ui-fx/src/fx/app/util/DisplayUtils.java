@@ -1,13 +1,15 @@
 package fx.app.util;
 
+import semulator.api.dto.FunctionDto;
 import semulator.api.dto.InstructionDto;
 import semulator.api.dto.ProgramDto;
+import semulator.api.dto.ProgramFunctionDto;
 
 import java.util.List;
 
 public class DisplayUtils {
 
-    public static int getNumberOfBasicInstructions(ProgramDto program) {
+    public static int getNumberOfBasicInstructions(ProgramFunctionDto program) {
         int numberOfBasicInstructions = 0;
         List<InstructionDto> instructions = program.getInstructions();
         for (InstructionDto instruction : instructions) {
@@ -15,5 +17,17 @@ public class DisplayUtils {
                 numberOfBasicInstructions++;
         }
         return numberOfBasicInstructions;
+    }
+
+    public static FunctionDto findFunctionToDisplay(String programToDisplayName, ProgramDto programDetails){
+        FunctionDto functionToDisplay = null;
+        List<FunctionDto> functions = programDetails.getFunctions();
+        for (FunctionDto function : functions) {
+            if(function.getName().equals(programToDisplayName)){
+                functionToDisplay = function;
+                break;
+            }
+        }
+        return functionToDisplay;
     }
 }

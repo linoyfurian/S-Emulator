@@ -7,6 +7,7 @@ import semulator.logic.instruction.UnexpandableInstruction;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
+import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 
 import java.io.Serializable;
@@ -120,7 +121,7 @@ public class Function implements Program, Serializable {
         int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new semulator.logic.program.ProgramImpl(programToExpand.getName(), programDegree); //new program
+            nextExpandedProgram = new Function(programToExpand.getName(), this.userString, programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());

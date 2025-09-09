@@ -14,13 +14,14 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class FunctionDto {
+public class FunctionDto implements ProgramFunctionDto{
     private final String functionName;
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
     private final List<String> allVariablesInOrder;
     private final List<String> labelsInOrder;
     private final int functionDegree;
+    private final int maxDegree;
     private final String userString;
 
     public FunctionDto(Program function, Program program) {
@@ -98,33 +99,45 @@ public class FunctionDto {
         this.functionDegree = function.getDegree();
         this.userString = functionToDto.getUserString();
 
+        this.maxDegree = function.calculateMaxDegree();
     }
 
-    public String getFunctionName() {
+    @Override
+    public String getName() {
         return functionName;
     }
 
+    @Override
     public List<String> getInputVariablesInOrder() {
         return inputVariablesInOrder;
     }
 
+    @Override
     public List<String> getLabelsInOrder() {
         return labelsInOrder;
     }
 
+    @Override
     public List<InstructionDto> getInstructions() {
         return instructions;
     }
 
-    public int getProgramDegree() {
+    @Override
+    public int getDegree() {
         return functionDegree;
     }
 
+    @Override
     public List<String> getAllVariablesInOrder() {
         return allVariablesInOrder;
     }
 
     public String getUserString() {
         return userString;
+    }
+
+    @Override
+    public int getMaxDegree() {
+        return maxDegree;
     }
 }

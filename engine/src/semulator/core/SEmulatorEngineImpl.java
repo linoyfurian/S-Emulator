@@ -4,13 +4,17 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.api.LoadReport;
+import semulator.api.dto.FunctionDto;
+import semulator.api.dto.ProgramFunctionDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.program.Program;
 import semulator.api.dto.ProgramDto;
+import semulator.logic.program.ProgramImpl;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -89,10 +93,23 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
-    public ProgramDto expand(int desiredDegreeOfExpand){
-        Program expandedProgram = program.expand(desiredDegreeOfExpand);
-        ProgramDto programDto = new ProgramDto(expandedProgram);
-        return programDto;
+    public ProgramFunctionDto expand(String programToExpandName, int desiredDegreeOfExpand){
+        ProgramFunctionDto programFunctionDto;
+        Program expandedProgram;
+
+        if(programToExpandName.equals(program.getName())){
+            expandedProgram = program.expand(desiredDegreeOfExpand);
+            programFunctionDto = new ProgramDto(expandedProgram);
+        }
+        else{
+            ProgramImpl programImpl = (ProgramImpl) program;
+            List<Program> functions = programImpl.getFunctions();
+
+            Program programToExpand = ExpansionUtils.findFunctionInProgram(functions, programToExpandName);
+            expandedProgram = programToExpand.expand(desiredDegreeOfExpand);
+            programFunctionDto = new FunctionDto(expandedProgram, program);
+        }
+        return programFunctionDto;
     }
 
     @Override

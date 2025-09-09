@@ -12,13 +12,14 @@ import semulator.logic.variable.VariableType;
 
 import java.util.*;
 
-public class ProgramDto {
+public class ProgramDto implements ProgramFunctionDto{
     private final String programName;
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
     private final List<String> allVariablesInOrder;
     private final List<String> labelsInOrder;
     private final int programDegree;
+    private final int maxDegree;
     private final List<FunctionDto> functions;
 
 
@@ -102,34 +103,47 @@ public class ProgramDto {
             FunctionDto newFunctionDto = new FunctionDto(function, program);
             this.functions.add(newFunctionDto);
         }
+
+        this.maxDegree = program.calculateMaxDegree();
     }
 
-    public String getProgramName() {
+    @Override
+    public String getName() {
         return programName;
     }
 
+    @Override
     public List<String> getInputVariablesInOrder() {
         return inputVariablesInOrder;
     }
 
+    @Override
     public List<String> getLabelsInOrder() {
         return labelsInOrder;
     }
 
+    @Override
     public List<InstructionDto> getInstructions() {
         return instructions;
     }
 
-    public int getProgramDegree() {
+    @Override
+    public int getDegree() {
         return programDegree;
     }
 
+    @Override
     public List<String> getAllVariablesInOrder() {
         return allVariablesInOrder;
     }
 
     public List<FunctionDto> getFunctions() {
         return functions;
+    }
+
+    @Override
+    public int getMaxDegree() {
+        return maxDegree;
     }
 }
 
