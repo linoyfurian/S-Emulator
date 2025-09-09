@@ -6,36 +6,38 @@ import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 
-public class ProgramDto {
-    private final String programName;
+public class FunctionDto {
+    private final String functionName;
     private final List<InstructionDto> instructions;
     private final List<String> inputVariablesInOrder;
     private final List<String> allVariablesInOrder;
     private final List<String> labelsInOrder;
-    private final int programDegree;
-    private final List<FunctionDto> functions;
+    private final int functionDegree;
+    private final String userString;
 
+    public FunctionDto(Program function, Program program) {
+        Function functionToDto = (Function) function;
 
-    public ProgramDto(Program program) {
-        this.programName = program.getName();
+        this.functionName = function.getName();
 
         this.inputVariablesInOrder =  new ArrayList<>();
         this.labelsInOrder = new ArrayList<>();
         this.allVariablesInOrder = new ArrayList<>();
-        this.functions = new ArrayList<>();
 
         List<Integer> labelsNumbers = new ArrayList<>();
         List<Integer> inputVariablesNumbers = new ArrayList<>();
         List<Integer> workVariablesNumbers = new ArrayList<>();
 
-        LinkedHashSet<Variable> allVars = program.getVariables();
-        LinkedHashSet<Label> labels = program.getLabels();
+        LinkedHashSet<Variable> allVars = function.getVariables();
+        LinkedHashSet<Label> labels = function.getLabels();
 
         boolean sawExit = false;
         boolean sawY = false;
@@ -86,26 +88,20 @@ public class ProgramDto {
             allVariablesInOrder.add(("z" + number));
         }
 
-        List<Instruction> programInstructions = program.getInstructions();
+        List<Instruction> functionInstruction = function.getInstructions();
         this.instructions = new ArrayList<>();
 
-        for (Instruction instruction : programInstructions) {
+        for (Instruction instruction : functionInstruction) {
             this.instructions.add(new InstructionDto(instruction, program));
         }
 
-        this.programDegree = program.getDegree();
+        this.functionDegree = function.getDegree();
+        this.userString = functionToDto.getUserString();
 
-        ProgramImpl  programImpl = (ProgramImpl) program;
-        List<Program> programFunctions = programImpl.getFunctions();
-
-        for (Program function : programFunctions) {
-            FunctionDto newFunctionDto = new FunctionDto(function, program);
-            this.functions.add(newFunctionDto);
-        }
     }
 
-    public String getProgramName() {
-        return programName;
+    public String getFunctionName() {
+        return functionName;
     }
 
     public List<String> getInputVariablesInOrder() {
@@ -121,11 +117,14 @@ public class ProgramDto {
     }
 
     public int getProgramDegree() {
-        return programDegree;
+        return functionDegree;
     }
 
     public List<String> getAllVariablesInOrder() {
         return allVariablesInOrder;
     }
-}
 
+    public String getUserString() {
+        return userString;
+    }
+}

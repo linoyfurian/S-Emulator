@@ -35,6 +35,8 @@ public class ProgramImpl implements Program, Serializable {
 
     @Override
     public void addInstruction(Instruction instruction) {
+        if (instruction == null)
+            return;
         instructions.add(instruction);
 
         List<Variable> instructionVariables = instruction.getAllVariables();
@@ -144,12 +146,28 @@ public class ProgramImpl implements Program, Serializable {
                     }
                     instructionNumber = instructionNumber + nextInstructions.size();
                 }
+                else{
+                    if(instruction instanceof ComplexInstruction complexInstruction) {
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, this);
+
+                        for (Instruction nextInstruction : nextInstructions) {
+                            nextExpandedProgram.addInstruction(nextInstruction);
+                        }
+                        instructionNumber = instructionNumber + nextInstructions.size();
+                    }
+                }
             }
             programToExpand = nextExpandedProgram;
             degreeOfExpand--;
         }
 
         expandedProgram = programToExpand;
+
+        List<Program> functions = this.getFunctions();
+        for (Program function : functions) {
+            if(expandedProgram instanceof ProgramImpl expandedProgramImpl)
+                expandedProgramImpl.addFunction(function);
+        }
         return expandedProgram;
     }
 

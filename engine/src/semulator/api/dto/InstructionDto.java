@@ -1,7 +1,12 @@
 package semulator.api.dto;
 
+import semulator.logic.instruction.ComplexInstruction;
 import semulator.logic.instruction.Instruction;
+import semulator.logic.instruction.QuoteInstruction;
+import semulator.logic.instruction.SimpleInstruction;
 import semulator.logic.label.Label;
+import semulator.logic.program.Program;
+import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
@@ -17,9 +22,17 @@ public class InstructionDto {
     private final List<String> allLabels;
     private final List<String> allVariables;
 
-    public InstructionDto(Instruction instruction) {
+    public InstructionDto(Instruction instruction, Program program) {
         this.label = instruction.getLabel().getLabelRepresentation();
-        this.command = instruction.getInstructionDescription();
+        if(instruction instanceof SimpleInstruction simpleInstruction)
+            this.command = simpleInstruction.getInstructionDescription();
+        else {
+            if(instruction instanceof ComplexInstruction complexInstruction){
+                this.command = complexInstruction.getInstructionDescription(program);
+            }
+            else
+                this.command = "";
+        }
         this.type = instruction.getType().getType();
         this.number = instruction.getInstructionNumber();
         this.cycles = instruction.cycles();
@@ -27,7 +40,7 @@ public class InstructionDto {
         Instruction parent;
         parent = instruction.getParent();
         while(parent != null){
-            this.parents.add(new ParentInstructionDto(parent));
+            this.parents.add(new ParentInstructionDto(parent, program));
             parent = parent.getParent();
         }
 

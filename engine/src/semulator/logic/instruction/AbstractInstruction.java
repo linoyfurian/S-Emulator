@@ -14,7 +14,7 @@ public abstract class AbstractInstruction implements Instruction, Serializable {
     private final Label label;
     private final Variable variable;
     private final InstructionType type;
-    private final int degreeOfExpansion;
+    private int degreeOfExpansion;
     private final long instructionNumber;
     private final Instruction parent;
 
@@ -84,5 +84,9 @@ public abstract class AbstractInstruction implements Instruction, Serializable {
     @Override
     public Instruction getParent(){
         return parent;
+    }
+
+    public void setMaxDegreeOfExpansion(int maxDegreeOfExpansion) {
+        this.degreeOfExpansion = maxDegreeOfExpansion;
     }
 }

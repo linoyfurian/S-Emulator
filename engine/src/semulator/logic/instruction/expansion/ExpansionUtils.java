@@ -1,18 +1,17 @@
 package semulator.logic.instruction.expansion;
 
 import semulator.core.loader.XmlProgramMapperV2;
+import semulator.logic.Function.Function;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
+import semulator.logic.program.Program;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
 import semulator.logic.variable.VariableType;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ExpansionUtils {
     private ExpansionUtils() {}
@@ -89,6 +88,7 @@ public class ExpansionUtils {
                 }
                 else{
                     newVariableImpl = variable;
+                    zUsedNumbers.add(variableNumber);
                 }
             }
             oldAndNew.put(variable.getRepresentation(), newVariableImpl.getRepresentation());
@@ -117,20 +117,41 @@ public class ExpansionUtils {
                 }
                 else{
                     newLabelImpl = label;
+                    usedLabelsNumbers.add(labelNumber);
                 }
                 oldAndNew.put(label.getLabelRepresentation(), newLabelImpl.getLabelRepresentation());
             }
         }
         else if (label == FixedLabel.EXIT){
-            newLabelNumber = ExpansionUtils.findAvailableLabelNumber(usedLabelsNumbers);
-            usedLabelsNumbers.add(newLabelNumber);
-            newLabelImpl = new LabelImpl(newLabelNumber);
-            oldAndNew.put(label.getLabelRepresentation(), newLabelImpl.getLabelRepresentation());
+            if(oldAndNew.containsKey(label.getLabelRepresentation())){
+                newLabel = oldAndNew.get(label.getLabelRepresentation());
+                newLabelNumber =  Integer.parseInt(newLabel.substring(1));
+                newLabelImpl = new LabelImpl(newLabelNumber);
+            }
+            else{
+                newLabelNumber = ExpansionUtils.findAvailableLabelNumber(usedLabelsNumbers);
+                usedLabelsNumbers.add(newLabelNumber);
+                newLabelImpl = new LabelImpl(newLabelNumber);
+                oldAndNew.put(label.getLabelRepresentation(), newLabelImpl.getLabelRepresentation());
+            }
         }
         else
             newLabelImpl = FixedLabel.EMPTY;
 
         return newLabelImpl;
+    }
+
+    public static Function findFunctionInProgram(List<Program> functions, String functionName) {
+        Function functionToRun = null;
+        for (Program function : functions) {
+            if(function instanceof Function f) {
+                if(functionName.equals(f.getName())) {
+                    functionToRun = f;
+                    break;
+                }
+            }
+        }
+        return functionToRun;
     }
 }
 

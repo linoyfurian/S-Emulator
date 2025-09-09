@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface ComplexInstruction {
-    Label execute(ExecutionContext context, ProgramImpl program);
-    List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, ProgramImpl program);
-    String getInstructionDescription(ProgramImpl program);
+    Label execute(ExecutionContext context, Program program);
+    List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Program program);
+    String getInstructionDescription(Program program);
+    boolean isComposite();
 }

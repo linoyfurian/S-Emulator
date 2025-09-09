@@ -1,7 +1,9 @@
 package semulator.logic.execution;
 
 import semulator.api.dto.ExecutionRunDto;
+import semulator.logic.instruction.ComplexInstruction;
 import semulator.logic.instruction.Instruction;
+import semulator.logic.instruction.SimpleInstruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
@@ -51,7 +53,14 @@ public class ProgramExecutorImpl implements ProgramExecutor {
 
         Label nextLabel;
         do {
-            nextLabel = currentInstruction.execute(context);
+            if(currentInstruction instanceof SimpleInstruction simpleInstruction) {
+                nextLabel = simpleInstruction.execute(context);
+            }
+            else{
+                ComplexInstruction complexInstruction =  (ComplexInstruction) currentInstruction;
+                nextLabel = complexInstruction.execute(context, programToRun);
+            }
+
             cycles = cycles + currentInstruction.cycles();
 
             if (nextLabel == FixedLabel.EMPTY) {//next instruction

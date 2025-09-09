@@ -4,6 +4,7 @@ import semulator.core.loader.jaxb.schema.version2.generated.*;
 
 import semulator.logic.Function.Function;
 import semulator.logic.instruction.*;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
@@ -38,6 +39,7 @@ public class XmlProgramMapperV2 {
                 programImpl.addFunction(newProgram);
             }
         }
+        setMaxDegreeOfExpansionForComplexInstruction(program);
 
         return program;
     }
@@ -110,6 +112,22 @@ public class XmlProgramMapperV2 {
                 JEVariableLabel = getTargetLabel(JEVariableArguments,  "JEVariableLabel");
                 instructionToReturn = new JumpEqualVariableInstruction(variable, label, JEVariableLabel, variableName, instructionNumber, null);
                 break;
+            case "QUOTE":
+                String functionName, functionArguments;
+                List<SInstructionArgument> quoteInstructionArguments = instruction.getSInstructionArguments().getSInstructionArgument();
+                functionName = getSpecificArgumentByName(quoteInstructionArguments, "functionName");
+                functionArguments = getSpecificArgumentByName(quoteInstructionArguments, "functionArguments");
+                instructionToReturn = new QuoteInstruction(variable, functionName, functionArguments, label, instructionNumber, null);
+                break;
+            case "JUMP_EQUAL_FUNCTION":
+                String jumpFunctionName, jumpFunctionArguments;
+                Label JEFunctionLabel;
+                List<SInstructionArgument> JEFunctionArguments = instruction.getSInstructionArguments().getSInstructionArgument();
+                jumpFunctionName = getSpecificArgumentByName(JEFunctionArguments, "functionName");
+                jumpFunctionArguments = getSpecificArgumentByName(JEFunctionArguments, "functionArguments");
+                JEFunctionLabel = getTargetLabel(JEFunctionArguments, "JEFunctionLabel");
+                instructionToReturn = new JumpEqualFunctionInstruction(variable, jumpFunctionName, jumpFunctionArguments, label, JEFunctionLabel, instructionNumber, null);
+                break;
         }
 
         return instructionToReturn;
@@ -175,6 +193,15 @@ public class XmlProgramMapperV2 {
         return 0;
     }
 
+    private static String getSpecificArgumentByName(List<SInstructionArgument> arguments, String nameOfArgument){
+        for (SInstructionArgument argument : arguments) {
+            if((argument.getName().trim()).equalsIgnoreCase(nameOfArgument)){
+                return argument.getValue().trim();
+            }
+        }
+        return "";
+    }
+
     private static Label getTargetLabel(List<SInstructionArgument> arguments, String nameOfArgument){
         Label labelToReturn = null;
         for (SInstructionArgument argument : arguments) {
@@ -214,5 +241,65 @@ public class XmlProgramMapperV2 {
             instructionCounter++;
         }
         return program;
+    }
+
+    public static String getFunctionName(String currArgument){
+        String parts [] = currArgument.split(",");
+        String functionName = "";
+        if(parts.length == 1)
+            functionName = parts[0].substring(1, parts[0].length()-1);
+        else
+            functionName = parts[0].substring(1);
+
+        return functionName;
+    }
+
+
+
+    public static String getFunctionarguments(String currArgument) {
+        String parts[] = currArgument.split(",");
+        String functionArguments = "";
+        if (parts.length > 1) {
+            for (int i = 1; i < parts.length; i++) {
+                if (i == parts.length - 1)
+                    functionArguments = functionArguments + parts[i].substring(0, parts[i].length() - 1);
+                else
+                    functionArguments = functionArguments + parts[i] + ",";
+            }
+        }
+        return functionArguments;
+    }
+
+    private static void setMaxDegreeOfExpansionForComplexInstruction(Program program) {
+        List<Instruction> instructions = program.getInstructions();
+        ProgramImpl programImpl = (ProgramImpl) program;
+        List<Program> functions = programImpl.getFunctions();
+        int maxDegreeOfExpansion = 0, maxDegreeOfFunction = 0;
+        for (Instruction instruction : instructions) {
+            boolean isComposite = false;
+            if(instruction instanceof ComplexInstruction complexInstruction){
+                isComposite = complexInstruction.isComposite();
+            }
+            if(instruction instanceof QuoteInstruction quoteInstruction) {
+                Function function = ExpansionUtils.findFunctionInProgram(functions, quoteInstruction.getFunctionName());
+                maxDegreeOfFunction = function.calculateMaxDegree();
+                if(isComposite)
+                    maxDegreeOfExpansion = maxDegreeOfFunction + 2;
+                else
+                    maxDegreeOfExpansion = maxDegreeOfFunction + 1;
+                quoteInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+            }
+            else{
+                if(instruction instanceof JumpEqualFunctionInstruction jumpEqualFunctionInstruction){
+                    Function function = ExpansionUtils.findFunctionInProgram(functions, jumpEqualFunctionInstruction.getFunctionName());
+                    maxDegreeOfFunction = function.calculateMaxDegree();
+                    if(isComposite)
+                        maxDegreeOfExpansion = maxDegreeOfFunction + 2;
+                    else
+                        maxDegreeOfExpansion = maxDegreeOfFunction + 1;
+                    jumpEqualFunctionInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+                }
+            }
+        }
     }
 }

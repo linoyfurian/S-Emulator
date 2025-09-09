@@ -6,12 +6,12 @@ import semulator.logic.Function.Function;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
+import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
-import semulator.logic.variable.VariableImpl;
 
 import java.util.*;
 
@@ -26,14 +26,15 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     }
 
     public QuoteInstruction(Variable variable, String functionName, String functionArguments, Label label, long instructionNumber, Instruction parent) {
-        super(InstructionData.JUMP_ZERO, variable, label, InstructionType.SYNTHETIC, 2, instructionNumber, parent);
+        super(InstructionData.QUOTE, variable, label, InstructionType.SYNTHETIC, 0, instructionNumber, parent);
         this.functionName = functionName;
         this.functionArguments = functionArguments;
     }
 
     @Override
-    public Label execute(ExecutionContext context, ProgramImpl program) {
-        List<Program> functions = program.getFunctions();
+    public Label execute(ExecutionContext context, Program program) {
+        ProgramImpl programImpl = (ProgramImpl) program;
+        List<Program> functions = programImpl.getFunctions();
         Function functionToRun = null;
         long assignedValue = 0L;
 
@@ -67,33 +68,43 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
 
     @Override
-    public String getInstructionDescription(ProgramImpl program) {
+    public String getInstructionDescription(Program program) {
         String functionUserName = "";
 
-        List<Program> functions = program.getFunctions();
-        for (Program function : functions) {
-            if(function instanceof Function f) {
-                if(functionName.equals(f.getName())) {
-                    functionUserName = f.getUserString();
-                    break;
+        if(program instanceof ProgramImpl programImpl) {
+            List<Program> functions = programImpl.getFunctions();
+            for (Program function : functions) {
+                if(function instanceof Function f) {
+                    if(functionName.equalsIgnoreCase(f.getName())) {
+                        functionUserName = f.getUserString();
+                        break;
+                    }
                 }
             }
+
+            if (functionArguments.equals(""))
+                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName +  ")");
+            else
+                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + functionArguments + ")");
         }
-        return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + functionArguments + ")");
+
+        return "";
     }
 
 
 
     @Override
-    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, ProgramImpl program) {
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Program program) {
         List<Instruction> nextInstructions = new ArrayList<>();
-        List<Program> functions = program.getFunctions();
+        ProgramImpl programImpl = (ProgramImpl) program;
+
+        List<Program> functions = programImpl.getFunctions();
         Map<String, String> oldAndNew = new HashMap<>();
 
         Function functionToRun = null;
         Instruction newInstruction;
 
-        functionToRun = findFunctionInProgram(functions);
+        functionToRun = ExpansionUtils.findFunctionInProgram(functions, functionName);
 
         //add first instruction
         if(this.getLabel()!=FixedLabel.EMPTY) {
@@ -104,15 +115,28 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
         List<Instruction> newQ = generatenewQInstructions(functionToRun, zUsedNumbers, usedLabelsNumbers, oldAndNew); //Q'
 
+        String inputArgument;
+        List<String> arguments = splitFunctionArguments();
 
-        String[] arguments = functionArguments.split(",");
-        for(int i = 0; i < arguments.length; i++) {
-            String currArgument = arguments[i].trim();
-            if(oldAndNew.containsKey(currArgument)) {
+
+        for(int i = 0; i < arguments.size(); i++) {
+            String currArgument = arguments.get(i).trim();
+            inputArgument = "x" + (i+1);
+            if(oldAndNew.containsKey(inputArgument)) {
                 Variable newVariable, newAssignedVariable;
-                newVariable = XmlProgramMapperV2.variableMapper(oldAndNew.get(currArgument));
+                newVariable = XmlProgramMapperV2.variableMapper(oldAndNew.get(inputArgument));
                 newAssignedVariable = XmlProgramMapperV2.variableMapper(currArgument);
-                newInstruction = new AssignmentInstruction(newVariable, instructionNumber, newAssignedVariable, this);
+
+                if(isVariableIsAFunction(currArgument)) {
+                    String newFunctionName = XmlProgramMapperV2.getFunctionName(currArgument);
+                    String newFunctionArguments = XmlProgramMapperV2.getFunctionarguments(currArgument);
+                    newInstruction = new QuoteInstruction(newVariable, newFunctionName, newFunctionArguments, instructionNumber, this);
+
+                    QuoteInstruction ci=(QuoteInstruction) newInstruction;
+                }
+                else
+                    newInstruction = new AssignmentInstruction(newVariable, instructionNumber, newAssignedVariable, this);
+
                 nextInstructions.add(newInstruction);
                 instructionNumber++;
             }
@@ -133,19 +157,6 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         nextInstructions.add(newInstruction);
 
         return nextInstructions;
-    }
-
-    private Function findFunctionInProgram(List<Program> functions) {
-        Function functionToRun = null;
-        for (Program function : functions) {
-            if(function instanceof Function f) {
-                if(functionName.equals(f.getName())) {
-                    functionToRun = f;
-                    break;
-                }
-            }
-        }
-        return functionToRun;
     }
 
     private List<Instruction> generatenewQInstructions(Function functionToRun, Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, Map<String, String> oldAndNew){
@@ -183,5 +194,67 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         newInstruction = new AssignmentInstruction(this.getVariable(), lastInstructionNewLabel, instructionNumber, newQResult, this);
 
         return newInstruction;
+    }
+
+    private boolean isVariableIsAFunction(String variableName) {
+        boolean result = false;
+        variableName = variableName.trim();
+        if(variableName.startsWith("("))
+            result = true;
+
+        return result;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    private List<String> splitFunctionArguments() {
+        List<String> arguments = new ArrayList<>();
+
+        boolean isFunction = false;
+        String currFunctionArgument="";
+
+        for (int i = 0; i < functionArguments.length(); i++) {
+            char c = functionArguments.charAt(i);
+            if(c=='('){
+                isFunction = true;
+                currFunctionArgument = currFunctionArgument + c;
+            }
+            else if(c==','){
+                    if(isFunction)
+                        currFunctionArgument = currFunctionArgument + c;
+                    else{
+                        arguments.add(currFunctionArgument);
+                        currFunctionArgument ="";
+                    }
+                }
+                else if(c==')'){
+                    currFunctionArgument = currFunctionArgument + c;
+                    isFunction = false;
+                }
+                else
+                    currFunctionArgument = currFunctionArgument + c;
+        }
+
+        if (!currFunctionArgument.equals(""))
+            arguments.add(currFunctionArgument);
+
+        return arguments;
+
+    }
+
+    @Override
+    public boolean isComposite(){
+        boolean result = false;
+        List<String> functionArguments = splitFunctionArguments();
+        if(functionArguments.size()>0){
+            for(String functionArgument : functionArguments){
+                if(functionArgument.startsWith("("))
+                    result = true;
+                break;
+            }
+        }
+        return result;
     }
 }
