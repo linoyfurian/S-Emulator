@@ -38,7 +38,6 @@ public class ProgramImpl implements Program, Serializable {
         if (instruction == null)
             return;
         instructions.add(instruction);
-
         List<Variable> instructionVariables = instruction.getAllVariables();
         for (Variable variable : instructionVariables) {
             this.variables.add(variable);

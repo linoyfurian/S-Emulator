@@ -215,8 +215,8 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         boolean isFunction = false;
         String currFunctionArgument="";
 
-        for (int i = 0; i < functionArguments.length(); i++) {
-            char c = functionArguments.charAt(i);
+        for (int i = 0; i < this.functionArguments.length(); i++) {
+            char c = this.functionArguments.charAt(i);
             if(c=='('){
                 isFunction = true;
                 currFunctionArgument = currFunctionArgument + c;
@@ -256,5 +256,61 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
             }
         }
         return result;
+    }
+
+    @Override
+    public List<Variable> getAllVariables(){
+        Set <String> allVariables = new HashSet<>();
+        allVariables.add(this.getVariable().toString());
+        boolean isFunction = false, isFunctionName = false, isArg = true;
+        String currFunctionArgument="";
+        List<Variable> variablesResult = new ArrayList<>();
+
+        if(this.functionArguments.isEmpty()||this.functionArguments.equals("")){
+            variablesResult.add(this.getVariable());
+            return variablesResult;
+        }
+
+        for (int i = 0; i < this.functionArguments.length(); i++) {
+            char c = this.functionArguments.charAt(i);
+            if(c=='('){
+                isFunction = true;
+                isFunctionName = true;
+                isArg = false;
+            }
+            else if(c==','){
+                if(isFunction){
+                    if(isFunctionName){
+                        isFunctionName = false;
+                        isArg = true;
+                    }
+                    else {
+                        allVariables.add(currFunctionArgument);
+                        currFunctionArgument ="";
+                    }
+                }
+                else {
+                    allVariables.add(currFunctionArgument);
+                    currFunctionArgument = "";
+                }
+            }
+            else if(c==')'){
+                isFunction = false;
+                isFunctionName = false;
+                isArg = true;
+            }
+            else if(isArg)
+                currFunctionArgument = currFunctionArgument + c;
+        }
+
+        if(!currFunctionArgument.equals(""))
+            allVariables.add(currFunctionArgument);
+
+        for(String variable : allVariables){
+            if(!variable.equals(""))
+                variablesResult.add(XmlProgramMapperV2.variableMapper(variable));
+        }
+
+        return variablesResult;
     }
 }
