@@ -167,4 +167,12 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         }
         return result;
     }
+
+    @Override
+    public List<Label> getAllLabels(){
+        List<Label> allLabels = new ArrayList<>();
+        allLabels.add(this.getLabel());
+        allLabels.add(JEFunctionLabel);
+        return allLabels;
+    }
 }

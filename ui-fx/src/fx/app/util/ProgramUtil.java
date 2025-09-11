@@ -10,57 +10,45 @@ import java.util.List;
 
 public class ProgramUtil {
 
-    public static int getDisplayedProgramDegree(String displayedProgramName, ProgramFunctionDto programDetails) {
-        int programDegree = 0;
-
-        if (displayedProgramName.equals(programDetails.getName()))
-            programDegree = programDetails.getDegree();
-        else {
-            ProgramDto programDto = (ProgramDto) programDetails;
-            FunctionDto displayedFunction = DisplayUtils.findFunctionToDisplay(displayedProgramName, programDto);
-            if (displayedFunction != null)
-                programDegree = displayedFunction.getDegree();
-        }
+    public static int getDisplayedProgramDegree(ProgramFunctionDto programInContextDetails) {
+        int programDegree;
+        programDegree = programInContextDetails.getDegree();
         return programDegree;
     }
 
-    public static int getDisplayedProgramMaxDegree(String displayedProgramName, ProgramFunctionDto programDetails) {
-        int programMaxDegree = 0;
-
-        if (displayedProgramName.equals(programDetails.getName()))
-            programMaxDegree = programDetails.getMaxDegree();
-        else {
-            ProgramDto programDto = (ProgramDto) programDetails;
-            FunctionDto displayedFunction = DisplayUtils.findFunctionToDisplay(displayedProgramName, programDto);
-            if (displayedFunction != null)
-                programMaxDegree = displayedFunction.getMaxDegree();
-        }
+    public static int getDisplayedProgramMaxDegree(ProgramFunctionDto programInContextDetails) {
+        int programMaxDegree;
+        programMaxDegree = programInContextDetails.getMaxDegree();
         return programMaxDegree;
     }
 
-    public static List<String> getDisplayedProgramVariables(String displayedProgramName, ProgramFunctionDto programDetails) {
-        List<String> displayedProgramVariables =  new ArrayList<>();
-        if (displayedProgramName.equals(programDetails.getName()))
-            displayedProgramVariables = programDetails.getAllVariablesInOrder();
-        else {
-            ProgramDto programDto = (ProgramDto) programDetails;
-            FunctionDto displayedFunction = DisplayUtils.findFunctionToDisplay(displayedProgramName, programDto);
-            if (displayedFunction != null)
-                displayedProgramVariables = displayedFunction.getAllVariablesInOrder();
-        }
+    public static List<String> getDisplayedProgramVariables(ProgramFunctionDto programInContextDetails) {
+        List<String> displayedProgramVariables;
+        displayedProgramVariables = programInContextDetails.getAllVariablesInOrder();
         return displayedProgramVariables;
     }
 
-    public static List<String> getDisplayedProgramLabels(String displayedProgramName, ProgramFunctionDto programDetails) {
-        List<String> displayedProgramLabels =  new ArrayList<>();
-        if (displayedProgramName.equals(programDetails.getName()))
-            displayedProgramLabels = programDetails.getLabelsInOrder();
-        else {
-            ProgramDto programDto = (ProgramDto) programDetails;
-            FunctionDto displayedFunction = DisplayUtils.findFunctionToDisplay(displayedProgramName, programDto);
-            if (displayedFunction != null)
-                displayedProgramLabels = displayedFunction.getLabelsInOrder();
-        }
+    public static List<String> getDisplayedProgramLabels(ProgramFunctionDto programInContextDetails) {
+        List<String> displayedProgramLabels;
+        displayedProgramLabels = programInContextDetails.getLabelsInOrder();
         return displayedProgramLabels;
     }
+
+    public static List<Integer> generateNewExpandOptions(int currentDegree, int maxDegree) {
+        List<Integer> newExpandOptions = new ArrayList<>();
+        for(int i = currentDegree + 1; i <= maxDegree; i++) {
+            newExpandOptions.add(i);
+        }
+        return newExpandOptions;
+    }
+
+    public static List<Integer> generateNewCollapseOptions(int currentDegree, int maxDegree) {
+        List<Integer> newCollapseOptions = new ArrayList<>();
+        for(int i = 0; i < currentDegree; i++) {
+            newCollapseOptions.add(i);
+        }
+        return newCollapseOptions;
+    }
+
+
 }

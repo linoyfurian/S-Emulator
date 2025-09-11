@@ -25,12 +25,20 @@ import java.nio.file.Path;
 
 public class SEmulatorEngineImpl implements SEmulatorEngine {
     private Program program = null;
+    private Program programInContext = null;
     private boolean isLoaded = false;
     private List<ExecutionRunDto> programRuns = new ArrayList<>();
 
     @Override
-    public ProgramDto displayProgram(){
-        return new ProgramDto(program);
+    public ProgramFunctionDto displayProgram(){
+        if(programInContext == null){
+            return null;
+        }
+
+        if(programInContext instanceof ProgramImpl)
+            return new ProgramDto(programInContext);
+        else
+            return new FunctionDto(programInContext, program);
     }
 
     @Override
@@ -58,6 +66,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram);
             boolean isValidProgram = mappedProgram.validate();
             if (isValidProgram) {
+                this.programInContext = mappedProgram;
                 this.program = mappedProgram;
                 this.isLoaded = true;
                 loadReport = new LoadReport(true, "Program loaded successfully");
@@ -82,10 +91,12 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input){
-        Program programToRun = program.expand(desiredDegreeOfExpand);
+        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
         long runNumber = this.programRuns.size()+1;
 
+
+        //todo map history
         ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, runNumber, input);
         this.programRuns.add(runResult);
 
@@ -93,22 +104,20 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
-    public ProgramFunctionDto expand(String programToExpandName, int desiredDegreeOfExpand){
+    public ProgramFunctionDto expand(int desiredDegreeOfExpand){
         ProgramFunctionDto programFunctionDto;
         Program expandedProgram;
 
-        if(programToExpandName.equals(program.getName())){
-            expandedProgram = program.expand(desiredDegreeOfExpand);
-            programFunctionDto = new ProgramDto(expandedProgram);
+        if(programInContext == null){
+            return  null;
         }
-        else{
-            ProgramImpl programImpl = (ProgramImpl) program;
-            List<Program> functions = programImpl.getFunctions();
 
-            Program programToExpand = ExpansionUtils.findFunctionInProgram(functions, programToExpandName);
-            expandedProgram = programToExpand.expand(desiredDegreeOfExpand);
+        expandedProgram = programInContext.expand(desiredDegreeOfExpand);
+        if(expandedProgram instanceof ProgramImpl)
+            programFunctionDto = new ProgramDto(expandedProgram);
+        else
             programFunctionDto = new FunctionDto(expandedProgram, program);
-        }
+
         return programFunctionDto;
     }
 
@@ -143,14 +152,40 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
+    public int getProgramInContextMaxDegreeOfExpand(){
+        return this.programInContext.calculateMaxDegree();
+    }
+
+    @Override
+    public String getProgramInContextName(){
+        return this.programInContext.getName();
+    }
+
+    @Override
+    public void setProgramInContext(String programInContextName){
+        if(programInContextName == null)
+            return;
+        if(programInContextName.equals(program.getName()))
+            this.programInContext = this.program;
+        else{
+            ProgramImpl programImpl = (ProgramImpl) program;
+            List<Program> functions = programImpl.getFunctions();
+
+            Program programInContext = ExpansionUtils.findFunctionInProgram(functions, programInContextName);
+            this.programInContext = programInContext;
+        }
+    }
+
+    //todo fix engine state
+    @Override
     public void saveState(Path filePath) throws IOException {
         if (filePath == null) {
             throw new IOException("Error: Path is null");
         }
-        EngineState currentState = new EngineState(this.program, this.isLoaded, this.programRuns);
+       // EngineState currentState = new EngineState(this.program, this.isLoaded, this.programRuns);
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(Files.newOutputStream(filePath)))) {
-            oos.writeObject(currentState);
+           // oos.writeObject(currentState);
             oos.flush();
         }
     }
@@ -168,9 +203,23 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             Object obj = ois.readObject();
             EngineState state = (EngineState) obj;
 
-            this.program = state.getProgram();
+          //  this.program = state.getProgram();
             this.isLoaded = state.getLoadedState();
             this.programRuns = new ArrayList<>(state.getProgramRuns());
         }
+    }
+
+    @Override
+    public List<String> getProgramOrFunctionNames(){
+        List<String> programOrFunctionNames = new ArrayList<>();
+        programOrFunctionNames.add(program.getName());
+        ProgramImpl programImpl = (ProgramImpl) program;
+        List<Program> functions = programImpl.getFunctions();
+
+        for (Program function : functions) {
+            programOrFunctionNames.add(function.getName());
+        }
+
+        return programOrFunctionNames;
     }
 }

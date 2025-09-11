@@ -62,49 +62,54 @@ public class SEmulatorSystemController {
             return;
         }
         if(loadReport.isSuccess()) {
-            ProgramDto programDetails = engine.displayProgram();
-            if(programDetails!=null) {
+            ProgramFunctionDto programInContextDetails = engine.displayProgram();
+            if(programInContextDetails!=null) {
                 if(currentProgramName==null) {
-                    currentProgramName = programDetails.getName();
+                    currentProgramName = programInContextDetails.getName();
                 }
-                instructionsController.displayProgram(currentProgramName, programDetails);
+                instructionsController.displayProgram(programInContextDetails);
 
-                int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDetails);
-                int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
+                int programDegree = ProgramUtil.getDisplayedProgramDegree(programInContextDetails);
+                int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(programInContextDetails);
+
                 topBarController.updateDegreeLabel(programDegree, maxDegree);
-                topBarController.refreshHighlightOptions(currentProgramName, programDetails);
+
+
+                topBarController.refreshHighlightOptions(programInContextDetails);
 
                 //debuggerController.setProgram(programDetails); //todo
                 topBarController.setLoadFileText(fileName);
-                topBarController.refreshProgramOrFunctionOptions(programDetails);
+                List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
+                topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
             }
         }
     }
 
     public void btnExpandListener(int degreeToExpand) {
-        ProgramFunctionDto programFunctionDto = engine.expand(currentProgramName, degreeToExpand);
-        if(programFunctionDto != null) {
-            instructionsController.displayProgram(currentProgramName, programFunctionDto);
-            int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programFunctionDto);
-            ProgramDto programDetails = engine.displayProgram();
-            int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
-            topBarController.updateDegreeLabel(programDegree, maxDegree);
-            topBarController.refreshHighlightOptions(currentProgramName, programFunctionDto);
-            //debuggerController.setProgram(programFunctionDto);
+        ProgramFunctionDto expandedProgramDetails = engine.expand(degreeToExpand);
+        if(expandedProgramDetails != null) {
+            instructionsController.displayProgram(expandedProgramDetails);
+            topBarController.refreshHighlightOptions(expandedProgramDetails);
+            javafx.application.Platform.runLater(() -> {
+                topBarController.updateCurrentDegreeLabel(degreeToExpand);
+                //topBarController.refreshHighlightOptions(expanded);
+            });
+            //todo: debuggerController.setProgram(programFunctionDto);
         }
     }
 
-    public void btnCollapseListener(int degreeToExpand) {
-        ProgramFunctionDto programDto = engine.expand(currentProgramName, degreeToExpand);
-        if(programDto != null) {
-            instructionsController.displayProgram(currentProgramName, programDto);
-            ProgramDto programDetails = engine.displayProgram();
-            int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDto);
-            int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
-            topBarController.updateDegreeLabel(programDegree, maxDegree);
-            topBarController.refreshHighlightOptions(currentProgramName, programDetails);
-            //debuggerController.setProgram(programDetails);
+    public void btnCollapseListener(int degreeToCollapse) {
+        ProgramFunctionDto collapsedProgramDetails = engine.expand(degreeToCollapse);
+        if(collapsedProgramDetails != null) {
+            instructionsController.displayProgram(collapsedProgramDetails);
+            topBarController.refreshHighlightOptions(collapsedProgramDetails);
+            //todo: debuggerController.setProgram(programFunctionDto);
+            javafx.application.Platform.runLater(() -> {
+                topBarController.updateCurrentDegreeLabel(degreeToCollapse);
+                //topBarController.refreshHighlightOptions(expanded);
+            });
         }
+        //debuggerController.setProgram(programDetails);
     }
 
     public void onHighlightChangedListener(String highlightSelected){
@@ -119,17 +124,18 @@ public class SEmulatorSystemController {
         }
     }
 
-    public void onProgramFunctionChangedListener(String ProgramFunctionSelected){
-        currentProgramName = ProgramFunctionSelected;
-        ProgramDto programDetails = engine.displayProgram();
-        instructionsController.displayProgram(currentProgramName,programDetails);
-        int programDegree = ProgramUtil.getDisplayedProgramDegree(currentProgramName, programDetails);
-        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(currentProgramName, programDetails);
+    public void onProgramFunctionChangedListener(String programFunctionSelected){
+        if (programFunctionSelected == null || programFunctionSelected.isBlank())
+            return;
+        engine.setProgramInContext(programFunctionSelected);
+        ProgramFunctionDto programInContextDetails = engine.displayProgram();
+        instructionsController.displayProgram(programInContextDetails);
+        int programDegree = ProgramUtil.getDisplayedProgramDegree(programInContextDetails);
+        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(programInContextDetails);
         topBarController.updateDegreeLabel(programDegree, maxDegree);
-        topBarController.refreshHighlightOptions(currentProgramName, programDetails);
+        topBarController.refreshHighlightOptions(programInContextDetails);
 
-        debuggerController.setProgram(programDetails); //todo
+        //debuggerController.setProgram(programDetails); //todo
     }
-
 
 }

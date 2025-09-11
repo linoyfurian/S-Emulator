@@ -1,6 +1,9 @@
 package fx.component.topbar;
 
 import fx.app.util.ProgramUtil;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,14 +14,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import fx.system.SEmulatorSystemController;
 import javafx.stage.FileChooser;
-import semulator.api.dto.FunctionDto;
-import semulator.api.dto.ProgramDto;
 import semulator.api.dto.ProgramFunctionDto;
-
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,18 +23,71 @@ public class TopBarController {
     private SEmulatorSystemController mainController;
     private ProgressBar inlineProgressBar; //todo !!!!!!!!!!!
 
+    private boolean refreshingProgramOrFunctions = false;
+    private boolean refreshingExpandOptions = false;
+    private boolean refreshingCollapseOptions = false;
+
+    // Holds "current degree" and "max degree" as Strings
+    private final StringProperty currentDegree = new SimpleStringProperty(this, "currentDegree", "current Degree");
+    private final StringProperty maxDegree = new SimpleStringProperty(this, "maxDegree", "max Degree");
+    private final StringProperty currentFileName = new SimpleStringProperty(this, "currentFileName", "");
 
     @FXML private TextField loadFileTextField;
     @FXML private Label degreeLabel;
     @FXML private ComboBox<String> cmbHighlight;
     @FXML private ComboBox<String> cmbProgramOrFunction;
+    @FXML private ComboBox<Integer> cmbExpand;
+    @FXML private ComboBox<Integer> cmbCollapse;
+
 
     private final ObservableList<String> highlightOptions = FXCollections.observableArrayList();
     private final ObservableList<String> programOrFunctionOptions = FXCollections.observableArrayList();
+    private final ObservableList<Integer> expandOptions = FXCollections.observableArrayList();
+    private final ObservableList<Integer> collapseOptions = FXCollections.observableArrayList();
 
     @FXML private void initialize() {
         cmbHighlight.setItems(highlightOptions);
         cmbProgramOrFunction.setItems(programOrFunctionOptions);
+        cmbExpand.setItems(expandOptions);
+        cmbCollapse.setItems(collapseOptions);
+
+        degreeLabel.textProperty().bind(
+                Bindings.format("%s / %s", currentDegree, maxDegree)
+        );
+
+        loadFileTextField.textProperty().bind(currentFileName);
+
+//        Platform.runLater(() -> {
+//            attachComboGuards(cmbProgramOrFunction);
+//            attachComboGuards(cmbExpand);
+//            attachComboGuards(cmbCollapse);
+//            attachComboGuards(cmbHighlight);
+//        });
+    }
+
+    // --- Getters / Setters as integers ---
+    public int getCurrentDegree() {
+        try {
+            return Integer.parseInt(currentDegree.get());
+        } catch (NumberFormatException e) {
+            return 0; // fallback in case value is not a number
+        }
+    }
+
+    public void setCurrentDegree(int value) {
+        currentDegree.set(Integer.toString(value));
+    }
+
+    public int getMaxDegree() {
+        try {
+            return Integer.parseInt(maxDegree.get());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    public void setMaxDegree(int value) {
+        maxDegree.set(Integer.toString(value));
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
@@ -61,64 +111,83 @@ public class TopBarController {
     }
 
     public void setLoadFileText(String newText) {
-        loadFileTextField.setText(newText);
+        currentFileName.set(newText);
+    }
+
+    public void updateCurrentDegreeLabel(int programDegree){
+        setCurrentDegree(programDegree);
+        int maxDegree = getMaxDegree();
+
+        List<Integer> newExpandValues = ProgramUtil.generateNewExpandOptions(programDegree, maxDegree);
+        List<Integer> newCollapseValues = ProgramUtil.generateNewCollapseOptions(programDegree, maxDegree);
+
+        refreshExpandAndCollapseOptions(newExpandValues, newCollapseValues);
     }
 
     public void updateDegreeLabel(int programDegree, int maxDegree){
-        degreeLabel.setText(programDegree + "/" + maxDegree);
+        refreshingExpandOptions = true;
+        refreshingCollapseOptions = true;
+        try{
+            setCurrentDegree(programDegree);
+            setMaxDegree(maxDegree);
+
+            List<Integer> newExpandValues = ProgramUtil.generateNewExpandOptions(programDegree, maxDegree);
+            List<Integer> newCollapseValues = ProgramUtil.generateNewCollapseOptions(programDegree, maxDegree);
+
+            refreshExpandAndCollapseOptions(newExpandValues, newCollapseValues);
+        }
+        finally{
+            refreshingExpandOptions = false;
+            refreshingCollapseOptions = false;
+        }
     }
 
     public void btnExpandListener(ActionEvent event) {
-        String degree = degreeLabel.getText();
-        String[] degreeValues = degree.split("/");
-        if (degreeValues.length != 2) {
-            return; // Invalid format
-        }
-        int currentDegree;
-        int maxDegree;
-        try {
-            currentDegree = Integer.parseInt(degreeValues[0].trim());
-            maxDegree = Integer.parseInt(degreeValues[1].trim());
-        } catch (NumberFormatException e) {
-            return; // Invalid numbers
+        if(expandOptions.isEmpty()){
+            return;
         }
 
-        if (currentDegree < maxDegree && mainController != null) {
-            mainController.btnExpandListener(currentDegree + 1);
+        Integer expandSelected = cmbExpand.getSelectionModel().getSelectedItem();
+        if(expandSelected == null)
+            return;
+        cmbExpand.setDisable(true);
+        try {
+            if (mainController != null) {
+                mainController.btnExpandListener(expandSelected);
+            }
+        } finally {
+            cmbExpand.setDisable(false);
+
         }
     }
 
     public void btnCollapseListener(ActionEvent event) {
-        String degree = degreeLabel.getText();
-        String[] degreeValues = degree.split("/");
-        if (degreeValues.length != 2) {
-            return; // Invalid format
-        }
-        int currentDegree;
-        try {
-            currentDegree = Integer.parseInt(degreeValues[0].trim());
-        } catch (NumberFormatException e) {
-            return; // Invalid numbers
+
+        if(collapseOptions.isEmpty()){
+            return;
         }
 
-        if (currentDegree > 0 && mainController != null) {
-            mainController.btnCollapseListener(currentDegree - 1);
+        Integer collapseSelected = cmbCollapse.getSelectionModel().getSelectedItem();
+        if(collapseSelected == null)
+            return;
+        if (mainController != null) {
+            mainController.btnCollapseListener(collapseSelected);
         }
     }
 
-    public void refreshHighlightOptions(String displayedProgramName, ProgramFunctionDto program) {
+    public void refreshHighlightOptions(ProgramFunctionDto programInContextDetails) {
         int i;
         highlightOptions.clear();
         highlightOptions.add("— choose —");
 
 
-        List<String> variables = ProgramUtil.getDisplayedProgramVariables(displayedProgramName, program);
+        List<String> variables = ProgramUtil.getDisplayedProgramVariables(programInContextDetails);
 
         for (i = 0; i < variables.size(); i++) {
             highlightOptions.add(variables.get(i));
         }
 
-        List<String> labels = ProgramUtil.getDisplayedProgramLabels(displayedProgramName, program);
+        List<String> labels = ProgramUtil.getDisplayedProgramLabels(programInContextDetails);
 
         for (i = 0; i < labels.size(); i++) {
             highlightOptions.add(labels.get(i));
@@ -134,39 +203,88 @@ public class TopBarController {
         }
     }
 
-    public int getCurrentDegree(){
-        int currentDegree=0;
-        String degree = degreeLabel.getText();
-        String[] degreeValues = degree.split("/");
+    public void refreshProgramOrFunctionOptions(List<String> programOrFunction) {
+        refreshingProgramOrFunctions = true;
         try {
-            currentDegree = Integer.parseInt(degreeValues[0].trim());
-        } catch (NumberFormatException e) {
+            programOrFunctionOptions.clear();
+            cmbProgramOrFunction.getSelectionModel().clearSelection();
+            cmbProgramOrFunction.setValue(null);
 
+            if (programOrFunction == null || programOrFunction.isEmpty()) {
+                programOrFunctionOptions.setAll();
+                cmbProgramOrFunction.setDisable(true);
+                return;
+            }
+            else {
+                programOrFunctionOptions.setAll(programOrFunction);
+            }
+
+            boolean hasItems = !programOrFunctionOptions.isEmpty();
+            cmbProgramOrFunction.setDisable(!hasItems);
+
+            if (hasItems) {
+                cmbProgramOrFunction.getSelectionModel().select(0);
+            } else {
+                cmbProgramOrFunction.setValue(null);
+            }
         }
-
-        return currentDegree;
+        finally{
+            refreshingProgramOrFunctions = false;
+        }
     }
 
 
-    public void refreshProgramOrFunctionOptions(ProgramDto program) {
-        int i;
-        programOrFunctionOptions.clear();
-        programOrFunctionOptions.add(program.getName());
+    public void refreshExpandAndCollapseOptions(List<Integer> expandOptions, List<Integer> collapseOptions) {
+        this.expandOptions.clear();
+        this.collapseOptions.clear();
 
-        List<FunctionDto> functions = program.getFunctions();
-
-
-        for (i = 0; i < functions.size(); i++) {
-            programOrFunctionOptions.add(functions.get(i).getName());
+        if(expandOptions.isEmpty()){
+            this.expandOptions.addAll();
         }
+        else
+            this.expandOptions.addAll(expandOptions);
 
-        cmbProgramOrFunction.getSelectionModel().select(programOrFunctionOptions.get(0));
+        if(collapseOptions.isEmpty()){
+            this.collapseOptions.addAll();
+        }
+        else
+            this.collapseOptions.addAll(collapseOptions);
+
+        cmbExpand.setDisable(expandOptions.isEmpty());
+        cmbCollapse.setDisable(collapseOptions.isEmpty());
+
+        cmbExpand.getSelectionModel().clearSelection();
+        cmbCollapse.getSelectionModel().clearSelection();
+
+        cmbExpand.setPromptText("Expand");
+        cmbCollapse.setPromptText("Collapse");
     }
 
     @FXML void onProgramFunctionChangedListener(ActionEvent event) {
+        if(refreshingProgramOrFunctions)
+            return;
         String programFunctionSelected = cmbProgramOrFunction.getSelectionModel().getSelectedItem();
         if(mainController != null) {
             mainController.onProgramFunctionChangedListener(programFunctionSelected);
         }
+    }
+
+    private static <T> void attachComboGuards(ComboBox<T> cb) {
+        cb.setOnShown(e -> {
+            if (cb.getItems() == null || cb.getItems().isEmpty()) {
+                cb.hide();
+                e.consume();
+            }
+        });
+        cb.setOnMousePressed(e -> {
+            if (cb.getItems() == null || cb.getItems().isEmpty()) {
+                e.consume();
+            }
+        });
+        cb.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+            if (isShowing && (cb.getItems() == null || cb.getItems().isEmpty())) {
+                cb.hide();
+            }
+        });
     }
 }

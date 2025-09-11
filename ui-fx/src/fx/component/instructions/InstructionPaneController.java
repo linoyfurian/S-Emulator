@@ -2,8 +2,10 @@ package fx.component.instructions;
 
 import fx.app.util.DisplayUtils;
 import fx.system.SEmulatorSystemController;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -42,6 +44,9 @@ public class InstructionPaneController {
     @FXML private Label lblBasicCount;
     @FXML private Label lblSyntheticCount;
 
+    private final IntegerProperty basicInstructionsNumber = new SimpleIntegerProperty(0);
+    private final IntegerProperty syntheticInstructionsNumber = new SimpleIntegerProperty(0);
+
 
     @FXML
     private void initialize() {
@@ -72,40 +77,24 @@ public class InstructionPaneController {
 
         tblChainInstructions.setItems(instructionChainData);
 
+        lblBasicCount.textProperty().bind(basicInstructionsNumber.asString());
+        lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
+
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
         this.mainController = mainController;
     }
 
-    public void displayProgram(String programToDisplayName, ProgramFunctionDto programDetails){
-        int numberOfBasicInstruction, numberOfSyntheticInstruction;
+    public void displayProgram(ProgramFunctionDto programDetails){
         instructionData.clear();
         instructionChainData.clear();
 
-        if(programToDisplayName.equals(programDetails.getName())){
-            List<InstructionDto> instructions = programDetails.getInstructions();
-            instructionData.addAll(instructions);
+        List<InstructionDto> instructions = programDetails.getInstructions();
+        instructionData.addAll(instructions);
 
-            numberOfBasicInstruction = DisplayUtils.getNumberOfBasicInstructions(programDetails);
-            numberOfSyntheticInstruction = instructions.size() -  numberOfBasicInstruction;
-
-            lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
-            lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
-
-        }
-        else{
-            ProgramDto programDto = (ProgramDto) programDetails;
-            FunctionDto functionToDisplay = DisplayUtils.findFunctionToDisplay(programToDisplayName, programDto);
-            List<InstructionDto> instructions = functionToDisplay.getInstructions();
-            instructionData.addAll(instructions);
-
-            numberOfBasicInstruction = DisplayUtils.getNumberOfBasicInstructions(functionToDisplay);
-            numberOfSyntheticInstruction = instructions.size() -  numberOfBasicInstruction;
-
-            lblBasicCount.setText(String.valueOf(numberOfBasicInstruction));
-            lblSyntheticCount.setText(String.valueOf(numberOfSyntheticInstruction));
-        }
+        basicInstructionsNumber.set(DisplayUtils.getNumberOfBasicInstructions(programDetails));
+        syntheticInstructionsNumber.set(instructions.size() - basicInstructionsNumber.get());
 
         clearAllRowHighlights();
     }
