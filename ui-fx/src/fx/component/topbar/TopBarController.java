@@ -56,16 +56,9 @@ public class TopBarController {
         );
 
         loadFileTextField.textProperty().bind(currentFileName);
-
-//        Platform.runLater(() -> {
-//            attachComboGuards(cmbProgramOrFunction);
-//            attachComboGuards(cmbExpand);
-//            attachComboGuards(cmbCollapse);
-//            attachComboGuards(cmbHighlight);
-//        });
     }
 
-    // --- Getters / Setters as integers ---
+
     public int getCurrentDegree() {
         try {
             return Integer.parseInt(currentDegree.get());
@@ -269,22 +262,22 @@ public class TopBarController {
         }
     }
 
-    private static <T> void attachComboGuards(ComboBox<T> cb) {
-        cb.setOnShown(e -> {
-            if (cb.getItems() == null || cb.getItems().isEmpty()) {
-                cb.hide();
-                e.consume();
-            }
-        });
-        cb.setOnMousePressed(e -> {
-            if (cb.getItems() == null || cb.getItems().isEmpty()) {
-                e.consume();
-            }
-        });
-        cb.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-            if (isShowing && (cb.getItems() == null || cb.getItems().isEmpty())) {
-                cb.hide();
-            }
-        });
-    }
+//    private static <T> void attachComboGuards(ComboBox<T> cb) {
+//        cb.setOnShown(e -> {
+//            if (cb.getItems() == null || cb.getItems().isEmpty()) {
+//                cb.hide();
+//                e.consume();
+//            }
+//        });
+//        cb.setOnMousePressed(e -> {
+//            if (cb.getItems() == null || cb.getItems().isEmpty()) {
+//                e.consume();
+//            }
+//        });
+//        cb.showingProperty().addListener((obs, wasShowing, isShowing) -> {
+//            if (isShowing && (cb.getItems() == null || cb.getItems().isEmpty())) {
+//                cb.hide();
+//            }
+//        });
+//    }
 }

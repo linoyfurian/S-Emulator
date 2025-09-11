@@ -77,7 +77,7 @@ public class SEmulatorSystemController {
 
                 topBarController.refreshHighlightOptions(programInContextDetails);
 
-                //debuggerController.setProgram(programDetails); //todo
+                debuggerController.setProgram(programInContextDetails);
                 topBarController.setLoadFileText(fileName);
                 List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
                 topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
@@ -92,9 +92,8 @@ public class SEmulatorSystemController {
             topBarController.refreshHighlightOptions(expandedProgramDetails);
             javafx.application.Platform.runLater(() -> {
                 topBarController.updateCurrentDegreeLabel(degreeToExpand);
-                //topBarController.refreshHighlightOptions(expanded);
             });
-            //todo: debuggerController.setProgram(programFunctionDto);
+            debuggerController.setProgram(expandedProgramDetails);
         }
     }
 
@@ -103,20 +102,21 @@ public class SEmulatorSystemController {
         if(collapsedProgramDetails != null) {
             instructionsController.displayProgram(collapsedProgramDetails);
             topBarController.refreshHighlightOptions(collapsedProgramDetails);
-            //todo: debuggerController.setProgram(programFunctionDto);
+            debuggerController.setProgram(collapsedProgramDetails);
             javafx.application.Platform.runLater(() -> {
                 topBarController.updateCurrentDegreeLabel(degreeToCollapse);
-                //topBarController.refreshHighlightOptions(expanded);
             });
         }
-        //debuggerController.setProgram(programDetails);
     }
 
     public void onHighlightChangedListener(String highlightSelected){
         instructionsController.highlightSelectionOnTable(highlightSelected);
     }
 
-    public void btnStartRegularExecutionListener(long... inputs){
+
+
+
+    public void btnRunListener(long... inputs){
         int degreeOfRun = topBarController.getCurrentDegree();
         ExecutionRunDto runResult= engine.runProgram(degreeOfRun,inputs);
         if(runResult!=null){
@@ -134,8 +134,7 @@ public class SEmulatorSystemController {
         int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(programInContextDetails);
         topBarController.updateDegreeLabel(programDegree, maxDegree);
         topBarController.refreshHighlightOptions(programInContextDetails);
-
-        //debuggerController.setProgram(programDetails); //todo
+        debuggerController.setProgram(programInContextDetails);
     }
 
 }

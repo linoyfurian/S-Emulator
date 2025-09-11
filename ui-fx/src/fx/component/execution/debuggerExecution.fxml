@@ -3,30 +3,42 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="480.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="500.0" prefHeight="400.0" prefWidth="550.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
    <children>
       <Label id="debugger-title" text="Debugger\Execution" textAlignment="CENTER">
          <padding>
-            <Insets bottom="5.0" left="170.0" top="5.0" />
+            <Insets bottom="5.0" left="180.0" top="5.0" />
          </padding>
          <opaqueInsets>
             <Insets left="80.0" />
          </opaqueInsets>
       </Label>
-      <HBox maxHeight="30.0" minHeight="30.0" minWidth="200.0" prefHeight="30.0" prefWidth="200.0" spacing="3.0">
+      <HBox maxHeight="30.0" minHeight="40.0" minWidth="200.0" prefHeight="40.0" prefWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" onAction="#btnStartRegularExecutionListener" prefWidth="144.0" text="Start Regular Execution" />
-            <Button mnemonicParsing="false" text="Start Debug Execution" />
-            <Button mnemonicParsing="false" text="Stop" />
-            <Button mnemonicParsing="false" text="Resume" />
-            <Button mnemonicParsing="false" text="Step over" />
+            <Button mnemonicParsing="false" onAction="#btnNewRunListener" styleClass="execution-button" text="New run" />
+            <Button id="run-button" mnemonicParsing="false" onAction="#btnRunListener" text="Run" />
+            <VBox prefHeight="200.0" prefWidth="70.0" spacing="3.0">
+               <children>
+                  <RadioButton mnemonicParsing="false" selected="true" text="regular">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="runModeGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton mnemonicParsing="false" text="debug" toggleGroup="$runModeGroup" />
+               </children>
+            </VBox>
+            <Button mnemonicParsing="false" styleClass="execution-button" text="Stop" />
+            <Button mnemonicParsing="false" styleClass="execution-button" text="Resume" />
+            <Button mnemonicParsing="false" styleClass="execution-button" text="Step over" />
          </children>
          <padding>
             <Insets left="3.0" />

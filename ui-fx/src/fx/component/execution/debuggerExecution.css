@@ -23,3 +23,13 @@
     -fx-font-weight: bold;
     -fx-text-fill: #193d5c;
 }
+
+#run-button {
+    -fx-background-color: #56e15c;
+    -fx-text-fill: white;
+}
+
+.execution-button {
+    -fx-background-color: #8b8c8b;
+    -fx-text-fill: white;
+}

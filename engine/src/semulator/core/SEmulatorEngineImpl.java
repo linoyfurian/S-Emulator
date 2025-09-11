@@ -93,11 +93,11 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     public ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input){
         Program programToRun = programInContext.expand(desiredDegreeOfExpand);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
-        long runNumber = this.programRuns.size()+1;
+       //todo long runNumber = this.programRuns.size()+1;
 
 
         //todo map history
-        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, runNumber, input);
+        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, input);
         this.programRuns.add(runResult);
 
         return runResult;

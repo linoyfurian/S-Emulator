@@ -2,6 +2,9 @@ package fx.component.execution;
 
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,11 +20,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramDto;
+import semulator.api.dto.ProgramFunctionDto;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+
 
 public class DebuggerExecutionController {
     private SEmulatorSystemController mainController;
@@ -38,6 +43,7 @@ public class DebuggerExecutionController {
     @FXML private TableView<VariableRow> variablesTable;
 
     @FXML private Label cyclesLabel;
+    private IntegerProperty cyclesProperty = new SimpleIntegerProperty(0);
 
     @FXML
     private void initialize() {
@@ -46,24 +52,26 @@ public class DebuggerExecutionController {
         valueCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(String.valueOf(cellData.getValue().getValue())));
         variablesTable.setItems(variablesData);
+        cyclesLabel.textProperty().bind(Bindings.format("%s", cyclesProperty));
     }
-        public void setMainController(SEmulatorSystemController mainController) {
+
+    public void setMainController(SEmulatorSystemController mainController) {
         this.mainController = mainController;
     }
 
 
     /** Call this when a program is loaded or when switching program */
-    public void setProgram(ProgramDto program) {
-        buildInputsUI(program);
+    public void setProgram(ProgramFunctionDto programInContextDetails) {
+        buildInputsUI(programInContextDetails);
         variablesData.clear();
     }
 
     /** Create rows of (Label | TextField) dynamically */
-    private void buildInputsUI(ProgramDto program) {
+    private void buildInputsUI(ProgramFunctionDto programInContextDetails) {
         inputsContainer.getChildren().clear();
         inputFields.clear();
 
-        List<String> inputNames = program.getInputVariablesInOrder(); // adapt to your ProgramDto
+        List<String> inputNames = programInContextDetails.getInputVariablesInOrder(); // adapt to your ProgramDto
 
         for (String name : inputNames) {
             HBox row = new HBox(8);
@@ -156,7 +164,40 @@ public class DebuggerExecutionController {
     }
 
 
-    @FXML void btnStartRegularExecutionListener(ActionEvent event) {
+    @FXML
+    void btnNewRunListener(ActionEvent event) {
+        variablesData.clear();
+        if (cyclesLabel != null) {
+            cyclesProperty.set(0);
+        }
+
+        TextField firstField = null;
+
+        for (Node rowNode : inputsContainer.getChildren()) {
+            if (rowNode instanceof HBox row) {
+                for (Node child : row.getChildren()) {
+                    if (child instanceof TextField tf) {
+                        tf.clear();
+                        if (firstField == null) {
+                            firstField = tf;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (inputsScroll != null) {
+            inputsScroll.setVvalue(0.0);
+        }
+
+        if (firstField != null) {
+            firstField.requestFocus();
+        }
+
+        inputFields.values().forEach(TextField::clear);
+    }
+
+    @FXML void btnRunListener(ActionEvent event) {
         if (mainController != null) {
             if(inputFields.isEmpty()) {
                 return;
@@ -177,6 +218,8 @@ public class DebuggerExecutionController {
                         value = 0L;
                     }
                 }
+                else
+                    value = 0L;
                 inputsValues.put(index, value);
                 if (index > maxIndex)
                     maxIndex = index;
@@ -190,9 +233,8 @@ public class DebuggerExecutionController {
                 inputs[i - 1] = inputsValues.getOrDefault(i, 0L);
             }
 
-            mainController.btnStartRegularExecutionListener(inputs);
+            mainController.btnRunListener(inputs);
         }
-
     }
 
     public void updateRunResult(ExecutionRunDto runResult){
@@ -203,8 +245,6 @@ public class DebuggerExecutionController {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
-
-        cyclesLabel.setText(String.valueOf(runResult.getCycles()));
-
+        cyclesProperty.set(runResult.getCycles());
     }
 }
