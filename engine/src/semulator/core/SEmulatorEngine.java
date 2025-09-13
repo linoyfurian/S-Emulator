@@ -2,6 +2,7 @@ package semulator.core;
 
 import jakarta.xml.bind.JAXBException;
 import semulator.api.LoadReport;
+import semulator.api.dto.DebugContextDto;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramDto;
 import semulator.api.dto.ProgramFunctionDto;
@@ -10,6 +11,7 @@ import semulator.logic.program.Program;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public interface SEmulatorEngine {
 
@@ -29,4 +31,5 @@ public interface SEmulatorEngine {
     String getProgramInContextName();
     void setProgramInContext(String programInContextName);
     List<String> getProgramOrFunctionNames();
+    DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, long ... input);
 }

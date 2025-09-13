@@ -38,7 +38,8 @@
             </VBox>
             <Button fx:id="stopBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Stop" />
             <Button fx:id="resumeBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Resume" />
-            <Button fx:id="stepOverBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Step over" />
+            <Button fx:id="stepOverBtn" disable="true" mnemonicParsing="false" onAction="#btnStepOverListener" styleClass="execution-button" text="Step over" />
+            <Button fx:id="stepBackBtn" disable="true" mnemonicParsing="false" onAction="#btnStepBackListener" styleClass="execution-button" text="Step Back" />
          </children>
          <padding>
             <Insets left="3.0" />

@@ -9,10 +9,7 @@ import fx.component.topbar.TopBarController;
 import jakarta.xml.bind.JAXBException;
 import javafx.fxml.FXML;
 import semulator.api.LoadReport;
-import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.InstructionDto;
-import semulator.api.dto.ProgramDto;
-import semulator.api.dto.ProgramFunctionDto;
+import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
@@ -30,6 +27,7 @@ public class SEmulatorSystemController {
     @FXML private HistoryController historyController;
 
     private String currentProgramName;
+    DebugContextDto debugContext = null;
 
     @FXML
     public void initialize() {
@@ -113,9 +111,6 @@ public class SEmulatorSystemController {
         instructionsController.highlightSelectionOnTable(highlightSelected);
     }
 
-
-
-
     public void btnRunListener(boolean isDebugMode, long... inputs){
         int degreeOfRun = topBarController.getCurrentDegree();
         if(!isDebugMode) {
@@ -126,7 +121,9 @@ public class SEmulatorSystemController {
         }
         else {
             debuggerController.initialStartOfDebugging();
-
+            DebugContextDto debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, inputs);
+            this.debugContext = debugDetails;
+            debuggerController.updateDebugResult(this.debugContext);
         }
     }
 
@@ -143,4 +140,30 @@ public class SEmulatorSystemController {
         debuggerController.setProgram(programInContextDetails);
     }
 
+    public void cleanDebugContext(){
+        debugContext = null;
+    }
+
+    public void btnStepOverListener(){
+        int degreeOfRun = topBarController.getCurrentDegree();
+        DebugContextDto debugDetails = engine.debugProgram(degreeOfRun, this.debugContext);
+        this.debugContext = debugDetails;
+        debuggerController.updateDebugResult(this.debugContext);
+    }
+
+    public void btnStepBackListener(){
+        if(this.debugContext!=null){
+            System.out.println("Step back");
+            long presInstructionNumber = this.debugContext.getPreviousInstructionNumber();
+            System.out.println("presInstructionNumber: " + presInstructionNumber);
+            if(presInstructionNumber==1){
+                debuggerController.updateDebugPrevResult(this.debugContext);
+                debuggerController.disableStepBackBtn();
+            }
+            else{
+                this.debugContext = this.debugContext.getPrevDebugContext();
+                debuggerController.updateDebugResult(this.debugContext);
+            }
+        }
+    }
 }

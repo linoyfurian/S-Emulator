@@ -4,17 +4,16 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.api.LoadReport;
-import semulator.api.dto.FunctionDto;
-import semulator.api.dto.ProgramFunctionDto;
+import semulator.api.dto.*;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
-import semulator.api.dto.ExecutionRunDto;
 import semulator.logic.Function.Function;
+import semulator.logic.debugger.ProgramDebugger;
+import semulator.logic.debugger.ProgramDebuggerImpl;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.program.Program;
-import semulator.api.dto.ProgramDto;
 import semulator.logic.program.ProgramImpl;
 
 import java.io.*;
@@ -89,6 +88,27 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         String name = path.getFileName().toString().trim();
         return name.toLowerCase(Locale.ROOT).endsWith(".xml");
     }
+
+    @Override
+    public DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, long ... input){
+        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
+        ProgramDebugger debugger;
+        if(context == null)
+            debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
+        else
+            debugger = new ProgramDebuggerImpl(programToRun, context, this.program);
+
+        long instructionToExecuteNumber = 1;
+        if(context!=null)
+            instructionToExecuteNumber = context.getNextInstructionNumber();
+
+        DebugContextDto result;
+        result = debugger.debug(instructionToExecuteNumber, context);
+
+        return result;
+    }
+
+
 
     @Override
     public ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input){

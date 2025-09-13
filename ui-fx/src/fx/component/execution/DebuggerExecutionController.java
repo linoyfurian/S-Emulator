@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import semulator.api.dto.DebugContextDto;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramFunctionDto;
 
@@ -50,6 +51,7 @@ public class DebuggerExecutionController {
     @FXML private Button resumeBtn;
     @FXML private Button stepOverBtn;
     @FXML private Button stopBtn;
+    @FXML private Button stepBackBtn;
 
     private boolean isDebugMode = false;
     private boolean isStopDebugger = false;
@@ -211,6 +213,8 @@ public class DebuggerExecutionController {
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
         radioBtnRegular.setDisable(false);
+
+        mainController.cleanDebugContext();
     }
 
     @FXML void btnRunListener(ActionEvent event) {
@@ -274,5 +278,59 @@ public class DebuggerExecutionController {
         resumeBtn.setDisable(false);
         stepOverBtn.setDisable(false);
         radioBtnRegular.setDisable(true);
+        stepBackBtn.setDisable(true);
+    }
+
+    public void updateDebugResult(DebugContextDto debugContext) {
+        Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
+        variablesData.clear();
+
+        for (Map.Entry<String, Long> entry : variablesValues.entrySet()) {
+            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+            variablesData.add(row);
+        }
+        cyclesProperty.set(debugContext.getCycles());
+
+        long nextInstructionNumber = debugContext.getNextInstructionNumber();
+        if (nextInstructionNumber == 0) { //finish debug
+            runBtn.setDisable(false);
+            stopBtn.setDisable(true);
+            resumeBtn.setDisable(true);
+            stepOverBtn.setDisable(true);
+            radioBtnRegular.setDisable(false);
+        }
+    }
+
+    public void updateDebugPrevResult(DebugContextDto debugContext){
+        Map<String, Long> variablesValues = debugContext.getPreviousVariablesValues();
+        variablesData.clear();
+
+        for (Map.Entry<String, Long> entry : variablesValues.entrySet()) {
+            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+            variablesData.add(row);
+        }
+        cyclesProperty.set(debugContext.getCycles());
+
+        long nextInstructionNumber = debugContext.getNextInstructionNumber();
+        if (nextInstructionNumber == 0) { //finish debug
+            runBtn.setDisable(false);
+            stopBtn.setDisable(true);
+            resumeBtn.setDisable(true);
+            stepOverBtn.setDisable(true);
+            radioBtnRegular.setDisable(false);
+        }
+    }
+
+    @FXML void btnStepOverListener(ActionEvent event) {
+        mainController.btnStepOverListener();
+        stepBackBtn.setDisable(false);
+    }
+
+    @FXML void btnStepBackListener(ActionEvent event) {
+        mainController.btnStepBackListener();
+    }
+
+    public void disableStepBackBtn(){
+        stepBackBtn.setDisable(true);
     }
 }
