@@ -36,7 +36,7 @@
                   <RadioButton fx:id="radioBtnDebug" mnemonicParsing="false" text="debug" toggleGroup="$runModeGroup" />
                </children>
             </VBox>
-            <Button fx:id="stopBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Stop" />
+            <Button fx:id="stopBtn" disable="true" mnemonicParsing="false" onAction="#btnStopListener" styleClass="execution-button" text="Stop" />
             <Button fx:id="resumeBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Resume" />
             <Button fx:id="stepOverBtn" disable="true" mnemonicParsing="false" onAction="#btnStepOverListener" styleClass="execution-button" text="Step over" />
             <Button fx:id="stepBackBtn" disable="true" mnemonicParsing="false" onAction="#btnStepBackListener" styleClass="execution-button" text="Step Back" />

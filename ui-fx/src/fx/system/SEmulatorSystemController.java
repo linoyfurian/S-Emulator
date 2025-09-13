@@ -1,6 +1,5 @@
 package fx.system;
 
-import fx.app.util.DisplayUtils;
 import fx.app.util.ProgramUtil;
 import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
@@ -15,8 +14,8 @@ import semulator.core.SEmulatorEngineImpl;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class SEmulatorSystemController {
 
@@ -111,19 +110,28 @@ public class SEmulatorSystemController {
         instructionsController.highlightSelectionOnTable(highlightSelected);
     }
 
-    public void btnRunListener(boolean isDebugMode, long... inputs){
+    public void btnRunListener(boolean isDebugMode, Map<String, Long> originalInputs, long ... inputs){
         int degreeOfRun = topBarController.getCurrentDegree();
         if(!isDebugMode) {
-            ExecutionRunDto runResult= engine.runProgram(degreeOfRun,inputs);
+            ExecutionRunDto runResult= engine.runProgram(degreeOfRun, originalInputs, inputs);
             if(runResult!=null){
                 debuggerController.updateRunResult(runResult);
+                List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+                historyController.updateHistoryRunTable(programInContextRunHistory);
             }
         }
         else {
             debuggerController.initialStartOfDebugging();
-            DebugContextDto debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, inputs);
+            DebugContextDto debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
             this.debugContext = debugDetails;
             debuggerController.updateDebugResult(this.debugContext);
+            long nextInstructionNumber = debugContext.getNextInstructionNumber();
+            if(nextInstructionNumber == 0) {
+                engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+                List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+                historyController.updateHistoryRunTable(programInContextRunHistory);
+            }
+
         }
     }
 
@@ -138,6 +146,8 @@ public class SEmulatorSystemController {
         topBarController.updateDegreeLabel(programDegree, maxDegree);
         topBarController.refreshHighlightOptions(programInContextDetails);
         debuggerController.setProgram(programInContextDetails);
+        List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+        historyController.updateHistoryRunTable(programInContextRunHistory);
     }
 
     public void cleanDebugContext(){
@@ -146,16 +156,20 @@ public class SEmulatorSystemController {
 
     public void btnStepOverListener(){
         int degreeOfRun = topBarController.getCurrentDegree();
-        DebugContextDto debugDetails = engine.debugProgram(degreeOfRun, this.debugContext);
+        DebugContextDto debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs());
         this.debugContext = debugDetails;
+        long nextInstructionNumber = debugContext.getNextInstructionNumber();
+        if(nextInstructionNumber == 0){
+            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+            historyController.updateHistoryRunTable(programInContextRunHistory);
+        }
         debuggerController.updateDebugResult(this.debugContext);
     }
 
     public void btnStepBackListener(){
         if(this.debugContext!=null){
-            System.out.println("Step back");
             long presInstructionNumber = this.debugContext.getPreviousInstructionNumber();
-            System.out.println("presInstructionNumber: " + presInstructionNumber);
             if(presInstructionNumber==1){
                 debuggerController.updateDebugPrevResult(this.debugContext);
                 debuggerController.disableStepBackBtn();
@@ -165,5 +179,12 @@ public class SEmulatorSystemController {
                 debuggerController.updateDebugResult(this.debugContext);
             }
         }
+    }
+
+    public void btnStopListener(){
+        int degreeOfRun = topBarController.getCurrentDegree();
+        engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+        List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+        historyController.updateHistoryRunTable(programInContextRunHistory);
     }
 }

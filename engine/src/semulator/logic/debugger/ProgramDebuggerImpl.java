@@ -57,7 +57,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     }
 
     @Override
-    public DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails){
+    public DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
 
         List<Instruction> instructions = programToDebug.getInstructions();
         //todo check size of instructions
@@ -98,7 +98,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails);
+        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs);
 
         return result;
     }

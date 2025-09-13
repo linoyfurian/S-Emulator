@@ -23,7 +23,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
     }
 
     @Override
-    public ExecutionRunDto run(int degreeOfExpansion, long runNumber, long... inputs) {
+    public ExecutionRunDto run(int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
         int cycles = 0;
         ExecutionContext context = new ExecutionContextImpl();
 
@@ -83,7 +83,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         long y = context.getVariableValue(Variable.RESULT);
         Map<String, Long> variablesValues = context.getAllValues();
 
-        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, inputs, cycles, variablesValues);
+        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, cycles, variablesValues, originalInputs);
         return result;
     }
 }

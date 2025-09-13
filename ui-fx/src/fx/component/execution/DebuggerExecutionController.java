@@ -76,6 +76,12 @@ public class DebuggerExecutionController {
     public void setProgram(ProgramFunctionDto programInContextDetails) {
         buildInputsUI(programInContextDetails);
         variablesData.clear();
+        stepBackBtn.setDisable(true);
+        runBtn.setDisable(false);
+        stopBtn.setDisable(true);
+        resumeBtn.setDisable(true);
+        stepOverBtn.setDisable(true);
+        radioBtnRegular.setDisable(false);
     }
 
     /** Create rows of (Label | TextField) dynamically */
@@ -219,11 +225,14 @@ public class DebuggerExecutionController {
 
     @FXML void btnRunListener(ActionEvent event) {
         isDebugMode = radioBtnDebug.isSelected();
+        mainController.cleanDebugContext();
+
+        Map<String, Long> originalInputs = new HashMap<>();
 
         if (mainController != null) {
             if(inputFields.isEmpty()) {
                 long [] inputs = new long[0];
-                mainController.btnRunListener(isDebugMode, inputs);
+                mainController.btnRunListener(isDebugMode, originalInputs, inputs);
             }
 
             int maxIndex = 0;
@@ -245,6 +254,7 @@ public class DebuggerExecutionController {
                 else
                     value = 0L;
                 inputsValues.put(index, value);
+                originalInputs.put(input.getKey(), value);
                 if (index > maxIndex)
                     maxIndex = index;
             }
@@ -257,7 +267,7 @@ public class DebuggerExecutionController {
                 inputs[i - 1] = inputsValues.getOrDefault(i, 0L);
             }
 
-            mainController.btnRunListener(isDebugMode, inputs);
+            mainController.btnRunListener(isDebugMode, originalInputs, inputs);
         }
     }
 
@@ -332,5 +342,16 @@ public class DebuggerExecutionController {
 
     public void disableStepBackBtn(){
         stepBackBtn.setDisable(true);
+    }
+
+
+    @FXML void btnStopListener(ActionEvent event) {
+        runBtn.setDisable(false);
+        stopBtn.setDisable(true);
+        resumeBtn.setDisable(true);
+        stepOverBtn.setDisable(true);
+        stepBackBtn.setDisable(true);
+        radioBtnRegular.setDisable(false);
+        mainController.btnStopListener();
     }
 }

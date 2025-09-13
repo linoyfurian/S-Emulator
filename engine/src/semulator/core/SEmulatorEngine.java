@@ -2,10 +2,7 @@ package semulator.core;
 
 import jakarta.xml.bind.JAXBException;
 import semulator.api.LoadReport;
-import semulator.api.dto.DebugContextDto;
-import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.ProgramDto;
-import semulator.api.dto.ProgramFunctionDto;
+import semulator.api.dto.*;
 import semulator.logic.program.Program;
 
 import java.io.IOException;
@@ -18,7 +15,7 @@ public interface SEmulatorEngine {
     LoadReport loadProgramDetails(Path filePath) throws JAXBException;
     ProgramFunctionDto displayProgram();
     ProgramFunctionDto expand(int desiredDegreeOfExpand);
-    ExecutionRunDto runProgram(int desiredDegreeOfExpand, long... input);
+    ExecutionRunDto runProgram(int desiredDegreeOfExpand, Map<String, Long> originalInputs, long... input);
     List<ExecutionRunDto> historyDisplay();
     void setLoaded(boolean isLoaded);
     boolean isLoaded();
@@ -31,5 +28,7 @@ public interface SEmulatorEngine {
     String getProgramInContextName();
     void setProgramInContext(String programInContextName);
     List<String> getProgramOrFunctionNames();
-    DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, long ... input);
+    DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
+    void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun);
+    List<RunResultDto> getProgramInContextRunHistory();
 }

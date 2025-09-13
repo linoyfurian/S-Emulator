@@ -8,11 +8,11 @@ public class ExecutionRunDto implements Serializable {
     private final long runNumber;
     private final int expansionDegree;
     private final long result;
-    private final long [] inputs;
+    private final Map<String, Long> inputs;
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
 
-    public ExecutionRunDto(long runNumber, int expansionDegree, long result, long [] inputs, int cycles, Map<String, Long> variables) {
+    public ExecutionRunDto(long runNumber, int expansionDegree, long result, int cycles, Map<String, Long> variables,  Map<String, Long> inputs) {
         this.runNumber = runNumber;
         this.expansionDegree = expansionDegree;
         this.result = result;
@@ -70,7 +70,7 @@ public class ExecutionRunDto implements Serializable {
         return expansionDegree;
     }
 
-    public long [] getInputs() {
+    public  Map<String, Long> getInputs() {
         return inputs;
     }
 }

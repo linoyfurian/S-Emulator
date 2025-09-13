@@ -18,15 +18,14 @@ import semulator.logic.program.ProgramImpl;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.nio.file.Path;
 
 public class SEmulatorEngineImpl implements SEmulatorEngine {
     private Program program = null;
     private Program programInContext = null;
     private boolean isLoaded = false;
+    private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
     private List<ExecutionRunDto> programRuns = new ArrayList<>();
 
     @Override
@@ -69,6 +68,14 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
                 this.programInContext = mappedProgram;
                 this.program = mappedProgram;
                 this.isLoaded = true;
+
+                this.runsHistory.put(mappedProgram.getName(), new ArrayList<>());
+                ProgramImpl programImpl = (ProgramImpl) mappedProgram;
+                List<Program> functions = programImpl.getFunctions();
+                for (Program function : functions) {
+                    this.runsHistory.put(function.getName(), new ArrayList<>());
+                }
+
                 loadReport = new LoadReport(true, "Program loaded successfully");
                 return loadReport;
             }
@@ -90,7 +97,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
-    public DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, long ... input){
+    public DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input){
         Program programToRun = programInContext.expand(desiredDegreeOfExpand);
         ProgramDebugger debugger;
         if(context == null)
@@ -103,7 +110,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             instructionToExecuteNumber = context.getNextInstructionNumber();
 
         DebugContextDto result;
-        result = debugger.debug(instructionToExecuteNumber, context);
+        result = debugger.debug(instructionToExecuteNumber, context, originalInputs);
 
         return result;
     }
@@ -111,15 +118,14 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
 
     @Override
-    public ExecutionRunDto runProgram(int desiredDegreeOfExpand, long ... input){
+    public ExecutionRunDto runProgram(int desiredDegreeOfExpand, Map<String, Long> originalInputs, long ... input){
         Program programToRun = programInContext.expand(desiredDegreeOfExpand);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
-       //todo long runNumber = this.programRuns.size()+1;
+        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
 
-
-        //todo map history
-        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, input);
-        this.programRuns.add(runResult);
+        List<RunResultDto> results = this.runsHistory.get(programToRun.getName());
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables());
+        results.add(currentRunResult);
 
         return runResult;
     }
@@ -243,5 +249,17 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         }
 
         return programOrFunctionNames;
+    }
+
+    public void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun){
+        List<RunResultDto> results = this.runsHistory.get(this.programInContext.getName());
+        Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
+        long resultY = variablesValues.get("y");
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues());
+        results.add(currentRunResult);
+    }
+
+    public List<RunResultDto> getProgramInContextRunHistory(){
+        return this.runsHistory.get(this.programInContext.getName());
     }
 }

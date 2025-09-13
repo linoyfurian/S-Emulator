@@ -16,14 +16,16 @@ public class DebugContextDto {
     private final LinkedHashMap<String, Long> previousVariablesValues;
     private final int cycles;
     private final DebugContextDto prevDebugContext;
+    private final Map<String, Long> originalInputs;
 
-    public DebugContextDto(Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext) {
+    public DebugContextDto(Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs) {
         this.previousInstructionNumber = previousInstructionNumber;
         this.nextInstructionNumber = nextInstructionNumber;
         this.currentVariablesValues = sortVarsForDisplay(context.getAllValues());
         this.previousVariablesValues = sortVarsForDisplay(previousVariablesValues);
         this.cycles = cycles;
         this.prevDebugContext = prevDebugContext;
+        this.originalInputs = originalInputs;
     }
 
     public LinkedHashMap<String, Long> getCurrentVariablesValues() {
@@ -48,6 +50,10 @@ public class DebugContextDto {
 
     public DebugContextDto getPrevDebugContext() {
         return prevDebugContext;
+    }
+
+    public Map<String, Long> getOriginalInputs() {
+        return originalInputs;
     }
 
     private static LinkedHashMap<String, Long> sortVarsForDisplay(Map<String, Long> vars) {

@@ -1,0 +1,14 @@
+.history-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.sub-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #3a476c;
+}
+
+.history-button {
+    -fx-background-color: #2c6697;
+    -fx-text-fill: white;
+}

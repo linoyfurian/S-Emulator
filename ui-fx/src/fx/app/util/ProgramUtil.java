@@ -1,12 +1,10 @@
 package fx.app.util;
 
-import semulator.api.dto.FunctionDto;
-import semulator.api.dto.InstructionDto;
-import semulator.api.dto.ProgramDto;
-import semulator.api.dto.ProgramFunctionDto;
+import semulator.api.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProgramUtil {
 
@@ -48,6 +46,16 @@ public class ProgramUtil {
             newCollapseOptions.add(i);
         }
         return newCollapseOptions;
+    }
+
+    public static List<VariableRow> generateVariablesRowList(RunResultDto selectedRun){
+        Map<String,Long> variables = selectedRun.getAllVariables();
+        List<VariableRow> variableRows = new ArrayList<>();
+        for(Map.Entry<String,Long> entry : variables.entrySet()){
+            VariableRow variableRow = new VariableRow(entry.getKey(), entry.getValue());
+            variableRows.add(variableRow);
+        }
+        return variableRows;
     }
 
 

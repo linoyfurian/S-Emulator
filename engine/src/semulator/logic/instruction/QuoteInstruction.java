@@ -58,7 +58,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 inputs[i] = context.getVariableValue(var);
             }
 
-            ExecutionRunDto runDetails = programExecutor.run(0, 0, inputs);
+            ExecutionRunDto runDetails = programExecutor.run(0, 0, null, inputs);
             if(runDetails!=null) {
                 assignedValue = runDetails.getResult();
                 context.updateVariable(this.getVariable(), assignedValue);
