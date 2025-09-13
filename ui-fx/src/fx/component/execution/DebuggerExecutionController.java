@@ -19,7 +19,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.ProgramDto;
 import semulator.api.dto.ProgramFunctionDto;
 
 import java.util.HashMap;
@@ -44,6 +43,17 @@ public class DebuggerExecutionController {
 
     @FXML private Label cyclesLabel;
     private IntegerProperty cyclesProperty = new SimpleIntegerProperty(0);
+
+    @FXML private Button runBtn;
+    @FXML private RadioButton radioBtnDebug;
+    @FXML private RadioButton radioBtnRegular;
+    @FXML private Button resumeBtn;
+    @FXML private Button stepOverBtn;
+    @FXML private Button stopBtn;
+
+    private boolean isDebugMode = false;
+    private boolean isStopDebugger = false;
+    private boolean isResume = false;
 
     @FXML
     private void initialize() {
@@ -195,14 +205,23 @@ public class DebuggerExecutionController {
         }
 
         inputFields.values().forEach(TextField::clear);
+
+        runBtn.setDisable(false);
+        stopBtn.setDisable(true);
+        resumeBtn.setDisable(true);
+        stepOverBtn.setDisable(true);
+        radioBtnRegular.setDisable(false);
     }
 
     @FXML void btnRunListener(ActionEvent event) {
+        isDebugMode = radioBtnDebug.isSelected();
+
         if (mainController != null) {
             if(inputFields.isEmpty()) {
                 long [] inputs = new long[0];
-                mainController.btnRunListener(inputs);
+                mainController.btnRunListener(isDebugMode, inputs);
             }
+
             int maxIndex = 0;
             int index;
             String strValue;
@@ -234,7 +253,7 @@ public class DebuggerExecutionController {
                 inputs[i - 1] = inputsValues.getOrDefault(i, 0L);
             }
 
-            mainController.btnRunListener(inputs);
+            mainController.btnRunListener(isDebugMode, inputs);
         }
     }
 
@@ -247,5 +266,13 @@ public class DebuggerExecutionController {
             variablesData.add(row);
         }
         cyclesProperty.set(runResult.getCycles());
+    }
+
+    public void initialStartOfDebugging(){
+        runBtn.setDisable(true);
+        stopBtn.setDisable(false);
+        resumeBtn.setDisable(false);
+        stepOverBtn.setDisable(false);
+        radioBtnRegular.setDisable(true);
     }
 }

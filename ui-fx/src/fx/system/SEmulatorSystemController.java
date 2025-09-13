@@ -116,11 +116,17 @@ public class SEmulatorSystemController {
 
 
 
-    public void btnRunListener(long... inputs){
+    public void btnRunListener(boolean isDebugMode, long... inputs){
         int degreeOfRun = topBarController.getCurrentDegree();
-        ExecutionRunDto runResult= engine.runProgram(degreeOfRun,inputs);
-        if(runResult!=null){
-            debuggerController.updateRunResult(runResult);
+        if(!isDebugMode) {
+            ExecutionRunDto runResult= engine.runProgram(degreeOfRun,inputs);
+            if(runResult!=null){
+                debuggerController.updateRunResult(runResult);
+            }
+        }
+        else {
+            debuggerController.initialStartOfDebugging();
+
         }
     }
 

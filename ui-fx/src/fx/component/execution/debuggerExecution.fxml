@@ -25,20 +25,20 @@
       <HBox maxHeight="30.0" minHeight="40.0" minWidth="200.0" prefHeight="40.0" prefWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
          <children>
             <Button mnemonicParsing="false" onAction="#btnNewRunListener" styleClass="execution-button" text="New run" />
-            <Button id="run-button" mnemonicParsing="false" onAction="#btnRunListener" text="Run" />
+            <Button id="run-button" fx:id="runBtn" mnemonicParsing="false" onAction="#btnRunListener" text="Run" />
             <VBox prefHeight="200.0" prefWidth="70.0" spacing="3.0">
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="regular">
+                  <RadioButton fx:id="radioBtnRegular" mnemonicParsing="false" selected="true" text="regular">
                      <toggleGroup>
                         <ToggleGroup fx:id="runModeGroup" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="debug" toggleGroup="$runModeGroup" />
+                  <RadioButton fx:id="radioBtnDebug" mnemonicParsing="false" text="debug" toggleGroup="$runModeGroup" />
                </children>
             </VBox>
-            <Button mnemonicParsing="false" styleClass="execution-button" text="Stop" />
-            <Button mnemonicParsing="false" styleClass="execution-button" text="Resume" />
-            <Button mnemonicParsing="false" styleClass="execution-button" text="Step over" />
+            <Button fx:id="stopBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Stop" />
+            <Button fx:id="resumeBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Resume" />
+            <Button fx:id="stepOverBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Step over" />
          </children>
          <padding>
             <Insets left="3.0" />
