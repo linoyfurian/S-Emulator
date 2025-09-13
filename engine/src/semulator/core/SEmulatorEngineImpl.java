@@ -9,6 +9,7 @@ import semulator.api.dto.ProgramFunctionDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.api.dto.ExecutionRunDto;
+import semulator.logic.Function.Function;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.instruction.expansion.ExpansionUtils;
@@ -171,7 +172,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             ProgramImpl programImpl = (ProgramImpl) program;
             List<Program> functions = programImpl.getFunctions();
 
-            Program programInContext = ExpansionUtils.findFunctionInProgram(functions, programInContextName);
+            Program programInContext = ExpansionUtils.findFunctionInProgramAccordingToUserString(functions, programInContextName);
             this.programInContext = programInContext;
         }
     }
@@ -217,7 +218,8 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         List<Program> functions = programImpl.getFunctions();
 
         for (Program function : functions) {
-            programOrFunctionNames.add(function.getName());
+            Function asFunction = (Function) function;
+            programOrFunctionNames.add(asFunction.getUserString());
         }
 
         return programOrFunctionNames;

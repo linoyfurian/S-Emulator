@@ -14,7 +14,7 @@ public class DisplayManager {
         List<InstructionDto> instructionsToDisplay;
 
         String lineSeparator = System.lineSeparator();
-        System.out.println("Program name: " + programToDisplay.getProgramName());
+        System.out.println("Program name: " + programToDisplay.getName());
 
         inputVariablesInOrder = programToDisplay.getInputVariablesInOrder();
         System.out.print("Input variables in order: ");

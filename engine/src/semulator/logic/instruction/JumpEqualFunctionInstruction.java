@@ -3,6 +3,7 @@ package semulator.logic.instruction;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.Function;
+import semulator.logic.Function.FunctionUtils;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
@@ -80,14 +81,19 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         if(program instanceof ProgramImpl programImpl) {
             List<Program> functions = programImpl.getFunctions();
             for (Program function : functions) {
-                if(function instanceof Function f) {
-                    if(functionName.equals(f.getName())) {
+                if (function instanceof Function f) {
+                    if (functionName.equals(f.getName())) {
                         functionUserName = f.getUserString();
                         break;
                     }
                 }
             }
-            return ("IF" + getVariable().getRepresentation() + " = " + functionUserName + "(" + functionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
+            if (functionArguments.equals("") || functionArguments == null)
+                return ("IF" + getVariable().getRepresentation() + " = " + "(" + functionUserName + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
+            else {
+                String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
+                return ("IF" + getVariable().getRepresentation() + " = " + "(" + functionUserName + "," + useStringFunctionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
+            }
         }
         return "";
     }
@@ -119,45 +125,10 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         return functionName;
     }
 
-    private List<String> splitFunctionArguments() {
-        List<String> arguments = new ArrayList<>();
-
-        boolean isFunction = false;
-        String currFunctionArgument="";
-
-        for (int i = 0; i < functionArguments.length(); i++) {
-            char c = functionArguments.charAt(i);
-            if(c=='('){
-                isFunction = true;
-                currFunctionArgument = currFunctionArgument + c;
-            }
-            else if(c==','){
-                if(isFunction)
-                    currFunctionArgument = currFunctionArgument + c;
-                else{
-                    arguments.add(currFunctionArgument);
-                    currFunctionArgument ="";
-                }
-            }
-            else if(c==')'){
-                currFunctionArgument = currFunctionArgument + c;
-                isFunction = false;
-            }
-            else
-                currFunctionArgument = currFunctionArgument + c;
-        }
-
-        if (!currFunctionArgument.equals(""))
-            arguments.add(currFunctionArgument);
-
-        return arguments;
-
-    }
-
     @Override
     public boolean isComposite(){
         boolean result = false;
-        List<String> functionArguments = splitFunctionArguments();
+        List<String> functionArguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
         if(functionArguments.size()>0){
             for(String functionArgument : functionArguments){
                 if(functionArgument.startsWith("("))
@@ -180,7 +151,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
     @Override
     public List<Variable> getAllVariables(){
         Set <String> allVariables = new HashSet<>();
-        allVariables.add(this.getVariable().toString());
+        allVariables.add(this.getVariable().getRepresentation());
         boolean isFunction = false, isFunctionName = false, isArg = true;
         String currFunctionArgument="";
         List<Variable> variablesResult = new ArrayList<>();

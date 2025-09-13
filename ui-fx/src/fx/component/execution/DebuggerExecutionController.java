@@ -200,7 +200,8 @@ public class DebuggerExecutionController {
     @FXML void btnRunListener(ActionEvent event) {
         if (mainController != null) {
             if(inputFields.isEmpty()) {
-                return;
+                long [] inputs = new long[0];
+                mainController.btnRunListener(inputs);
             }
             int maxIndex = 0;
             int index;

@@ -3,6 +3,7 @@ package semulator.logic.instruction;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.Function;
+import semulator.logic.Function.FunctionUtils;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
@@ -84,9 +85,11 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
             if (functionArguments.equals(""))
                 return (getVariable().getRepresentation() + " <- " + "(" + functionUserName +  ")");
-            else
-                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + functionArguments + ")");
-        }
+            else{
+                String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
+                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + useStringFunctionArguments + ")");
+            }
+       }
 
         return "";
     }
@@ -116,7 +119,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         List<Instruction> newQ = generatenewQInstructions(functionToRun, zUsedNumbers, usedLabelsNumbers, oldAndNew); //Q'
 
         String inputArgument;
-        List<String> arguments = splitFunctionArguments();
+        List<String> arguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
 
 
         for(int i = 0; i < arguments.size(); i++) {
@@ -127,7 +130,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 newVariable = XmlProgramMapperV2.variableMapper(oldAndNew.get(inputArgument));
                 newAssignedVariable = XmlProgramMapperV2.variableMapper(currArgument);
 
-                if(isVariableIsAFunction(currArgument)) {
+                if(FunctionUtils.isVariableIsAFunction(currArgument)) {
                     String newFunctionName = XmlProgramMapperV2.getFunctionName(currArgument);
                     String newFunctionArguments = XmlProgramMapperV2.getFunctionarguments(currArgument);
                     newInstruction = new QuoteInstruction(newVariable, newFunctionName, newFunctionArguments, instructionNumber, this);
@@ -196,58 +199,15 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         return newInstruction;
     }
 
-    private boolean isVariableIsAFunction(String variableName) {
-        boolean result = false;
-        variableName = variableName.trim();
-        if(variableName.startsWith("("))
-            result = true;
-
-        return result;
-    }
 
     public String getFunctionName() {
         return functionName;
     }
 
-    private List<String> splitFunctionArguments() {
-        List<String> arguments = new ArrayList<>();
-
-        boolean isFunction = false;
-        String currFunctionArgument="";
-
-        for (int i = 0; i < this.functionArguments.length(); i++) {
-            char c = this.functionArguments.charAt(i);
-            if(c=='('){
-                isFunction = true;
-                currFunctionArgument = currFunctionArgument + c;
-            }
-            else if(c==','){
-                    if(isFunction)
-                        currFunctionArgument = currFunctionArgument + c;
-                    else{
-                        arguments.add(currFunctionArgument);
-                        currFunctionArgument ="";
-                    }
-                }
-                else if(c==')'){
-                    currFunctionArgument = currFunctionArgument + c;
-                    isFunction = false;
-                }
-                else
-                    currFunctionArgument = currFunctionArgument + c;
-        }
-
-        if (!currFunctionArgument.equals(""))
-            arguments.add(currFunctionArgument);
-
-        return arguments;
-
-    }
-
     @Override
     public boolean isComposite(){
         boolean result = false;
-        List<String> functionArguments = splitFunctionArguments();
+        List<String> functionArguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
         if(functionArguments.size()>0){
             for(String functionArgument : functionArguments){
                 if(functionArgument.startsWith("("))
@@ -261,7 +221,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     @Override
     public List<Variable> getAllVariables(){
         Set <String> allVariables = new HashSet<>();
-        allVariables.add(this.getVariable().toString());
+        allVariables.add(this.getVariable().getRepresentation());
         boolean isFunction = false, isFunctionName = false, isArg = true;
         String currFunctionArgument="";
         List<Variable> variablesResult = new ArrayList<>();

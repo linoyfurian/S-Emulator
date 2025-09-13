@@ -153,5 +153,18 @@ public class ExpansionUtils {
         }
         return functionToRun;
     }
+
+    public static Function findFunctionInProgramAccordingToUserString(List<Program> functions, String functionName) {
+        Function functionToReturn = null;
+        for (Program function : functions) {
+            if(function instanceof Function f) {
+                if(functionName.equals(f.getUserString())) {
+                    functionToReturn = f;
+                    break;
+                }
+            }
+        }
+        return functionToReturn;
+    }
 }
 
