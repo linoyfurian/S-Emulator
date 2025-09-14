@@ -38,4 +38,8 @@ public class RunResultDto {
     public Map<String,Long> getAllVariables() {
         return allVariables;
     }
+
+    public Map<String,Long> getInputs() {
+        return inputs;
+    }
 }

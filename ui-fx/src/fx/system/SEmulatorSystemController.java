@@ -187,4 +187,27 @@ public class SEmulatorSystemController {
         List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
         historyController.updateHistoryRunTable(programInContextRunHistory);
     }
+
+    public void onReRunButtonListener(RunResultDto selectedRun){
+        int currentDegree = topBarController.getCurrentDegree();
+        int degreeOfRun = selectedRun.getDegreeOfRun();
+        updateSystemToTheDesiredDegree(currentDegree, degreeOfRun);
+        debuggerController.initialOfNewRun();
+        Map<String,Long> inputs = selectedRun.getInputs();
+        debuggerController.applyRelevantInputs(inputs);
+        //todo: put the correct inputs
+
+
+    }
+
+    private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
+        if(degreeOfRun==currentDegree){
+            return;
+        }
+        else if(degreeOfRun<currentDegree){
+            btnCollapseListener(degreeOfRun);
+        }
+        else
+            btnExpandListener(degreeOfRun);
+    }
 }

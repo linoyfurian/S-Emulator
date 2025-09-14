@@ -21,6 +21,7 @@ import semulator.api.dto.InstructionDto;
 import semulator.api.dto.RunResultDto;
 
 import java.util.List;
+import java.util.Map;
 
 public class HistoryController {
     private SEmulatorSystemController mainController;
@@ -96,6 +97,14 @@ public class HistoryController {
 
             this.variablesData.clear();
             this.variablesData.addAll(variables);
+        }
+    }
+
+
+    @FXML void onReRunButtonListener(ActionEvent event) {
+        RunResultDto selectedRun = historyRunsTable.getSelectionModel().getSelectedItem();
+        if(selectedRun != null){
+            mainController.onReRunButtonListener(selectedRun);
         }
     }
 
