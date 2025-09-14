@@ -57,6 +57,58 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     }
 
     @Override
+    public DebugContextDto resume (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
+
+        List<Instruction> instructions = programToDebug.getInstructions();
+        //todo check size of instructions
+
+        Label nextLabel;
+        int cycles = this.cycles;
+        Map<String,Long> previousVariablesValues = this.context.getAllValues();
+
+        int currInstructionNumber = (int)(instructionToExecuteNumber);
+        while (currInstructionNumber != 0 && currInstructionNumber <= instructions.size()) {
+            Instruction instruction = instructions.get(currInstructionNumber-1);
+
+            if(instruction instanceof SimpleInstruction simpleInstruction)
+                nextLabel = simpleInstruction.execute(this.context);
+            else {
+                ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
+                nextLabel = complexInstruction.execute(this.context, mainProgram);
+            }
+
+            cycles = cycles + instruction.cycles();
+
+            long nextInstructionNumber, nextInstructionIndex = 0;
+
+            if (nextLabel == FixedLabel.EMPTY) {//next instruction
+                nextInstructionNumber = currInstructionNumber + 1;
+            } else if (nextLabel != FixedLabel.EXIT) {
+                for (Instruction inst : instructions) {
+                    if (inst.getLabel().getLabelRepresentation().equals(nextLabel.getLabelRepresentation())) {
+                        break;
+                    } else
+                        nextInstructionIndex++;
+                }
+                nextInstructionNumber = nextInstructionIndex + 1;
+            }
+            else
+                nextInstructionNumber = 0;
+
+
+            if (nextInstructionNumber <= 0 || nextInstructionNumber > instructions.size()) { //exit
+                nextInstructionNumber = 0;
+            }
+            currInstructionNumber = (int)nextInstructionNumber;
+        }
+
+        Map<String,Long> currentVariablesValues = this.context.getAllValues();
+
+        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs);
+        return result;
+    }
+
+    @Override
     public DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
 
         List<Instruction> instructions = programToDebug.getInstructions();

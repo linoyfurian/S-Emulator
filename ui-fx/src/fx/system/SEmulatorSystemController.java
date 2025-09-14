@@ -195,9 +195,6 @@ public class SEmulatorSystemController {
         debuggerController.initialOfNewRun();
         Map<String,Long> inputs = selectedRun.getInputs();
         debuggerController.applyRelevantInputs(inputs);
-        //todo: put the correct inputs
-
-
     }
 
     private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
@@ -209,5 +206,18 @@ public class SEmulatorSystemController {
         }
         else
             btnExpandListener(degreeOfRun);
+    }
+
+    public void onBtnResumeListener(){
+        int degreeOfRun = topBarController.getCurrentDegree();
+        DebugContextDto debugDetails = engine.resumeProgram(degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs());
+        this.debugContext = debugDetails;
+        long nextInstructionNumber = debugContext.getNextInstructionNumber();
+        if(nextInstructionNumber == 0){
+            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+            historyController.updateHistoryRunTable(programInContextRunHistory);
+        }
+        debuggerController.updateDebugResult(this.debugContext);
     }
 }

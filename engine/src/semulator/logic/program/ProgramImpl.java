@@ -1,6 +1,7 @@
 package semulator.logic.program;
 
 import semulator.logic.Function.Function;
+import semulator.logic.Function.FunctionUtils;
 import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
@@ -91,6 +92,28 @@ public class ProgramImpl implements Program, Serializable {
         }
         return valid;
     }
+
+    public boolean hasInvalidFunctionReferences(){
+        boolean isFunctionFound;
+        boolean hasInvalidFunctionReferences = false;
+        List<Instruction> instructions = this.getInstructions();
+        List<Program> functions = this.getFunctions();
+
+        for (Instruction instr : instructions) {
+            if(instr instanceof QuoteInstruction quoteInstruction){
+                String functionName = quoteInstruction.getFunctionName();
+                isFunctionFound = FunctionUtils.isFunctionExist(functionName, functions);
+                if(!isFunctionFound){
+                    hasInvalidFunctionReferences = true;
+                    break;
+                }
+
+            }
+        }
+        return hasInvalidFunctionReferences;
+    }
+
+
 
     @Override
     public int calculateMaxDegree() {

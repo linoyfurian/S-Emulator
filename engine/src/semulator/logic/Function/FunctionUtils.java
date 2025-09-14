@@ -131,4 +131,13 @@ public class FunctionUtils {
 
         return result;
     }
+
+   public static boolean isFunctionExist(String functionName, List<Program> functions){
+        for (Program function : functions) {
+            if(function.getName().equals(functionName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -6,4 +6,5 @@ import java.util.Map;
 
 public interface ProgramDebugger {
     DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs);
+    DebugContextDto resume (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs);
 }

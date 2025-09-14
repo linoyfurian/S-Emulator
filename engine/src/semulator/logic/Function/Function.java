@@ -1,9 +1,6 @@
 package semulator.logic.Function;
 
-import semulator.logic.instruction.ExpandableInstruction;
-import semulator.logic.instruction.Instruction;
-import semulator.logic.instruction.JumpInstruction;
-import semulator.logic.instruction.UnexpandableInstruction;
+import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
@@ -158,4 +155,24 @@ public class Function implements Program, Serializable {
     public String getUserString() {
         return userString;
     }
+
+    public boolean hasInvalidFunctionReferences(List<Program> functions) {
+        boolean isFunctionFound;
+        boolean hasInvalidFunctionReferences = false;
+        List<Instruction> instructions = this.getInstructions();
+
+        for (Instruction instr : instructions) {
+            if(instr instanceof QuoteInstruction quoteInstruction){
+                String functionName = quoteInstruction.getFunctionName();
+                isFunctionFound = FunctionUtils.isFunctionExist(functionName, functions);
+                if(!isFunctionFound){
+                    hasInvalidFunctionReferences = true;
+                    break;
+                }
+
+            }
+        }
+        return hasInvalidFunctionReferences;
+    }
+
 }

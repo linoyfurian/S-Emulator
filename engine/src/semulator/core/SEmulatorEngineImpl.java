@@ -65,13 +65,24 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram);
             boolean isValidProgram = mappedProgram.validate();
             if (isValidProgram) {
+                ProgramImpl programImpl = (ProgramImpl) mappedProgram;
+                if(programImpl.hasInvalidFunctionReferences()){
+                    loadReport = new LoadReport(false, "Error: Program is not valid, there is a reference in the program to a function that doesnt exits");
+                    return loadReport;
+                }
+                List<Program> functions = programImpl.getFunctions();
+                for (Program function : functions) {
+                    Function functionImpl = (Function) function;
+                    if(functionImpl.hasInvalidFunctionReferences(functions)){
+                        loadReport = new LoadReport(false, "Error: Program is not valid, there is a reference in a function to a function that doesnt exits");
+                        return loadReport;
+                    }
+                }
                 this.programInContext = mappedProgram;
                 this.program = mappedProgram;
                 this.isLoaded = true;
 
                 this.runsHistory.put(mappedProgram.getName(), new ArrayList<>());
-                ProgramImpl programImpl = (ProgramImpl) mappedProgram;
-                List<Program> functions = programImpl.getFunctions();
                 for (Program function : functions) {
                     this.runsHistory.put(function.getName(), new ArrayList<>());
                 }
@@ -111,6 +122,25 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
         DebugContextDto result;
         result = debugger.debug(instructionToExecuteNumber, context, originalInputs);
+
+        return result;
+    }
+
+    @Override
+    public DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input){
+        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
+        ProgramDebugger debugger;
+        if(context == null)
+            debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
+        else
+            debugger = new ProgramDebuggerImpl(programToRun, context, this.program);
+
+        long instructionToExecuteNumber = 1;
+        if(context!=null)
+            instructionToExecuteNumber = context.getNextInstructionNumber();
+
+        DebugContextDto result;
+        result = debugger.resume(instructionToExecuteNumber, context, originalInputs);
 
         return result;
     }

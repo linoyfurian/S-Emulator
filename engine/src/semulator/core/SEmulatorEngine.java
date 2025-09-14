@@ -31,4 +31,5 @@ public interface SEmulatorEngine {
     DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
     void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun);
     List<RunResultDto> getProgramInContextRunHistory();
+    DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
 }

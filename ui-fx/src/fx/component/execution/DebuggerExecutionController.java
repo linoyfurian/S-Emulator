@@ -310,6 +310,7 @@ public class DebuggerExecutionController {
             runBtn.setDisable(false);
             stopBtn.setDisable(true);
             resumeBtn.setDisable(true);
+            stepBackBtn.setDisable(true);
             stepOverBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
         }
@@ -331,13 +332,14 @@ public class DebuggerExecutionController {
             stopBtn.setDisable(true);
             resumeBtn.setDisable(true);
             stepOverBtn.setDisable(true);
+            stepBackBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
         }
     }
 
     @FXML void btnStepOverListener(ActionEvent event) {
-        mainController.btnStepOverListener();
         stepBackBtn.setDisable(false);
+        mainController.btnStepOverListener();
     }
 
     @FXML void btnStepBackListener(ActionEvent event) {
@@ -372,5 +374,9 @@ public class DebuggerExecutionController {
                 }
             }
         }
+    }
+
+    @FXML void onBtnResumeListener(ActionEvent event) {
+        mainController.onBtnResumeListener();
     }
 }

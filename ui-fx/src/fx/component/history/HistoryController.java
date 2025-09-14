@@ -82,6 +82,7 @@ public class HistoryController {
 
     @FXML void onHistoryRunSelectedListener(MouseEvent event) {
         RunResultDto selectedRun = historyRunsTable.getSelectionModel().getSelectedItem();
+        this.vboxVariablesStatus.setVisible(false);
         this.btnShowStatus.setVisible(true);
         this.btnReRun.setVisible(true);
 
