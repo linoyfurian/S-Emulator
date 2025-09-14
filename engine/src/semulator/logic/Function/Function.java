@@ -106,8 +106,7 @@ public class Function implements Program, Serializable {
         return labels;
     }
 
-    @Override
-    public Program expand(int degreeOfExpand) {
+    public Program expand(int degreeOfExpand, Program parentProgram) {
         Program expandedProgram = this;
         if (degreeOfExpand == 0)
             return expandedProgram;
@@ -118,7 +117,7 @@ public class Function implements Program, Serializable {
         int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new Function(programToExpand.getName(), this.userString, programDegree); //new program
+            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
@@ -139,12 +138,29 @@ public class Function implements Program, Serializable {
                     }
                     instructionNumber = instructionNumber + nextInstructions.size();
                 }
+                else{
+                    if(instruction instanceof ComplexInstruction complexInstruction) {
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, parentProgram);
+
+                        for (Instruction nextInstruction : nextInstructions) {
+                            nextExpandedProgram.addInstruction(nextInstruction);
+                        }
+                        instructionNumber = instructionNumber + nextInstructions.size();
+                    }
+                }
             }
             programToExpand = nextExpandedProgram;
             degreeOfExpand--;
         }
 
         expandedProgram = programToExpand;
+
+        ProgramImpl parentProgramImpl = (ProgramImpl) parentProgram;
+        List<Program> functions = parentProgramImpl.getFunctions();
+        for (Program function : functions) {
+            if(expandedProgram instanceof ProgramImpl expandedProgramImpl)
+                expandedProgramImpl.addFunction(function);
+        }
         return expandedProgram;
     }
 

@@ -109,7 +109,15 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input){
-        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
+        Program programToRun;
+        if(programInContext instanceof ProgramImpl programImpl){
+            programToRun = programImpl.expand(desiredDegreeOfExpand);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            programToRun = function.expand(desiredDegreeOfExpand, this.program);
+        }
+
         ProgramDebugger debugger;
         if(context == null)
             debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
@@ -128,7 +136,15 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input){
-        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
+        Program programToRun;
+        if(programInContext instanceof ProgramImpl programImpl){
+            programToRun = programImpl.expand(desiredDegreeOfExpand);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            programToRun = function.expand(desiredDegreeOfExpand, this.program);
+        }
+
         ProgramDebugger debugger;
         if(context == null)
             debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
@@ -149,7 +165,14 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public ExecutionRunDto runProgram(int desiredDegreeOfExpand, Map<String, Long> originalInputs, long ... input){
-        Program programToRun = programInContext.expand(desiredDegreeOfExpand);
+        Program programToRun;
+        if(programInContext instanceof ProgramImpl programImpl){
+            programToRun = programImpl.expand(desiredDegreeOfExpand);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            programToRun = function.expand(desiredDegreeOfExpand, this.program);
+        }
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
         ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
 
@@ -169,7 +192,14 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             return  null;
         }
 
-        expandedProgram = programInContext.expand(desiredDegreeOfExpand);
+        if(programInContext instanceof ProgramImpl programImpl){
+            expandedProgram = programImpl.expand(desiredDegreeOfExpand);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            expandedProgram = function.expand(desiredDegreeOfExpand, this.program);
+        }
+
         if(expandedProgram instanceof ProgramImpl)
             programFunctionDto = new ProgramDto(expandedProgram);
         else

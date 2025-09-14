@@ -40,6 +40,7 @@ public class XmlProgramMapperV2 {
             }
         }
         setMaxDegreeOfExpansionForComplexInstruction(program);
+        setMaxDegreeOfExpansionForComplexInstruction(program);
 
         return program;
     }
@@ -270,6 +271,7 @@ public class XmlProgramMapperV2 {
         return functionArguments;
     }
 
+    //todo delete sout
     private static void setMaxDegreeOfExpansionForComplexInstruction(Program program) {
         List<Instruction> instructions = program.getInstructions();
         ProgramImpl programImpl = (ProgramImpl) program;
@@ -278,28 +280,40 @@ public class XmlProgramMapperV2 {
         for (Instruction instruction : instructions) {
             boolean isComposite = false;
             if(instruction instanceof ComplexInstruction complexInstruction){
-                isComposite = complexInstruction.isComposite();
+                //isComposite = complexInstruction.isComposite();
+                complexInstruction.updateDegreeOfExpansion(program);
             }
-            if(instruction instanceof QuoteInstruction quoteInstruction) {
-                Function function = ExpansionUtils.findFunctionInProgram(functions, quoteInstruction.getFunctionName());
-                maxDegreeOfFunction = function.calculateMaxDegree();
-                if(isComposite)
-                    maxDegreeOfExpansion = maxDegreeOfFunction + 2;
-                else
-                    maxDegreeOfExpansion = maxDegreeOfFunction + 1;
-                quoteInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+//            if(instruction instanceof QuoteInstruction quoteInstruction) {
+//                Function function = ExpansionUtils.findFunctionInProgram(functions, quoteInstruction.getFunctionName());
+//                maxDegreeOfFunction = function.calculateMaxDegree();
+//                if(isComposite)
+//                    maxDegreeOfExpansion = maxDegreeOfFunction + 2;
+//                else
+//                    maxDegreeOfExpansion = maxDegreeOfFunction + 1;
+//                quoteInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+//            }
+//            else{
+//                if(instruction instanceof JumpEqualFunctionInstruction jumpEqualFunctionInstruction){
+//                    Function function = ExpansionUtils.findFunctionInProgram(functions, jumpEqualFunctionInstruction.getFunctionName());
+//                    maxDegreeOfFunction = function.calculateMaxDegree();
+//                    if(isComposite)
+//                        maxDegreeOfExpansion = maxDegreeOfFunction + 2;
+//                    else
+//                        maxDegreeOfExpansion = maxDegreeOfFunction + 1;
+//                    jumpEqualFunctionInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+//                }
             }
-            else{
-                if(instruction instanceof JumpEqualFunctionInstruction jumpEqualFunctionInstruction){
-                    Function function = ExpansionUtils.findFunctionInProgram(functions, jumpEqualFunctionInstruction.getFunctionName());
-                    maxDegreeOfFunction = function.calculateMaxDegree();
-                    if(isComposite)
-                        maxDegreeOfExpansion = maxDegreeOfFunction + 2;
-                    else
-                        maxDegreeOfExpansion = maxDegreeOfFunction + 1;
-                    jumpEqualFunctionInstruction.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+
+        for (Program function : functions) {
+            List<Instruction> functionInstructions = function.getInstructions();
+            for (Instruction instruction : functionInstructions) {
+                if(instruction instanceof ComplexInstruction complexInstruction){
+                    //isComposite = complexInstruction.isComposite();
+
+                    complexInstruction.updateDegreeOfExpansion(program);
                 }
             }
         }
+      //  }
     }
 }

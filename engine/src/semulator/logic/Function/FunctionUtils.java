@@ -5,6 +5,8 @@ import semulator.logic.program.Program;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FunctionUtils {
     private FunctionUtils() {}
@@ -139,5 +141,88 @@ public class FunctionUtils {
             }
         }
         return false;
+    }
+
+    public static Program findFunction(String functionName, List<Program> functions){
+        for (Program function : functions) {
+            if(function.getName().equals(functionName)){
+                return function;
+            }
+        }
+        return null;
+    }
+
+    public static String generateNewFunctionArguments(String functionArguments, Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, Map<String, String> oldAndNew){
+        String arguments = "";
+        String currVariable = "";
+        String newVariable = "";
+
+        boolean isFunction = false;
+        boolean isFunctionName = false;
+        boolean isArg = true;
+
+        for (int i = 0; i < functionArguments.length(); i++) {
+            char c = functionArguments.charAt(i);
+            if(c=='('){
+                isFunction = true;
+                isFunctionName = true;
+                isArg = false;
+                arguments = arguments + c;
+            }
+            else if(c==')'){
+                isFunction = false;
+                if(isArg){
+                    if(!currVariable.equals("")){
+                        if(oldAndNew.containsKey(currVariable)){
+                            newVariable = oldAndNew.get(currVariable);
+                        }
+                        else{
+                            int validZnumber = ExpansionUtils.findAvailableZNumber(zUsedNumbers);
+                            zUsedNumbers.add(validZnumber);
+                            newVariable = "z" + validZnumber;
+                            oldAndNew.put(currVariable, newVariable);
+                        }
+                        arguments = arguments + newVariable + c;
+                        currVariable = "";
+                    }
+                    else
+                        arguments = arguments + c;
+                }
+                else
+                    arguments = arguments + c;
+
+                isFunctionName = false;
+                isArg = true;
+            }
+            else if(c==',') {
+                if (isFunction) {
+                    if (isFunctionName) {
+                        isFunctionName = false;
+                        isArg = true;
+                        arguments = arguments + c;
+                    } else {
+                        if (oldAndNew.containsKey(currVariable)) {
+                            newVariable = oldAndNew.get(currVariable);
+                        } else {
+                            int validZnumber = ExpansionUtils.findAvailableZNumber(zUsedNumbers);
+                            zUsedNumbers.add(validZnumber);
+                            newVariable = "z" + validZnumber;
+                            oldAndNew.put(currVariable, newVariable);
+                        }
+                        arguments = arguments + newVariable + c;
+                        currVariable = "";
+                    }
+                }
+                else
+                    arguments = arguments + c;
+            }
+            else if(isArg){
+                currVariable = currVariable + c;
+            }
+            else
+                arguments = arguments + c;
+        }
+
+        return arguments;
     }
 }

@@ -1,0 +1,70 @@
+/* רקע כללי של ה־GridPane */
+#top-bar-grid {
+    -fx-background-color: #000000; /* שחור */
+}
+
+/* כל הלייבלים */
+.label {
+    -fx-text-fill: white;
+}
+
+/* כל הכפתורים */
+.button {
+    -fx-background-color: #2a2a2a; /* אפור כהה */
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 5 12 5 12;
+}
+
+.button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.button:pressed {
+    -fx-background-color: #555555;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-text-fill: white;            /* טקסט לבן */
+    -fx-prompt-text-fill: #aaaaaa;   /* טקסט רמז אפור */
+}
+
+/* הטקסט בתוך ה־cell שמוצג ב־ComboBox */
+.combo-box .list-cell {
+    -fx-text-fill: white;
+}
+
+/* הרשימה שנפתחת */
+.combo-box-popup .list-view {
+    -fx-background-color: #2a2a2a;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #444444;
+}
+
+/* שדה טקסט */
+.text-field {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aaaaaa;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #333333;
+}
+
+/* שדה טקסט כשהוא לא ניתן לעריכה */
+.text-field:readonly {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #bbbbbb;
+}

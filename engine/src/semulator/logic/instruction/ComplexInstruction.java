@@ -6,6 +6,7 @@ import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ComplexInstruction {
@@ -13,4 +14,7 @@ public interface ComplexInstruction {
     List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Program program);
     String getInstructionDescription(Program program);
     boolean isComposite();
+    void updateDegreeOfExpansion(Program program);
+    Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent);
+    Instruction cloneWithDifferentNumber(long instructionNumber);
 }

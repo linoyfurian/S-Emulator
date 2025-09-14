@@ -1,0 +1,119 @@
+#run-button {
+    -fx-background-color: #56e15c;
+    -fx-text-fill: white;
+}
+
+.execution-button {
+    -fx-background-color: #8b8c8b;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 5 12 5 12;
+}
+
+/* רקע כללי */
+.root {
+    -fx-background-color: #000000;
+}
+
+
+/* כותרת ראשית */
+#debugger-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+
+/* כל HBox ברקע שחור */
+.hbox {
+    -fx-background-color: #000000;
+}
+
+
+
+/* כל HBox ברקע שחור */
+.vbox {
+    -fx-background-color: #000000;
+}
+
+.execution-button:hover,
+#run-button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.execution-button:pressed,
+#run-button:pressed {
+    -fx-background-color: #555555;
+}
+
+/* RadioButton */
+.radio-button {
+    -fx-text-fill: white;
+}
+.radio-button:selected {
+    -fx-mark-color: white; /* צבע הסימון */
+}
+
+/* Panels */
+.panel-left,
+.panel-right {
+    -fx-background-color: #111111;
+    -fx-padding: 5;
+}
+
+.panel-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.sub-title-panel {
+    -fx-text-fill: #bbbbbb;
+    -fx-font-size: 12px;
+}
+
+#cycles-value {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* טבלאות */
+.table-view {
+    -fx-background-color: #1e1e1e;
+    -fx-control-inner-background: #1e1e1e;
+    -fx-table-cell-border-color: #2a2a2a;
+    -fx-table-header-border-color: #2a2a2a;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-view .column-header,
+.table-view .column-header-background {
+    -fx-background-color: #111111;
+    -fx-text-fill: white;
+}
+
+/* בחירת שורה */
+.table-row-cell:filled:selected,
+.table-row-cell:filled:selected:focused {
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+}
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background: #1e1e1e;
+    -fx-border-color: #333333;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #1e1e1e;
+}
+
+/* טקסטים */
+.label {
+    -fx-text-fill: white;
+}
+c

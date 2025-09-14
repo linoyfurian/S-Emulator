@@ -135,7 +135,6 @@ public class ProgramImpl implements Program, Serializable {
         return labels;
     }
 
-    @Override
     public Program expand(int degreeOfExpand) {
         Program expandedProgram = this;
         if (degreeOfExpand == 0)

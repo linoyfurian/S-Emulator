@@ -17,6 +17,5 @@ public interface Program {
     int calculateMaxDegree();
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();
-    Program expand(int degreeOfExpand);
     int getDegree();
 }

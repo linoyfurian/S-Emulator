@@ -1,0 +1,69 @@
+/* כל הרקע של המסך */
+.root {
+    -fx-background-color: #000000; /* שחור מלא */
+}
+
+/* טבלאות */
+.table-view {
+    -fx-background-color: #1e1e1e; /* אפור כהה */
+    -fx-control-inner-background: #1e1e1e;
+    -fx-text-fill: white;
+    -fx-table-cell-border-color: #2a2a2a; /* קווי גבול דקים */
+    -fx-table-header-border-color: #2a2a2a;
+}
+
+/* טקסט בתאים */
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER-LEFT;
+}
+
+/* כותרות עמודות */
+.table-view .column-header,
+.table-view .column-header-background,
+.table-view .filler {
+    -fx-background-color: #111111; /* רקע כותרות כהה יותר */
+    -fx-text-fill: white;
+}
+
+/* שורה נבחרת */
+.table-view:focused .table-row-cell:filled:focused:selected,
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+}
+
+/* שורה רגילה */
+.table-row-cell {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: white;
+}
+
+/* שורה תחת העכבר (hover) */
+.table-row-cell:hover {
+    -fx-background-color: #333333;
+}
+
+/* כל הלייבלים */
+.label {
+    -fx-text-fill: white;
+}
+
+/* סיכום */
+.summary-line {
+    -fx-background-color: #111111;
+}
+
+.summary-title {
+    -fx-text-fill: #cccccc;
+    -fx-font-weight: bold;
+}
+
+.summary-subtitle {
+    -fx-text-fill: #bbbbbb;
+}
+
+.summary-value {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

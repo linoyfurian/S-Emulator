@@ -203,4 +203,89 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
 
         return variablesResult;
     }
+
+
+    @Override
+    public void updateDegreeOfExpansion(Program program) {
+        ProgramImpl programImpl = (ProgramImpl) program;
+        List<String> functionArguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
+        List<Program> functions = programImpl.getFunctions();
+        Program currentFunction = FunctionUtils.findFunction(this.functionName, functions);
+
+        int depth = 1;
+        int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 3);
+        int currentMaxDegree;
+        boolean isFunctionName = false;
+
+        String currentFunctionName = "";
+
+        if(functionArguments.size()!=0) {
+            for(int i=0; i<this.functionArguments.length(); i++){
+                char c = this.functionArguments.charAt(i);
+                if(c=='('){
+                    depth++;
+                    isFunctionName = true;
+                }
+                else if(c==')'){
+                    if(isFunctionName){
+                        isFunctionName = false;
+                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        currentMaxDegree = currFunction.calculateMaxDegree() + depth;
+                        maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
+                        maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
+                        currentFunctionName = "";
+                    }
+                    depth--;
+                }
+                else if(c==','){
+                    if(isFunctionName){
+                        isFunctionName = false;
+                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        currentMaxDegree = currFunction.calculateMaxDegree() + depth;
+                        maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
+                        maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
+                        currentFunctionName = "";
+                    }
+                }
+                else{
+                    if(isFunctionName)
+                        currentFunctionName = currentFunctionName+c;
+                }
+            }
+        }
+        super.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+    }
+
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map <String, String> oldAndNew, Instruction parent) {
+        Instruction newInstruction;
+        Label label, newLabelImpl, JEFlabel, newJEFlabelImpl;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        //check JEF label
+        JEFlabel = this.JEFunctionLabel;
+        newJEFlabelImpl = ExpansionUtils.validateOrCreateLabel(JEFlabel, usedLabelsNumbers, oldAndNew);
+
+        String newFunctionArguments = FunctionUtils.generateNewFunctionArguments(this.functionArguments, zUsedNumbers, usedLabelsNumbers, oldAndNew);
+
+        newInstruction = new JumpEqualFunctionInstruction(newVariableImpl, this.functionName, newFunctionArguments, newLabelImpl, newJEFlabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long instructionNumber){
+        Instruction newInstruction;
+        newInstruction = new JumpEqualFunctionInstruction(this.getVariable(), this.functionName, this.functionArguments, this.getLabel(), this.JEFunctionLabel, instructionNumber, this.getParent());
+        return newInstruction;
+    }
 }

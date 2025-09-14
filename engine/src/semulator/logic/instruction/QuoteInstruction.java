@@ -133,9 +133,8 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 if(FunctionUtils.isVariableIsAFunction(currArgument)) {
                     String newFunctionName = XmlProgramMapperV2.getFunctionName(currArgument);
                     String newFunctionArguments = XmlProgramMapperV2.getFunctionarguments(currArgument);
-                    newInstruction = new QuoteInstruction(newVariable, newFunctionName, newFunctionArguments, instructionNumber, this);
 
-                    QuoteInstruction ci=(QuoteInstruction) newInstruction;
+                    newInstruction = new QuoteInstruction(newVariable, newFunctionName, newFunctionArguments, instructionNumber, this);
                 }
                 else
                     newInstruction = new AssignmentInstruction(newVariable, instructionNumber, newAssignedVariable, this);
@@ -149,6 +148,12 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         for(Instruction instruction : newQ) {
             if(instruction instanceof SimpleInstruction inst) {
                 newInstruction = inst.cloneWithDifferentNumber(instructionNumber);
+                nextInstructions.add(newInstruction);
+                instructionNumber++;
+            }
+            else{
+                ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
+                newInstruction = complexInstruction.cloneWithDifferentNumber(instructionNumber);
                 nextInstructions.add(newInstruction);
                 instructionNumber++;
             }
@@ -173,10 +178,37 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 newQ.add(newQInstruction);
                 newQindex++;
             }
+            else if(instruction instanceof ComplexInstruction complexInstruction) {
+                Instruction newQInstruction = complexInstruction.QuoteFunctionExpandHelper(zUsedNumbers, usedLabelsNumbers, newQindex, oldAndNew, this);
+                newQ.add(newQInstruction);
+                newQindex++;
+            }
         }
 
         return newQ;
     }
+
+    @Override
+    public Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map <String, String> oldAndNew, Instruction parent) {
+        Instruction newInstruction;
+        Label label, newLabelImpl;
+        Variable variable, newVariableImpl;
+
+        //check label
+        label = this.getLabel();
+        newLabelImpl = ExpansionUtils.validateOrCreateLabel(label, usedLabelsNumbers, oldAndNew);
+
+        //check variable
+        variable = this.getVariable();
+        newVariableImpl = ExpansionUtils.validateOrCreateVariable(variable, zUsedNumbers, oldAndNew);
+
+        String newFunctionArguments = FunctionUtils.generateNewFunctionArguments(this.functionArguments, zUsedNumbers, usedLabelsNumbers, oldAndNew);
+
+        newInstruction = new QuoteInstruction(newVariableImpl, this.functionName, newFunctionArguments, newLabelImpl, instructionNumber, parent);
+
+        return newInstruction;
+    }
+
 
     private Instruction generateLastInstructionInExpand(Map<String, String> oldAndNew, long instructionNumber) {
         Instruction newInstruction;
@@ -272,5 +304,63 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         }
 
         return variablesResult;
+    }
+
+    @Override
+    public void updateDegreeOfExpansion(Program program) {
+        ProgramImpl programImpl = (ProgramImpl) program;
+        List<String> functionArguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
+        List<Program> functions = programImpl.getFunctions();
+        Program currentFunction = FunctionUtils.findFunction(this.functionName, functions);
+
+        int depth = 1;
+        int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 3);
+        int currentMaxDegree;
+        boolean isFunctionName = false;
+
+        String currentFunctionName = "";
+
+        if(functionArguments.size()!=0) {
+            for(int i=0; i<this.functionArguments.length(); i++){
+                char c = this.functionArguments.charAt(i);
+                if(c=='('){
+                    depth++;
+                    isFunctionName = true;
+                }
+                else if(c==')'){
+                    if(isFunctionName){
+                        isFunctionName = false;
+                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        currentMaxDegree = currFunction.calculateMaxDegree() + depth;
+                        maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
+                        maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
+                        currentFunctionName = "";
+                    }
+                    depth--;
+                }
+                else if(c==','){
+                    if(isFunctionName){
+                        isFunctionName = false;
+                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        currentMaxDegree = currFunction.calculateMaxDegree() + depth;
+                        maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
+                        maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
+                        currentFunctionName = "";
+                    }
+                }
+                else{
+                    if(isFunctionName)
+                        currentFunctionName = currentFunctionName+c;
+                }
+            }
+        }
+        super.setMaxDegreeOfExpansion(maxDegreeOfExpansion);
+    }
+
+    @Override
+    public Instruction cloneWithDifferentNumber(long instructionNumber){
+        Instruction newInstruction;
+        newInstruction = new QuoteInstruction(this.getVariable(), this.functionName, this.functionArguments, this.getLabel(), instructionNumber, this.getParent());
+        return newInstruction;
     }
 }

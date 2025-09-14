@@ -54,10 +54,10 @@
                         <Insets left="3.0" />
                      </padding>
                   </Label>
-                  <TableView fx:id="variablesTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="variablesTable" maxWidth="170.0" prefHeight="200.0" prefWidth="150.0" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn fx:id="nameCol" prefWidth="75.0" text="name" />
-                      <TableColumn fx:id="valueCol" prefWidth="75.0" text="value" />
+                      <TableColumn fx:id="nameCol" prefWidth="85.0" text="name" />
+                      <TableColumn fx:id="valueCol" prefWidth="85.0" text="value" />
                     </columns>
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
