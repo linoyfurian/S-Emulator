@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="600.0" stylesheets="@history.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.history.HistoryController">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="550.0" stylesheets="@history.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.history.HistoryController">
    <children>
       <Label styleClass="history-title" text="History \ Statistics">
          <padding>

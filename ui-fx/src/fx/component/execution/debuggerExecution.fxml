@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="500.0" prefHeight="400.0" prefWidth="550.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
+<VBox maxHeight="500.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="500.0" prefHeight="300.0" prefWidth="550.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
    <children>
       <Label id="debugger-title" text="Debugger\Execution" textAlignment="CENTER">
          <padding>
@@ -79,14 +79,14 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" styleClass="panel-right">
                <children>
-                  <Label styleClass="panel-title" text="Execution Inputs:">
+                  <Label styleClass="panel-title" text="Execution Inputs:" VBox.vgrow="ALWAYS">
                      <padding>
                         <Insets left="3.0" />
                      </padding>
                   </Label>
-                  <ScrollPane fx:id="inputsScroll" fitToWidth="true" prefHeight="220">
+                  <ScrollPane fx:id="inputsScroll" fitToWidth="true" prefHeight="250.0" prefWidth="250.0" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="inputsContainer" spacing="8" />
+                        <VBox fx:id="inputsContainer" prefHeight="250.0" prefWidth="250.0" spacing="8" />
                      </content>
                   </ScrollPane>
                </children>
