@@ -149,7 +149,6 @@ public class ProgramImpl implements Program, Serializable {
             nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
-            Map<String,String> oldAndNew =  new HashMap<>();
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
             usedLabelsNumbers = ExpansionUtils.getSetOfUsedLabels(programToExpand.getLabels());
 
@@ -170,6 +169,7 @@ public class ProgramImpl implements Program, Serializable {
                 }
                 else{
                     if(instruction instanceof ComplexInstruction complexInstruction) {
+                        Map<String,String>  oldAndNew = new HashMap<>();
                         List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, this);
 
                         for (Instruction nextInstruction : nextInstructions) {

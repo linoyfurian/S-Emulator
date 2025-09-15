@@ -268,4 +268,78 @@ public class FunctionUtils {
         }
         return depth;
     }
+    public static String functionArgumentsToLower(String functionsArgs){
+        String arguments = "";
+        String currVariable = "";
+        String newVariable = "";
+
+        boolean isFunction = false;
+        boolean isFunctionName = false;
+        boolean isArg = true;
+
+        for (int i = 0; i < functionsArgs.length(); i++) {
+            char c = functionsArgs.charAt(i);
+            if(c=='('){
+                isFunction = true;
+                isFunctionName = true;
+                isArg = false;
+                arguments=arguments + c;
+            }
+            else if(c==')'){
+                isFunction = false;
+                if(isArg){
+                    if(!currVariable.equals("")){
+                        newVariable=currVariable.toLowerCase();
+                        arguments = arguments + newVariable + c;
+                        currVariable = "";
+                    }
+                    else
+                        arguments = arguments + c;
+                }
+                else
+                    arguments = arguments + c;
+
+                isFunctionName = false;
+                isArg = true;
+            }
+            else if(c==',') {
+                if (isFunction) {
+                    if (isFunctionName) {
+                        isFunctionName = false;
+                        isArg = true;
+                        arguments = arguments + c;
+                    } else {
+                        if(!currVariable.equals("")) {
+                            newVariable = currVariable.toLowerCase();
+                            arguments = arguments + newVariable + c;
+                            currVariable = "";
+                        }
+                    }
+                }
+                else if (isArg) {
+                    if(!currVariable.equals("")) {
+                        newVariable = currVariable.toLowerCase();
+                        arguments = arguments + newVariable + c;
+                        currVariable = "";
+                    }
+                    else
+                        arguments = arguments + c;
+                }
+                else
+                    arguments = arguments + c;
+            }
+            else if(isArg){
+                currVariable = currVariable + c;
+            }
+            else
+                arguments = arguments + c;
+        }
+
+        if(!currVariable.equals("")){
+            newVariable = currVariable.toLowerCase();
+            arguments = arguments + newVariable;
+        }
+
+        return arguments;
+    }
 }

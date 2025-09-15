@@ -3,6 +3,7 @@ package semulator.core.loader;
 import semulator.core.loader.jaxb.schema.version2.generated.*;
 
 import semulator.logic.Function.Function;
+import semulator.logic.Function.FunctionUtils;
 import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
@@ -31,12 +32,15 @@ public class XmlProgramMapperV2 {
             instructionCounter++;
         }
 
-        List<SFunction> functions = sProgram.getSFunctions().getSFunction();
+        SFunctions sFunctions = sProgram.getSFunctions();
+        if(sFunctions != null){
+            List<SFunction> functions = sFunctions.getSFunction();
 
-        for (SFunction function : functions) {
-            Program newProgram = fromSFunctionToFunction(function);
-            if(program instanceof ProgramImpl programImpl) {
-                programImpl.addFunction(newProgram);
+            for (SFunction function : functions) {
+                Program newProgram = fromSFunctionToFunction(function);
+                if(program instanceof ProgramImpl programImpl) {
+                    programImpl.addFunction(newProgram);
+                }
             }
         }
 
@@ -121,7 +125,7 @@ public class XmlProgramMapperV2 {
                 String functionName, functionArguments;
                 List<SInstructionArgument> quoteInstructionArguments = instruction.getSInstructionArguments().getSInstructionArgument();
                 functionName = getSpecificArgumentByName(quoteInstructionArguments, "functionName");
-                functionArguments = getSpecificArgumentByName(quoteInstructionArguments, "functionArguments");
+                functionArguments = FunctionUtils.functionArgumentsToLower(getSpecificArgumentByName(quoteInstructionArguments, "functionArguments"));
                 instructionToReturn = new QuoteInstruction(variable, functionName, functionArguments, label, instructionNumber, null);
                 break;
             case "JUMP_EQUAL_FUNCTION":
@@ -129,7 +133,7 @@ public class XmlProgramMapperV2 {
                 Label JEFunctionLabel;
                 List<SInstructionArgument> JEFunctionArguments = instruction.getSInstructionArguments().getSInstructionArgument();
                 jumpFunctionName = getSpecificArgumentByName(JEFunctionArguments, "functionName");
-                jumpFunctionArguments = getSpecificArgumentByName(JEFunctionArguments, "functionArguments");
+                jumpFunctionArguments = FunctionUtils.functionArgumentsToLower(getSpecificArgumentByName(JEFunctionArguments, "functionArguments"));
                 JEFunctionLabel = getTargetLabel(JEFunctionArguments, "JEFunctionLabel");
                 instructionToReturn = new JumpEqualFunctionInstruction(variable, jumpFunctionName, jumpFunctionArguments, label, JEFunctionLabel, instructionNumber, null);
                 break;
@@ -267,4 +271,6 @@ public class XmlProgramMapperV2 {
         }
 
     }
+
+
 }
