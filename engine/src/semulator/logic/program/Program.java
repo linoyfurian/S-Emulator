@@ -18,4 +18,5 @@ public interface Program {
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();
     int getDegree();
+    int findMaxDepth();
 }

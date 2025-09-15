@@ -39,9 +39,13 @@ public class XmlProgramMapperV2 {
                 programImpl.addFunction(newProgram);
             }
         }
-        setMaxDegreeOfExpansionForComplexInstruction(program);
-        setMaxDegreeOfExpansionForComplexInstruction(program);
 
+        ProgramImpl programImpl = (ProgramImpl) program;
+        int maxDepth = programImpl.findMaxDepth();
+
+        for(int i = 0; i < maxDepth; i++) {
+            setMaxDegreeOfExpansionForComplexInstruction(program);
+        }
         return program;
     }
 
@@ -244,34 +248,6 @@ public class XmlProgramMapperV2 {
         return program;
     }
 
-    public static String getFunctionName(String currArgument){
-        String parts [] = currArgument.split(",");
-        String functionName = "";
-        if(parts.length == 1)
-            functionName = parts[0].substring(1, parts[0].length()-1);
-        else
-            functionName = parts[0].substring(1);
-
-        return functionName;
-    }
-
-
-
-    public static String getFunctionarguments(String currArgument) {
-        String parts[] = currArgument.split(",");
-        String functionArguments = "";
-        if (parts.length > 1) {
-            for (int i = 1; i < parts.length; i++) {
-                if (i == parts.length - 1)
-                    functionArguments = functionArguments + parts[i].substring(0, parts[i].length() - 1);
-                else
-                    functionArguments = functionArguments + parts[i] + ",";
-            }
-        }
-        return functionArguments;
-    }
-
-    //todo delete sout
     private static void setMaxDegreeOfExpansionForComplexInstruction(Program program) {
         List<Instruction> instructions = program.getInstructions();
         ProgramImpl programImpl = (ProgramImpl) program;

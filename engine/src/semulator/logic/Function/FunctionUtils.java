@@ -225,4 +225,47 @@ public class FunctionUtils {
 
         return arguments;
     }
+
+    public static String getFunctionName(String currArgument){
+        String parts [] = currArgument.split(",");
+        String functionName = "";
+        if(parts.length == 1)
+            functionName = parts[0].substring(1, parts[0].length()-1);
+        else
+            functionName = parts[0].substring(1);
+
+        return functionName;
+    }
+
+
+
+    public static String getFunctionarguments(String currArgument) {
+        String parts[] = currArgument.split(",");
+        String functionArguments = "";
+        if (parts.length > 1) {
+            for (int i = 1; i < parts.length; i++) {
+                if (i == parts.length - 1)
+                    functionArguments = functionArguments + parts[i].substring(0, parts[i].length() - 1);
+                else
+                    functionArguments = functionArguments + parts[i] + ",";
+            }
+        }
+        return functionArguments;
+    }
+
+    public static int findDepthOfFunction(String functionArguments){
+        int depth = 1;
+
+        for(int i=0; i<functionArguments.length(); i++){
+            char c = functionArguments.charAt(i);
+            if(c=='('){
+                depth++;
+            }
+            else if(c==')'){
+                if(i!=functionArguments.length()-1)
+                    depth--;
+            }
+        }
+        return depth;
+    }
 }

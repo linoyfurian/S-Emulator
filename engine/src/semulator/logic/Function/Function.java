@@ -140,7 +140,8 @@ public class Function implements Program, Serializable {
                 }
                 else{
                     if(instruction instanceof ComplexInstruction complexInstruction) {
-                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, parentProgram);
+                        Map<String,String>  oldAndNew = new HashMap<>();
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, parentProgram);
 
                         for (Instruction nextInstruction : nextInstructions) {
                             nextExpandedProgram.addInstruction(nextInstruction);
@@ -191,4 +192,19 @@ public class Function implements Program, Serializable {
         return hasInvalidFunctionReferences;
     }
 
+    @Override
+    public int findMaxDepth(){
+        List<Instruction> instructions = this.getInstructions();
+
+        int maxDepth = 0, currentDepth;
+        for (Instruction instruction : instructions) {
+            if(instruction instanceof ComplexInstruction complexInstruction) {
+                currentDepth = complexInstruction.findDepthOfFunction();
+                if(currentDepth > maxDepth) {
+                    maxDepth = currentDepth;
+                }
+            }
+        }
+        return maxDepth;
+    }
 }

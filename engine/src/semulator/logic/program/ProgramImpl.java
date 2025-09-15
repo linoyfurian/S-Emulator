@@ -149,6 +149,7 @@ public class ProgramImpl implements Program, Serializable {
             nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
+            Map<String,String> oldAndNew =  new HashMap<>();
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
             usedLabelsNumbers = ExpansionUtils.getSetOfUsedLabels(programToExpand.getLabels());
 
@@ -169,7 +170,7 @@ public class ProgramImpl implements Program, Serializable {
                 }
                 else{
                     if(instruction instanceof ComplexInstruction complexInstruction) {
-                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, this);
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, this);
 
                         for (Instruction nextInstruction : nextInstructions) {
                             nextExpandedProgram.addInstruction(nextInstruction);
@@ -198,5 +199,28 @@ public class ProgramImpl implements Program, Serializable {
 
     public List<Program> getFunctions() {
         return functions;
+    }
+
+    @Override
+    public int findMaxDepth(){
+        List<Instruction> instructions = this.getInstructions();
+        List<Program> functions = this.getFunctions();
+        int maxDepth = 0, currentDepth;
+        for (Instruction instruction : instructions) {
+            if(instruction instanceof ComplexInstruction complexInstruction) {
+                currentDepth = complexInstruction.findDepthOfFunction();
+                if(currentDepth > maxDepth) {
+                    maxDepth = currentDepth;
+                }
+            }
+        }
+
+        for(Program function : functions){
+            currentDepth = function.findMaxDepth();
+            if(currentDepth > maxDepth) {
+                maxDepth = currentDepth;
+            }
+        }
+        return maxDepth;
     }
 }

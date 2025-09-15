@@ -100,7 +100,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
 
 
     @Override
-    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Program program) {
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program) {
         List<Instruction> nextInstructions = new ArrayList<>();
         Instruction newInstruction;
         int availableZnumber;
@@ -287,5 +287,10 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         Instruction newInstruction;
         newInstruction = new JumpEqualFunctionInstruction(this.getVariable(), this.functionName, this.functionArguments, this.getLabel(), this.JEFunctionLabel, instructionNumber, this.getParent());
         return newInstruction;
+    }
+
+    @Override
+    public int findDepthOfFunction(){
+        return FunctionUtils.findDepthOfFunction(this.functionArguments);
     }
 }

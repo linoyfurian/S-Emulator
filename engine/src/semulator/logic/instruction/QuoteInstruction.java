@@ -97,12 +97,11 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
 
     @Override
-    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Program program) {
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program) {
         List<Instruction> nextInstructions = new ArrayList<>();
         ProgramImpl programImpl = (ProgramImpl) program;
 
         List<Program> functions = programImpl.getFunctions();
-        Map<String, String> oldAndNew = new HashMap<>();
 
         Function functionToRun = null;
         Instruction newInstruction;
@@ -121,7 +120,6 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         String inputArgument;
         List<String> arguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
 
-
         for(int i = 0; i < arguments.size(); i++) {
             String currArgument = arguments.get(i).trim();
             inputArgument = "x" + (i+1);
@@ -130,9 +128,9 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 newVariable = XmlProgramMapperV2.variableMapper(oldAndNew.get(inputArgument));
                 newAssignedVariable = XmlProgramMapperV2.variableMapper(currArgument);
 
-                if(FunctionUtils.isVariableIsAFunction(currArgument)) {
-                    String newFunctionName = XmlProgramMapperV2.getFunctionName(currArgument);
-                    String newFunctionArguments = XmlProgramMapperV2.getFunctionarguments(currArgument);
+                if(FunctionUtils.isVariableIsAFunction(currArgument)) { //todo functionutils
+                    String newFunctionName = FunctionUtils.getFunctionName(currArgument);
+                    String newFunctionArguments = FunctionUtils.getFunctionarguments(currArgument);
 
                     newInstruction = new QuoteInstruction(newVariable, newFunctionName, newFunctionArguments, instructionNumber, this);
                 }
@@ -143,6 +141,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 instructionNumber++;
             }
         }
+
 
         //add Q' instructions
         for(Instruction instruction : newQ) {
@@ -362,5 +361,10 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         Instruction newInstruction;
         newInstruction = new QuoteInstruction(this.getVariable(), this.functionName, this.functionArguments, this.getLabel(), instructionNumber, this.getParent());
         return newInstruction;
+    }
+
+    @Override
+    public int findDepthOfFunction(){
+        return FunctionUtils.findDepthOfFunction(this.functionArguments);
     }
 }
