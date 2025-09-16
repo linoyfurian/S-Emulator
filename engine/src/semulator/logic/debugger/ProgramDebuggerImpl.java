@@ -148,10 +148,10 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
             nextInstructionNumber = 0;
         }
 
+
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
         DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs);
-
         return result;
     }
 }

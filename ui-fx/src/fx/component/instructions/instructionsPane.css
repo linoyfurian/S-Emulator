@@ -53,13 +53,13 @@
 }
 
 .table-row-cell:selected {
-    -fx-background-color: rgba(255, 100, 100, 0.8); /* אדמדם חצי שקוף */
+    -fx-background-color: rgba(110, 227, 161, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 /* active instruction line highlighted in reddish */
 .table-row-cell:current {
-    -fx-background-color: rgba(255, 100, 100, 0.8); /* אדמדם חצי שקוף */
+    -fx-background-color: rgba(255, 100, 100, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }

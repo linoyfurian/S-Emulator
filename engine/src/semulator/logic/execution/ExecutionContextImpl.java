@@ -28,7 +28,9 @@ public class ExecutionContextImpl implements ExecutionContext {
 
     @Override
     public Map<String, Long> getAllValues() {
-        return variableValues;
+        Map<String, Long> result = new HashMap<>();
+        result.putAll(this.variableValues);
+        return result;
     }
 
 }

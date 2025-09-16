@@ -1,13 +1,20 @@
 package fx.component.execution;
 
+import fx.app.util.ProgramUtil;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -18,10 +25,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import semulator.api.dto.DebugContextDto;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramFunctionDto;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +41,8 @@ public class DebuggerExecutionController {
     private SEmulatorSystemController mainController;
     private final String INPUT_VARIABLES = "input-variable";
     private final Map<String, TextField> inputFields = new HashMap<>();
+
+    private final ObservableSet<String> changedVarNames = FXCollections.observableSet();
 
     @FXML private ScrollPane inputsScroll;
     @FXML private VBox inputsContainer;
@@ -57,6 +68,9 @@ public class DebuggerExecutionController {
     private boolean isStopDebugger = false;
     private boolean isResume = false;
 
+    private final StringProperty lastChangedVarName = new SimpleStringProperty(null);
+    private static final PseudoClass PC_CHANGED = PseudoClass.getPseudoClass("changed");
+
     @FXML
     private void initialize() {
         nameCol.setCellValueFactory(cellData ->
@@ -65,6 +79,8 @@ public class DebuggerExecutionController {
                 new SimpleStringProperty(String.valueOf(cellData.getValue().getValue())));
         variablesTable.setItems(variablesData);
         cyclesLabel.textProperty().bind(Bindings.format("%s", cyclesProperty));
+
+        initVariablesHighlighting();
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
@@ -297,10 +313,13 @@ public class DebuggerExecutionController {
     }
 
     public void updateDebugResult(DebugContextDto debugContext) {
-        Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
+        Map<String, Long> prevVariablesValues = debugContext.getPreviousVariablesValues();
+        Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
+        List<String> changedVars = ProgramUtil.findChangedVariables(prevVariablesValues, currVariablesValues);
+
         variablesData.clear();
 
-        for (Map.Entry<String, Long> entry : variablesValues.entrySet()) {
+        for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
@@ -315,13 +334,18 @@ public class DebuggerExecutionController {
             stepOverBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
         }
+
+        markVariablesChanged(changedVars);
+
     }
 
     public void updateDebugPrevResult(DebugContextDto debugContext){
-        Map<String, Long> variablesValues = debugContext.getPreviousVariablesValues();
+        Map<String, Long> prevVariablesValues = debugContext.getPreviousVariablesValues();
+        Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
+        List<String> changedVars = ProgramUtil.findChangedVariables(prevVariablesValues, currVariablesValues);
         variablesData.clear();
 
-        for (Map.Entry<String, Long> entry : variablesValues.entrySet()) {
+        for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
@@ -336,6 +360,8 @@ public class DebuggerExecutionController {
             stepBackBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
         }
+
+        markVariablesChanged(changedVars);
     }
 
     @FXML void btnStepOverListener(ActionEvent event) {
@@ -380,4 +406,47 @@ public class DebuggerExecutionController {
     @FXML void onBtnResumeListener(ActionEvent event) {
         mainController.onBtnResumeListener();
     }
+
+
+    private void initVariablesHighlighting() {
+        variablesTable.setRowFactory(tv -> {
+            TableRow<VariableRow> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                VariableRow item = row.getItem();
+                boolean highlight = item != null && changedVarNames.contains(item.getName());
+                row.pseudoClassStateChanged(PC_CHANGED, highlight);
+            };
+
+            row.itemProperty().addListener((o, a, b) -> apply.run());
+            row.indexProperty().addListener((o, a, b) -> apply.run());
+            changedVarNames.addListener((SetChangeListener<String>) c -> apply.run());
+
+            return row;
+        });
+    }
+
+
+    public void markVariablesChanged(Collection<String> names) {
+        Platform.runLater(() -> {
+            changedVarNames.clear();
+            if (names != null)
+                changedVarNames.addAll(names);
+            //variablesTable.getSelectionModel().clearSelection();
+            variablesTable.refresh();
+
+            if (names != null && !names.isEmpty()) {
+                String first = names.iterator().next();
+                int idx = -1;
+                for (int i = 0; i < variablesTable.getItems().size(); i++) {
+                    if (first.equals(variablesTable.getItems().get(i).getName())) { idx = i; break; }
+                }
+                if (idx >= 0) variablesTable.scrollTo(Math.max(idx - 2, 0));
+            }
+        });
+
+    }
+
+
+
 }

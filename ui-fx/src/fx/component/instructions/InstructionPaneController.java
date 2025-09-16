@@ -88,6 +88,8 @@ public class InstructionPaneController {
         lblBasicCount.textProperty().bind(basicInstructionsNumber.asString());
         lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
 
+        initCodeTableHighlighting();
+
     }
 
     public void setMainController(SEmulatorSystemController mainController) {

@@ -58,5 +58,15 @@ public class ProgramUtil {
         return variableRows;
     }
 
+    public static List<String> findChangedVariables(Map<String,Long> prevVariablesValues, Map<String,Long> currVariablesValues){
+        List<String> changedVariables = new ArrayList<>();
+        for(String variableName : prevVariablesValues.keySet()){
+            if(currVariablesValues.get(variableName) != prevVariablesValues.get(variableName)){
+                changedVariables.add(variableName);
+            }
+        }
+        return changedVariables;
+    }
+
 
 }
