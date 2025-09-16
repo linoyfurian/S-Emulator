@@ -185,6 +185,7 @@ public class DebuggerExecutionController {
     @FXML
     void btnNewRunListener(ActionEvent event) {
         initialOfNewRun();
+        mainController.btnNewRunListener();
     }
 
     public void initialOfNewRun(){

@@ -2,12 +2,14 @@ package fx.component.instructions;
 
 import fx.app.util.DisplayUtils;
 import fx.system.SEmulatorSystemController;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,6 +28,12 @@ public class InstructionPaneController {
     private ObservableList<ParentInstructionDto> instructionChainData = FXCollections.observableArrayList();
     private static final String HIGHLIGHT_STYLE_CLASS = "highlight-row";
     private static final String NO_SELECTION_TEXT = "— choose —";
+
+    private static final PseudoClass PC_CURRENT = PseudoClass.getPseudoClass("current");
+
+    // current line in the debug execution (0-based, -1 = none)
+    private final IntegerProperty currentLine = new SimpleIntegerProperty(-1);
+
 
     @FXML private TableView<InstructionDto> tblInstructions;
     @FXML private TableColumn<InstructionDto, String> colNumber;
@@ -198,4 +206,34 @@ public class InstructionPaneController {
                 tableRow.getStyleClass().remove(HIGHLIGHT_STYLE_CLASS);
         }
     }
+
+    private void initCodeTableHighlighting() {
+        tblInstructions.setRowFactory(tv -> {
+            TableRow<InstructionDto> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                boolean highlight = row.getIndex() == currentLine.get();
+                row.pseudoClassStateChanged(PC_CURRENT, highlight);
+            };
+
+            currentLine.addListener((obs, oldV, newV) -> apply.run());
+            row.indexProperty().addListener((obs, oldV, newV) -> apply.run());
+            row.itemProperty().addListener((obs, oldV, newV) -> apply.run());
+
+            return row;
+        });
+    }
+
+    // call this whenever you move to a new line during debug
+    public void highlightLine(int index) {
+        Platform.runLater(() -> {
+            currentLine.set(index);
+            if(index==-1)
+                tblInstructions.getSelectionModel().clearSelection();
+            else
+                tblInstructions.getSelectionModel().clearAndSelect(index);
+            tblInstructions.scrollTo(Math.max(index - 3, 0)); // keep line in view
+        });
+    }
+
 }
