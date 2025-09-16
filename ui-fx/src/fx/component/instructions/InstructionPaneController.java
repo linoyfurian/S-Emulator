@@ -1,6 +1,7 @@
 package fx.component.instructions;
 
 import fx.app.util.DisplayUtils;
+import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -9,6 +10,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,10 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import semulator.api.dto.*;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class InstructionPaneController {
     private SEmulatorSystemController mainController;
@@ -34,6 +34,8 @@ public class InstructionPaneController {
     // current line in the debug execution (0-based, -1 = none)
     private final IntegerProperty currentLine = new SimpleIntegerProperty(-1);
 
+    private static final PseudoClass PC_CHANGED = PseudoClass.getPseudoClass("changed");
+    private final ObservableSet<Long> instructionsToHighlight = FXCollections.observableSet();
 
     @FXML private TableView<InstructionDto> tblInstructions;
     @FXML private TableColumn<InstructionDto, String> colNumber;
@@ -89,6 +91,7 @@ public class InstructionPaneController {
         lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
 
         initCodeTableHighlighting();
+        initInstructionsHighlighting();
 
     }
 
@@ -133,7 +136,6 @@ public class InstructionPaneController {
 
         List<InstructionDto> tableRows = tblInstructions.getItems();
         Set<Long> instructionsNumbersToHighlight = new HashSet<>();
-       // Set<InstructionDto> selectedInstructionsToHighlight = new HashSet<>();
 
         if (tableRows == null || tableRows.isEmpty()) {
             return;
@@ -155,24 +157,7 @@ public class InstructionPaneController {
         tblInstructions.applyCss();
         tblInstructions.layout();
 
-        //clear all visible rows
-        for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
-            if (row instanceof TableRow tableRow)
-                tableRow.getStyleClass().remove(HIGHLIGHT_STYLE_CLASS);
-        }
-
-        for (Object row : tblInstructions.lookupAll(".table-row-cell")) {
-            if (row instanceof TableRow tableRow) {
-                Object item = tableRow.getItem();
-                if (item instanceof InstructionDto instruction) {
-                    if (instruction != null) {
-                        if(instructionsNumbersToHighlight.contains(instruction.getNumber())) {
-                            tableRow.getStyleClass().add(HIGHLIGHT_STYLE_CLASS);
-                        }
-                    }
-                }
-            }
-        }
+        markInstructionChanged(instructionsNumbersToHighlight);
     }
 
     private boolean isInstructionContainsHighlightSelected(InstructionDto instructionToCheck, String highlightSelected) {
@@ -238,4 +223,42 @@ public class InstructionPaneController {
         });
     }
 
+
+    private void initInstructionsHighlighting() {
+        tblInstructions.setRowFactory(tv -> {
+            TableRow<InstructionDto> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                InstructionDto item = row.getItem();
+                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
+                row.pseudoClassStateChanged(PC_CHANGED, highlight);
+            };
+
+            row.itemProperty().addListener((o, a, b) -> apply.run());
+            row.indexProperty().addListener((o, a, b) -> apply.run());
+            instructionsToHighlight.addListener((SetChangeListener<Long>) c -> apply.run());
+
+            return row;
+        });
+    }
+
+
+    public void markInstructionChanged(Collection<Long> instructionsToMark) {
+        Platform.runLater(() -> {
+            instructionsToHighlight.clear();
+            if (instructionsToMark != null)
+                instructionsToHighlight.addAll(instructionsToMark);
+            tblInstructions.refresh();
+
+            if (instructionsToMark != null && !instructionsToMark.isEmpty()) {
+                Long first = instructionsToMark.iterator().next();
+                int idx = -1;
+                for (int i = 0; i < tblInstructions.getItems().size(); i++) {
+                    if (first.equals(tblInstructions.getItems().get(i).getNumber())) { idx = i; break; }
+                }
+                if (idx >= 0) tblInstructions.scrollTo(Math.max(idx - 2, 0));
+            }
+        });
+
+    }
 }

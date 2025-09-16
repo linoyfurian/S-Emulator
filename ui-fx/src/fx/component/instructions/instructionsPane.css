@@ -64,3 +64,9 @@
     -fx-background-radius: 0;
 }
 
+.table-row-cell:changed {
+    -fx-background-color: rgba(138, 94, 172, 0.8);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
