@@ -1,10 +1,12 @@
 package semulator.logic.instruction;
 
+import com.sun.source.tree.ReturnTree;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.Function;
 import semulator.logic.Function.FunctionUtils;
 import semulator.logic.execution.ExecutionContext;
+import semulator.logic.execution.ExecutionUtils;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.instruction.expansion.ExpansionUtils;
@@ -47,15 +49,16 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 }
             }
         }
+
         if(functionToRun != null) {
-            ProgramExecutor programExecutor = new ProgramExecutorImpl(functionToRun);
+            ProgramExecutor programExecutor = new ProgramExecutorImpl(functionToRun, program);
 
-            String[] arguments = functionArguments.split(",");
-            long [] inputs = new long[arguments.length];
+            List<String> arguments = FunctionUtils.splitFunctionArguments(functionArguments);
+            long [] inputs = new long[arguments.size()];
 
-            for(int i = 0; i < arguments.length; i++) {
-                Variable var = XmlProgramMapperV2.variableMapper(arguments[i]);
-                inputs[i] = context.getVariableValue(var);
+
+            for(int i = 0; i < arguments.size(); i++) {
+                inputs[i] = ExecutionUtils.findInputValue(program,arguments.get(i), context);
             }
 
             ExecutionRunDto runDetails = programExecutor.run(0, 0, null, inputs);
@@ -66,7 +69,6 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         }
         return FixedLabel.EMPTY;
     }
-
 
     @Override
     public String getInstructionDescription(Program program) {

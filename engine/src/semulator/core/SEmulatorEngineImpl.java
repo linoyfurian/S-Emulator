@@ -173,7 +173,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             Function function =  (Function) programInContext;
             programToRun = function.expand(desiredDegreeOfExpand, this.program);
         }
-        ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun);
+        ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, program);
         ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
 
         List<RunResultDto> results = this.runsHistory.get(programToRun.getName());
