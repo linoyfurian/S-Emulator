@@ -5,8 +5,13 @@ import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
 import fx.component.topbar.TopBarController;
+import fx.system.load.ProgressDialog;
 import jakarta.xml.bind.JAXBException;
+import javafx.animation.PauseTransition;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import semulator.api.LoadReport;
 import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
@@ -246,4 +251,139 @@ public class SEmulatorSystemController {
     public void btnNewRunListener(){
         instructionsController.highlightLine(-1);
     }
+
+    public void loadFileAsync(String xmlFile) {
+        LoadReport loadReport = null;
+        Path path;
+        path = Paths.get(xmlFile);
+
+        // Basic input validation
+        if (xmlFile == null) return;
+
+        // Build the background task
+        Task<LoadReport> task = new Task<>() {
+            @Override
+            protected LoadReport call() throws Exception {
+                updateMessage("Loading…");
+                updateProgress(-1, 1); // indeterminate
+
+                // Simulate short delay as required (1.5–2s), still responsive to cancel:
+                long ms = 1500;
+                long slept = 0;
+                while (slept < ms) {
+                    if (isCancelled()) {
+                        updateMessage("Canceling…");
+                        return null;
+                    }
+                    Thread.sleep(100);
+                    slept += 100;
+                }
+
+                try {
+
+                    // Heavy work off the JAT:
+                    LoadReport lr = engine.loadProgramDetails(path);
+                    if (isCancelled()) return null;
+                    return lr;
+                } catch (JAXBException ex) {
+                    // Let JavaFX know it's a failure
+                    throw ex;
+                }
+            }
+        };
+
+        // Small progress window
+        Stage owner = /* any app stage you have, e.g. primaryStage */ null;
+        ProgressDialog progress = new ProgressDialog(owner, "Loading Program");
+        progress.bindToTask(task);
+        progress.show();
+
+        // On success (back on JAT) – continue your existing UI flow
+        task.setOnSucceeded(ev -> {
+            try {
+                LoadReport lr = task.getValue();
+                if (lr == null) { // likely cancelled right at the end
+                    progress.close();
+                    return;
+                }
+
+                if (!lr.isSuccess()) {
+                    // Show error inside the progress window briefly
+                    String err = (lr.getMessage() != null && !lr.getMessage().isBlank())
+                            ? lr.getMessage()
+                            : "File failed validation.";
+                    progress.setMessage("Error: " + err);
+                    progress.setIndeterminate();
+                    // Wait ~1.2s then close
+                    PauseTransition pt = new PauseTransition(Duration.millis(1200));
+                    pt.setOnFinished(e -> progress.close());
+                    pt.play();
+                    return;
+                }
+
+                // Success: fetch the program
+                ProgramFunctionDto program = engine.displayProgram();
+                if (program == null) {
+                    progress.setMessage("Error: Program is empty.");
+                    PauseTransition pt = new PauseTransition(Duration.millis(900));
+                    pt.setOnFinished(e -> progress.close());
+                    pt.play();
+                    return;
+                }
+
+                // Close the progress before updating UI
+                progress.close();
+
+                //update in UI
+                if (currentProgramName == null) {
+                    currentProgramName = program.getName();
+                }
+
+                instructionsController.displayProgram(program);
+
+                int programDegree = ProgramUtil.getDisplayedProgramDegree(program);
+                int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(program);
+                topBarController.updateDegreeLabel(programDegree, maxDegree);
+
+                topBarController.refreshHighlightOptions(program);
+
+                debuggerController.setProgram(program);
+                topBarController.setLoadFileText(path.toString());
+
+                List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
+                topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
+
+                // NOTE: “Only one file loaded at a time” happens naturally:
+                // a successful load replaces the previous program in the engine/UI.
+
+            } catch (Exception ex) {
+                progress.close();
+            }
+        });
+
+        // On failure (exception thrown in call)
+        task.setOnFailed(ev -> {
+            Throwable ex = task.getException();
+            String msg = (ex != null && ex.getMessage() != null) ? ex.getMessage() : "Unknown load error.";
+            progress.setMessage("Error: " + msg);
+            progress.setIndeterminate();
+            PauseTransition pt = new PauseTransition(Duration.millis(1200));
+            pt.setOnFinished(e -> progress.close());
+            pt.play();
+        });
+
+        // On cancel
+        task.setOnCancelled(ev -> {
+            progress.setMessage("Canceled.");
+            progress.setIndeterminate();
+            PauseTransition pt = new PauseTransition(Duration.millis(600));
+            pt.setOnFinished(e -> progress.close());
+            pt.play();
+        });
+
+        Thread t = new Thread(task, "load-xml-task");
+        t.setDaemon(true);
+        t.start();
+    }
+
 }
