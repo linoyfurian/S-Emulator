@@ -312,10 +312,11 @@ public class SEmulatorSystemController {
                     String err = (lr.getMessage() != null && !lr.getMessage().isBlank())
                             ? lr.getMessage()
                             : "File failed validation.";
-                    progress.setMessage("Error: " + err);
+                    progress.setStatus("Error");
+                    progress.showDetails(err);
                     progress.setIndeterminate();
                     // Wait ~1.2s then close
-                    PauseTransition pt = new PauseTransition(Duration.millis(1200));
+                    PauseTransition pt = new PauseTransition(Duration.millis(1800));
                     pt.setOnFinished(e -> progress.close());
                     pt.play();
                     return;
@@ -324,15 +325,21 @@ public class SEmulatorSystemController {
                 // Success: fetch the program
                 ProgramFunctionDto program = engine.displayProgram();
                 if (program == null) {
-                    progress.setMessage("Error: Program is empty.");
+                    progress.setStatus("Error: Program is empty.");
                     PauseTransition pt = new PauseTransition(Duration.millis(900));
                     pt.setOnFinished(e -> progress.close());
                     pt.play();
                     return;
                 }
 
-                // Close the progress before updating UI
-                progress.close();
+                progress.setStatus("Loaded successfully.");
+
+                PauseTransition pt = new PauseTransition(Duration.millis(600));
+                pt.setOnFinished(e2 -> progress.close());
+                pt.play();
+
+//                // Close the progress before updating UI
+//                progress.close();
 
                 //update in UI
                 if (currentProgramName == null) {
@@ -365,7 +372,7 @@ public class SEmulatorSystemController {
         task.setOnFailed(ev -> {
             Throwable ex = task.getException();
             String msg = (ex != null && ex.getMessage() != null) ? ex.getMessage() : "Unknown load error.";
-            progress.setMessage("Error: " + msg);
+            progress.setStatus("Error: " + msg);
             progress.setIndeterminate();
             PauseTransition pt = new PauseTransition(Duration.millis(1200));
             pt.setOnFinished(e -> progress.close());
@@ -374,7 +381,7 @@ public class SEmulatorSystemController {
 
         // On cancel
         task.setOnCancelled(ev -> {
-            progress.setMessage("Canceled.");
+            progress.setStatus("Canceled.");
             progress.setIndeterminate();
             PauseTransition pt = new PauseTransition(Duration.millis(600));
             pt.setOnFinished(e -> progress.close());

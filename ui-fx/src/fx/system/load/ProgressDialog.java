@@ -1,6 +1,5 @@
 package fx.system.load;
 
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,42 +9,75 @@ import javafx.stage.Stage;
 
 public class ProgressDialog {
     private final Stage dialog;
-    private final Label lbl;
-    private final ProgressBar bar;
+    private final Label lblStatus;       // "Loading..."/"Canceling..."
+    private final ProgressBar pb;
+    private final TextArea taDetails;    // hidden at start
     private final Button btnCancel;
 
     public ProgressDialog(Stage owner, String title) {
         dialog = new Stage();
-        dialog.initOwner(owner);
+        if (owner != null) dialog.initOwner(owner);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle(title);
 
-        lbl = new Label("Loading…");
-        bar = new ProgressBar();
-        bar.setPrefWidth(260);
+        lblStatus = new Label("Loading…");
+        lblStatus.setWrapText(true);
+
+        pb = new ProgressBar();
+        pb.setPrefWidth(320);
+        pb.setMaxWidth(Double.MAX_VALUE);
+
+        taDetails = new TextArea();
+        taDetails.setWrapText(true);
+        taDetails.setEditable(false);
+        taDetails.setPrefRowCount(4);
+        taDetails.setMaxWidth(Double.MAX_VALUE);
+
+        taDetails.setVisible(false);
+        taDetails.setManaged(false);
+
         btnCancel = new Button("Cancel");
 
-        VBox root = new VBox(10, lbl, bar, btnCancel);
+        VBox root = new VBox(10, lblStatus, pb, taDetails, btnCancel);
         root.setPadding(new Insets(12));
+        root.setFillWidth(true);
+
+        root.setPrefWidth(420);
+        root.setPrefHeight(150);
+
+        lblStatus.setMaxWidth(Double.MAX_VALUE);
+        lblStatus.prefWidthProperty().bind(root.widthProperty().subtract(24));
+
         dialog.setScene(new Scene(root));
         dialog.setResizable(false);
+        dialog.setOnCloseRequest(e -> btnCancel.fire());
     }
 
-    public void bindToTask(Task<?> task) {
-        lbl.textProperty().bind(task.messageProperty());
-        bar.progressProperty().bind(task.progressProperty());
-
-        // Close-request (X) should cancel the task
-        dialog.setOnCloseRequest(ev -> task.cancel());
-
-        // Cancel button cancels the task
-        btnCancel.setOnAction(ev -> task.cancel());
+    public void bindToTask(javafx.concurrent.Task<?> task) {
+        lblStatus.textProperty().bind(task.messageProperty());
+        pb.progressProperty().bind(task.progressProperty());
+        btnCancel.setOnAction(e -> task.cancel());
     }
 
     public void show() { dialog.show(); }
     public void close() { dialog.close(); }
 
-    // Optional direct setters (for error flash before closing)
-    public void setMessage(String m) { lbl.textProperty().unbind(); lbl.setText(m); }
-    public void setIndeterminate() { bar.progressProperty().unbind(); bar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS); }
+    public void showDetails(String text) {
+        taDetails.textProperty().unbind();
+        taDetails.setText(text == null ? "" : text);
+        if (!taDetails.isVisible()) {
+            taDetails.setVisible(true);
+            taDetails.setManaged(true);
+        }
+    }
+
+    public void setIndeterminate() {
+        pb.progressProperty().unbind();
+        pb.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+    }
+
+    public void setStatus(String text) {
+        lblStatus.textProperty().unbind();
+        lblStatus.setText(text);
+    }
 }
