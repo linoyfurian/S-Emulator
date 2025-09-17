@@ -30,10 +30,7 @@ import semulator.api.dto.DebugContextDto;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramFunctionDto;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 
@@ -319,11 +316,12 @@ public class DebuggerExecutionController {
 
         variablesData.clear();
 
-        for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
+        for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
-        cyclesProperty.set(debugContext.getCycles());
+
+        cyclesProperty.set(debugContext.getPrevCycles());
 
         long nextInstructionNumber = debugContext.getNextInstructionNumber();
         if (nextInstructionNumber == 0) { //finish debug
@@ -333,10 +331,14 @@ public class DebuggerExecutionController {
             stepBackBtn.setDisable(true);
             stepOverBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
+            cyclesProperty.set(debugContext.getCycles());
         }
+    }
 
-        markVariablesChanged(changedVars);
-
+    public void updateVariableHighlight(String variablesToHighLight){
+        List<String> vars = new ArrayList<>();
+        vars.add(variablesToHighLight);
+        markVariablesChanged(vars);
     }
 
     public void updateDebugPrevResult(DebugContextDto debugContext){
@@ -349,7 +351,7 @@ public class DebuggerExecutionController {
             VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
             variablesData.add(row);
         }
-        cyclesProperty.set(debugContext.getCycles());
+        cyclesProperty.set(debugContext.getPrevCycles());
 
         long nextInstructionNumber = debugContext.getNextInstructionNumber();
         if (nextInstructionNumber == 0) { //finish debug
@@ -359,9 +361,8 @@ public class DebuggerExecutionController {
             stepOverBtn.setDisable(true);
             stepBackBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
+            cyclesProperty.set(debugContext.getCycles());
         }
-
-        markVariablesChanged(changedVars);
     }
 
     @FXML void btnStepOverListener(ActionEvent event) {

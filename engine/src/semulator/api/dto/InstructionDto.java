@@ -1,9 +1,6 @@
 package semulator.api.dto;
 
-import semulator.logic.instruction.ComplexInstruction;
-import semulator.logic.instruction.Instruction;
-import semulator.logic.instruction.QuoteInstruction;
-import semulator.logic.instruction.SimpleInstruction;
+import semulator.logic.instruction.*;
 import semulator.logic.label.Label;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
@@ -21,6 +18,8 @@ public class InstructionDto {
     private final List<ParentInstructionDto> parents;
     private final List<String> allLabels;
     private final List<String> allVariables;
+    private final String mainVariable;
+    private final boolean isJumpInstruction;
 
     public InstructionDto(Instruction instruction, Program program) {
         this.label = instruction.getLabel().getLabelRepresentation();
@@ -60,6 +59,23 @@ public class InstructionDto {
                 this.allVariables.add(variable.getRepresentation());
         }
 
+        Variable mainVar = instruction.getVariable();
+        if(mainVar!=null)
+            this.mainVariable = mainVar.getRepresentation();
+        else
+            this.mainVariable = "";
+
+        if(instruction instanceof JumpInstruction){
+            this.isJumpInstruction = true;
+        }
+        else{
+            this.isJumpInstruction = false;
+        }
+
+    }
+
+    public boolean isJumpInstruction() {
+        return isJumpInstruction;
     }
 
     public long getNumber() {
@@ -92,5 +108,9 @@ public class InstructionDto {
 
     public List<String> getAllVariables() {
         return allVariables;
+    }
+
+    public String getMainVariable() {
+        return mainVariable;
     }
 }

@@ -19,7 +19,7 @@ import semulator.logic.variable.VariableType;
 
 import java.util.*;
 
-public class JumpEqualFunctionInstruction extends AbstractInstruction implements ComplexInstruction {
+public class JumpEqualFunctionInstruction extends AbstractInstruction implements ComplexInstruction, JumpInstruction {
     private final Label JEFunctionLabel;
     private final String functionName;
     private final String functionArguments;
@@ -95,7 +95,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
                 return ("IF" + getVariable().getRepresentation() + " = " + "(" + functionUserName + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
             else {
                 String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
-                return ("IF" + getVariable().getRepresentation() + " = " + "(" + functionUserName + "," + useStringFunctionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
+                return ("IF " + getVariable().getRepresentation() + " = " + "(" + functionUserName + "," + useStringFunctionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
             }
         }
         return "";
@@ -216,7 +216,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         Program currentFunction = FunctionUtils.findFunction(this.functionName, functions);
 
         int depth = 1;
-        int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 3);
+        int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 4);
         int currentMaxDegree;
         boolean isFunctionName = false;
 
@@ -295,5 +295,10 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
     @Override
     public int findDepthOfFunction(){
         return FunctionUtils.findDepthOfFunction(this.functionArguments);
+    }
+
+    @Override
+    public Label getTargetLabel(){
+        return this.JEFunctionLabel;
     }
 }

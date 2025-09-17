@@ -177,9 +177,15 @@ public class SEmulatorSystemController {
             historyController.updateHistoryRunTable(programInContextRunHistory);
 
         }
+        else{
+            long prevInstructionNumber = debugContext.getPrevDebugContext().getPreviousInstructionNumber();
+            String variableToHighLight = this.instructionsController.getInstructionsMainVariable(prevInstructionNumber);
+            debuggerController.updateVariableHighlight(variableToHighLight);
+        }
         long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
         instructionsController.highlightLine((int)currInstructionToHighlight - 1);
         debuggerController.updateDebugResult(this.debugContext);
+
     }
 
     public void btnStepBackListener(){
@@ -188,7 +194,7 @@ public class SEmulatorSystemController {
             if(presInstructionNumber==1){
                 debuggerController.updateDebugPrevResult(this.debugContext);
                 debuggerController.disableStepBackBtn();
-                instructionsController.highlightLine(0); //todo: new
+                instructionsController.highlightLine(0);
             }
             else{
                 this.debugContext = this.debugContext.getPrevDebugContext();
@@ -197,8 +203,7 @@ public class SEmulatorSystemController {
                 instructionsController.highlightLine((int)currInstructionToHighlight - 1);
             }
 
-
-
+            debuggerController.updateVariableHighlight("");
         }
     }
 
@@ -209,6 +214,7 @@ public class SEmulatorSystemController {
         historyController.updateHistoryRunTable(programInContextRunHistory);
 
         instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
     }
 
     public void onReRunButtonListener(RunResultDto selectedRun){
@@ -220,6 +226,7 @@ public class SEmulatorSystemController {
         debuggerController.applyRelevantInputs(inputs);
 
         instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
     }
 
     private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
@@ -244,12 +251,13 @@ public class SEmulatorSystemController {
             historyController.updateHistoryRunTable(programInContextRunHistory);
         }
         debuggerController.updateDebugResult(this.debugContext);
-
+        debuggerController.updateVariableHighlight("");
         instructionsController.highlightLine(-1);
     }
 
     public void btnNewRunListener(){
         instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
     }
 
     public void loadFileAsync(String xmlFile) {
@@ -316,7 +324,7 @@ public class SEmulatorSystemController {
                     progress.showDetails(err);
                     progress.setIndeterminate();
                     // Wait ~1.2s then close
-                    PauseTransition pt = new PauseTransition(Duration.millis(1800));
+                    PauseTransition pt = new PauseTransition(Duration.millis(1200));
                     pt.setOnFinished(e -> progress.close());
                     pt.play();
                     return;
@@ -334,7 +342,7 @@ public class SEmulatorSystemController {
 
                 progress.setStatus("Loaded successfully.");
 
-                PauseTransition pt = new PauseTransition(Duration.millis(600));
+                PauseTransition pt = new PauseTransition(Duration.millis(500));
                 pt.setOnFinished(e2 -> progress.close());
                 pt.play();
 

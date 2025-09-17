@@ -64,6 +64,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Label nextLabel;
         int cycles = this.cycles;
+        int prevCycles = this.cycles;
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
 
         int currInstructionNumber = (int)(instructionToExecuteNumber);
@@ -104,7 +105,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs);
+        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
 
@@ -116,7 +117,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         Instruction instructionToExecute = instructions.get((int)(instructionToExecuteNumber - 1));
         Label nextLabel;
         int cycles;
-
+        int prevCycles = this.cycles;
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
 
         if(instructionToExecute instanceof SimpleInstruction simpleInstruction)
@@ -151,7 +152,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs);
+        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
 }

@@ -218,7 +218,7 @@ public class InstructionPaneController {
             if(index==-1)
                 tblInstructions.getSelectionModel().clearSelection();
             else
-                tblInstructions.getSelectionModel().clearAndSelect(index);
+               tblInstructions.getSelectionModel().clearAndSelect(index);
             tblInstructions.scrollTo(Math.max(index - 3, 0)); // keep line in view
         });
     }
@@ -260,5 +260,13 @@ public class InstructionPaneController {
             }
         });
 
+    }
+
+    public String getInstructionsMainVariable(long currInstructionNumber){
+        List<InstructionDto> instructions = this.tblInstructions.getItems();
+        InstructionDto currInstruction = instructions.get((int)currInstructionNumber-1);
+        if(currInstruction.isJumpInstruction())
+            return "";
+        return currInstruction.getMainVariable();
     }
 }
