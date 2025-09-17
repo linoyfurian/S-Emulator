@@ -4,10 +4,7 @@ import semulator.api.dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.Function;
 import semulator.logic.Function.FunctionUtils;
-import semulator.logic.execution.ExecutionContext;
-import semulator.logic.execution.ExecutionUtils;
-import semulator.logic.execution.ProgramExecutor;
-import semulator.logic.execution.ProgramExecutorImpl;
+import semulator.logic.execution.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
@@ -38,7 +35,8 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
 
 
     @Override
-    public Label execute(ExecutionContext context, Program program) {
+    public ComplexExecuteResult execute(ExecutionContext context, Program program) {
+        int runCycles = 0;
         ProgramImpl programImpl = (ProgramImpl) program;
         List<Program> functions = programImpl.getFunctions();
         Function functionToRun = null;
@@ -69,12 +67,13 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
             if(runDetails!=null) {
                 functionResult = runDetails.getResult();
                 long variableValue = context.getVariableValue(this.getVariable());
+                runCycles = runDetails.getCycles();
                 if(variableValue==functionResult) {
-                    return JEFunctionLabel;
+                    return new ComplexExecuteResult(JEFunctionLabel, runCycles);
                 }
             }
         }
-        return FixedLabel.EMPTY;
+        return new ComplexExecuteResult(FixedLabel.EMPTY, runCycles);
     }
 
     @Override
@@ -92,7 +91,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
                 }
             }
             if (functionArguments.equals("") || functionArguments == null)
-                return ("IF" + getVariable().getRepresentation() + " = " + "(" + functionUserName + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
+                return ("IF " + getVariable().getRepresentation() + " = " + "(" + functionUserName + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
             else {
                 String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
                 return ("IF " + getVariable().getRepresentation() + " = " + "(" + functionUserName + "," + useStringFunctionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());

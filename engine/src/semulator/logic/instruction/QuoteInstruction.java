@@ -1,14 +1,10 @@
 package semulator.logic.instruction;
 
-import com.sun.source.tree.ReturnTree;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.Function;
 import semulator.logic.Function.FunctionUtils;
-import semulator.logic.execution.ExecutionContext;
-import semulator.logic.execution.ExecutionUtils;
-import semulator.logic.execution.ProgramExecutor;
-import semulator.logic.execution.ProgramExecutorImpl;
+import semulator.logic.execution.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
@@ -35,7 +31,8 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     }
 
     @Override
-    public Label execute(ExecutionContext context, Program program) {
+    public ComplexExecuteResult execute(ExecutionContext context, Program program) {
+        int runCycles = 0;
         ProgramImpl programImpl = (ProgramImpl) program;
         List<Program> functions = programImpl.getFunctions();
         Function functionToRun = null;
@@ -65,9 +62,11 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
             if(runDetails!=null) {
                 assignedValue = runDetails.getResult();
                 context.updateVariable(this.getVariable(), assignedValue);
+                runCycles = runDetails.getCycles();
             }
         }
-        return FixedLabel.EMPTY;
+
+        return new ComplexExecuteResult(FixedLabel.EMPTY, runCycles);
     }
 
     @Override

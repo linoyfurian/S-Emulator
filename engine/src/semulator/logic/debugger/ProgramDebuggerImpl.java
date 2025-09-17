@@ -1,6 +1,7 @@
 package semulator.logic.debugger;
 
 import semulator.api.dto.DebugContextDto;
+import semulator.logic.execution.ComplexExecuteResult;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ExecutionContextImpl;
 import semulator.logic.instruction.ComplexInstruction;
@@ -58,7 +59,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
     @Override
     public DebugContextDto resume (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
-
+        ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
         //todo check size of instructions
 
@@ -75,7 +76,9 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 nextLabel = simpleInstruction.execute(this.context);
             else {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
-                nextLabel = complexInstruction.execute(this.context, mainProgram);
+                executeResult = complexInstruction.execute(this.context, mainProgram);
+                nextLabel = executeResult.getNextLabel();
+                cycles = cycles + executeResult.getRunCycles();
             }
 
             cycles = cycles + instruction.cycles();
@@ -111,12 +114,12 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
     @Override
     public DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
-
+        ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
         //todo check size of instructions
         Instruction instructionToExecute = instructions.get((int)(instructionToExecuteNumber - 1));
         Label nextLabel;
-        int cycles;
+        int cycles=0;
         int prevCycles = this.cycles;
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
 
@@ -124,10 +127,12 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
             nextLabel = simpleInstruction.execute(this.context);
         else {
             ComplexInstruction complexInstruction = (ComplexInstruction) instructionToExecute;
-            nextLabel = complexInstruction.execute(this.context, mainProgram);
+            executeResult = complexInstruction.execute(this.context, mainProgram);
+            nextLabel = executeResult.getNextLabel();
+            cycles = cycles + executeResult.getRunCycles();
         }
 
-        cycles = this.cycles + instructionToExecute.cycles();
+        cycles = cycles + this.cycles + instructionToExecute.cycles();
 
         long nextInstructionNumber = 0, nextInstructionIndex = 0;
 

@@ -27,6 +27,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
     @Override
     public ExecutionRunDto run(int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
         int cycles = 0;
+        ComplexExecuteResult executeResult;
         ExecutionContext context = new ExecutionContextImpl();
 
         //add input variables
@@ -60,7 +61,9 @@ public class ProgramExecutorImpl implements ProgramExecutor {
             }
             else{
                 ComplexInstruction complexInstruction =  (ComplexInstruction) currentInstruction;
-                nextLabel = complexInstruction.execute(context, mainProgram);
+                executeResult = complexInstruction.execute(context, mainProgram);
+                nextLabel = executeResult.getNextLabel();
+                cycles = cycles + executeResult.getRunCycles();
             }
 
             cycles = cycles + currentInstruction.cycles();
