@@ -1,5 +1,5 @@
 #top-bar-grid {
-    -fx-background-color: #000000;
+    -fx-background-color: #f1c8e2;
 }
 
 .label {
@@ -7,7 +7,7 @@
 }
 
 .button {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #fa64c3;
     -fx-text-fill: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
@@ -15,15 +15,15 @@
 }
 
 .button:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #f379c6;
 }
 
 .button:pressed {
-    -fx-background-color: #555555;
+    -fx-background-color: #f379c6;
 }
 
 .combo-box {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #fa64c3;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
     -fx-text-fill: white;
@@ -36,28 +36,28 @@
 
 
 .combo-box-popup .list-view {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #f3cce5;
 }
 
 .combo-box-popup .list-cell {
-    -fx-background-color: #2a2a2a;
-    -fx-text-fill: white;
+    -fx-background-color: #f3e9ef;
+    -fx-text-fill: #f367c6;
 }
 
 .combo-box-popup .list-cell:hover {
-    -fx-background-color: #444444;
+    -fx-background-color: #f3cce5;
 }
 
 .text-field {
-    -fx-background-color: #1e1e1e;
+    -fx-background-color: #f1c8e2;
     -fx-text-fill: white;
     -fx-prompt-text-fill: #aaaaaa;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
-    -fx-border-color: #333333;
+    -fx-border-color: #f1c8e2;
 }
 
 .text-field:readonly {
-    -fx-background-color: #1e1e1e;
+    -fx-background-color: #f1c8e2;
     -fx-text-fill: #bbbbbb;
 }

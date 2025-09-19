@@ -1,5 +1,6 @@
 package fx.component.topbar;
 
+import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,9 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import fx.system.SEmulatorSystemController;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import semulator.api.dto.ProgramFunctionDto;
 import java.io.File;
@@ -21,7 +22,9 @@ import java.util.List;
 
 public class TopBarController {
     private SEmulatorSystemController mainController;
-    private ProgressBar inlineProgressBar; //todo !!!!!!!!!!!
+
+    @FXML private GridPane topBarRoot;
+    @FXML private ComboBox<Theme> styleSheetCmb;
 
     private boolean refreshingProgramOrFunctions = false;
     private boolean refreshingExpandOptions = false;
@@ -56,6 +59,8 @@ public class TopBarController {
         );
 
         loadFileTextField.textProperty().bind(currentFileName);
+
+        styleSheetCmb.getItems().addAll(Theme.values());
     }
 
 
@@ -263,22 +268,23 @@ public class TopBarController {
         }
     }
 
-//    private static <T> void attachComboGuards(ComboBox<T> cb) {
-//        cb.setOnShown(e -> {
-//            if (cb.getItems() == null || cb.getItems().isEmpty()) {
-//                cb.hide();
-//                e.consume();
-//            }
-//        });
-//        cb.setOnMousePressed(e -> {
-//            if (cb.getItems() == null || cb.getItems().isEmpty()) {
-//                e.consume();
-//            }
-//        });
-//        cb.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-//            if (isShowing && (cb.getItems() == null || cb.getItems().isEmpty())) {
-//                cb.hide();
-//            }
-//        });
-//    }
+    @FXML void onStyleSheetChangedListener(ActionEvent event) {
+        Theme selectedStyleSheet = styleSheetCmb.getSelectionModel().getSelectedItem();
+        if(mainController != null) {
+            mainController.onStyleSheetChangedListener(selectedStyleSheet);
+        }
+        topBarRoot.getStylesheets().clear();
+        switch(selectedStyleSheet) {
+            case Theme.Default:
+                topBarRoot.getStylesheets().add("/fx/component/topbar/topBar.css");
+                break;
+            case Theme.Dark:
+                topBarRoot.getStylesheets().add("/fx/component/topbar/topBarV2.css");
+                break;
+            case Theme.Pink:
+                topBarRoot.getStylesheets().add("/fx/component/topbar/topBarV3.css");
+                break;
+        }
+    }
+
 }

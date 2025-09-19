@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" stylesheets="@instructionsPane.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.instructions.InstructionPaneController">
+<VBox fx:id="instructionRoot" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" styleClass="instructionVbox" stylesheets="@instructionsPane.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.instructions.InstructionPaneController">
    <children>
       <TableView fx:id="tblInstructions" maxHeight="400.0" onMouseClicked="#onInstructionSelectedListener" prefHeight="300.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn id="instructions-table-number" fx:id="colNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" text="number" />
-          <TableColumn id="instructions-table-bs" fx:id="colType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" text="B\S" />
-            <TableColumn fx:id="colLabel" prefWidth="75.0" text="Label" />
-            <TableColumn id="instructions-table-instruction" fx:id="colCommand" maxWidth="250.0" minWidth="100.0" prefWidth="250.0" sortable="false" text="Instruction" />
-            <TableColumn id="instructions-table-cycles" fx:id="colCycles" maxWidth="60.0" minWidth="50.0" prefWidth="60.0" sortable="false" text="Cycles" />
+          <TableColumn id="instructions-table-number" fx:id="colNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" styleClass="col" text="number" />
+          <TableColumn id="instructions-table-bs" fx:id="colType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" styleClass="col" text="B\S" />
+            <TableColumn fx:id="colLabel" prefWidth="75.0" styleClass="col" text="Label" />
+            <TableColumn id="instructions-table-instruction" fx:id="colCommand" maxWidth="250.0" minWidth="100.0" prefWidth="250.0" sortable="false" styleClass="col" text="Instruction" />
+            <TableColumn id="instructions-table-cycles" fx:id="colCycles" maxWidth="60.0" minWidth="50.0" prefWidth="60.0" sortable="false" styleClass="col" text="Cycles" />
         </columns>
       </TableView>
        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0" styleClass="summary-line" VBox.vgrow="NEVER">
@@ -36,11 +36,11 @@
            </padding></Label>
        <TableView fx:id="tblChainInstructions" maxHeight="400.0" prefHeight="300.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
            <columns>
-               <TableColumn id="instructions-chain-table-number" fx:id="chainColNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" text="number" />
-               <TableColumn id="instructions-chain-table-bs" fx:id="chainColType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" text="B\S" />
-               <TableColumn fx:id="chainColLabel" prefWidth="75.0" text="Label" />
-               <TableColumn id="instructions-chain-table-instruction" fx:id="chainColCommand" maxWidth="250.0" minWidth="100.0" prefWidth="250.0" sortable="false" text="Instruction" />
-               <TableColumn id="instructions-chain-table-cycles" fx:id="chainColCycles" maxWidth="60.0" minWidth="50.0" prefWidth="60.0" sortable="false" text="Cycles" />
+               <TableColumn id="instructions-chain-table-number" fx:id="chainColNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" styleClass="col" text="number" />
+               <TableColumn id="instructions-chain-table-bs" fx:id="chainColType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" styleClass="col" text="B\S" />
+               <TableColumn fx:id="chainColLabel" prefWidth="75.0" styleClass="col" text="Label" />
+               <TableColumn id="instructions-chain-table-instruction" fx:id="chainColCommand" maxWidth="250.0" minWidth="100.0" prefWidth="250.0" sortable="false" styleClass="col" text="Instruction" />
+               <TableColumn id="instructions-chain-table-cycles" fx:id="chainColCycles" maxWidth="60.0" minWidth="50.0" prefWidth="60.0" sortable="false" styleClass="col" text="Cycles" />
            </columns>
        </TableView>
    </children>

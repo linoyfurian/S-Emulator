@@ -1,62 +1,68 @@
 .root {
-    -fx-background-color: #000000;
+    -fx-background-color: #f1c8e2;
 }
 
 .table-view {
-    -fx-background-color: #1e1e1e;
-    -fx-control-inner-background: #1e1e1e;
-    -fx-text-fill: white;
-    -fx-table-cell-border-color: #2a2a2a;
-    -fx-table-header-border-color: #2a2a2a;
+    -fx-background-color: #f1c8e2;
+    -fx-control-inner-background: #f1c8e2;
+    -fx-text-fill: #f167d5;
+    -fx-table-cell-border-color: #f1c8e2;
+    -fx-table-header-border-color: #f1c8e2;
 }
 
 .table-view .table-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-alignment: CENTER-LEFT;
+}
+
+.table-view .col {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
-    -fx-background-color: #111111;
-    -fx-text-fill: white;
+    -fx-background-color: #e18dc2;
+    -fx-text-fill: f167d5;
 }
 
 .table-view:focused .table-row-cell:filled:focused:selected,
 .table-view .table-row-cell:filled:selected {
-    -fx-background-color: #a475ec;
+    -fx-background-color: #98f1a0;
     -fx-text-fill: white;
 }
 
 .table-row-cell {
-    -fx-background-color: #1e1e1e;
-    -fx-text-fill: white;
+    -fx-background-color: #f1c8e2;
+    -fx-text-fill: #f167d5;
 }
 
 .table-row-cell:hover {
-    -fx-background-color: #333333;
+    -fx-background-color: #f1c8e2;
 }
 
 .label {
     -fx-text-fill: white;
-    -fx-background-color: black;
-}
 
-.instructionVbox {
-    -fx-background-color: black;
 }
 
 .summary-line {
-    -fx-background-color: #111111;
+    -fx-background-color: #f1c8e2;
 }
 
+.instructionVbox {
+    -fx-background-color: #f1c8e2;
+}
+
+
 .summary-title {
-    -fx-text-fill: #cccccc;
+    -fx-text-fill: #e649ba;
     -fx-font-weight: bold;
 }
 
 .summary-subtitle {
-    -fx-text-fill: #bbbbbb;
+    -fx-text-fill: #e157c0;
 }
 
 .summary-value {
@@ -66,15 +72,14 @@
 
 /* active instruction line highlighted in reddish */
 .table-row-cell:current {
-    -fx-background-color: rgba(255, 100, 100, 0.8);
+    -fx-background-color: rgba(239, 120, 120, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 
 .table-row-cell:changed {
-    -fx-background-color: rgba(138, 94, 172, 0.8);
+    -fx-background-color: rgba(140, 244, 180, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
-
 

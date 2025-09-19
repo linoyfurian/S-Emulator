@@ -1,5 +1,6 @@
 package fx.system;
 
+import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
@@ -10,6 +11,7 @@ import jakarta.xml.bind.JAXBException;
 import javafx.animation.PauseTransition;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import semulator.api.LoadReport;
@@ -17,6 +19,7 @@ import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -29,6 +32,8 @@ public class SEmulatorSystemController {
     @FXML private InstructionPaneController instructionsController;
     @FXML private DebuggerExecutionController debuggerController;
     @FXML private HistoryController historyController;
+
+    @FXML private ScrollPane systemScrollPane;
 
     private String currentProgramName;
     DebugContextDto debugContext = null;
@@ -399,6 +404,25 @@ public class SEmulatorSystemController {
         Thread t = new Thread(task, "load-xml-task");
         t.setDaemon(true);
         t.start();
+    }
+
+    public void onStyleSheetChangedListener(Theme selectedStyleSheet) {
+        instructionsController.onStyleSheetChangedListener(selectedStyleSheet);
+        debuggerController.onStyleSheetChangedListener(selectedStyleSheet);
+        historyController.onStyleSheetChangedListener(selectedStyleSheet);
+
+        systemScrollPane.getStylesheets().clear();
+        switch(selectedStyleSheet) {
+            case Theme.Default:
+                systemScrollPane.getStylesheets().add("/fx/system/semulatorSystem.css");
+                break;
+            case Theme.Dark:
+                systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV2.css");
+                break;
+            case Theme.Pink:
+                systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV3.css");
+                break;
+        }
     }
 
 }

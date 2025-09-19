@@ -5,10 +5,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<ScrollPane fitToWidth="true" prefHeight="680.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.system.SEmulatorSystemController">
+<ScrollPane fx:id="systemScrollPane" fitToWidth="true" prefHeight="680.0" prefWidth="1100.0" stylesheets="@semulatorSystem.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.system.SEmulatorSystemController">
    <content>
-      <BorderPane prefHeight="500.0" prefWidth="800.0" stylesheets="@semulatorSystem.css">
+      <BorderPane maxHeight="350.0" prefHeight="500.0" prefWidth="800.0" styleClass="border-pane">
       
           <!-- Top: TopBar -->
           <top>

@@ -1,5 +1,6 @@
 package fx.component.instructions;
 
+import fx.app.display.Theme;
 import fx.app.util.DisplayUtils;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
@@ -18,11 +19,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.VBox;
 import semulator.api.dto.*;
 
 import java.util.*;
 
 public class InstructionPaneController {
+
+    @FXML private VBox instructionRoot;
+
     private SEmulatorSystemController mainController;
     private ObservableList<InstructionDto> instructionData = FXCollections.observableArrayList();
     private ObservableList<ParentInstructionDto> instructionChainData = FXCollections.observableArrayList();
@@ -269,4 +274,20 @@ public class InstructionPaneController {
             return "";
         return currInstruction.getMainVariable();
     }
+
+    public void onStyleSheetChangedListener(Theme selectedStyleSheet){
+        instructionRoot.getStylesheets().clear();
+        switch(selectedStyleSheet) {
+            case Theme.Default:
+                instructionRoot.getStylesheets().add("/fx/component/instructions/instructionsPane.css");
+                break;
+            case Theme.Dark:
+                instructionRoot.getStylesheets().add("/fx/component/instructions/instructionsPaneV2.css");
+                break;
+            case Theme.Pink:
+                instructionRoot.getStylesheets().add("/fx/component/instructions/instructionsPaneV3.css");
+                break;
+        }
+    }
+
 }

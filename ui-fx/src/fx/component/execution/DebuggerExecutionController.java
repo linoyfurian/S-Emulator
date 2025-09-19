@@ -1,5 +1,6 @@
 package fx.component.execution;
 
+import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
@@ -35,6 +36,9 @@ import java.util.function.UnaryOperator;
 
 
 public class DebuggerExecutionController {
+
+    @FXML private VBox debuggerRoot;
+
     private SEmulatorSystemController mainController;
     private final String INPUT_VARIABLES = "input-variable";
     private final Map<String, TextField> inputFields = new HashMap<>();
@@ -446,5 +450,20 @@ public class DebuggerExecutionController {
             }
         });
 
+    }
+
+    public void onStyleSheetChangedListener(Theme selectedStyleSheet){
+        debuggerRoot.getStylesheets().clear();
+        switch(selectedStyleSheet) {
+            case Theme.Default:
+                debuggerRoot.getStylesheets().add("/fx/component/execution/debuggerExecution.css");
+                break;
+            case Theme.Dark:
+                debuggerRoot.getStylesheets().add("/fx/component/execution/debuggerExecutionV2.css");
+                break;
+            case Theme.Pink:
+                debuggerRoot.getStylesheets().add("/fx/component/execution/debuggerExecutionV3.css");
+                break;
+        }
     }
 }

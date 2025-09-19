@@ -1,10 +1,10 @@
 #run-button {
-    -fx-background-color: #56e15c;
+    -fx-background-color: #e619ad;
     -fx-text-fill: white;
 }
 
 .execution-button {
-    -fx-background-color: #8b8c8b;
+    -fx-background-color: #a16580;
     -fx-text-fill: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
@@ -12,9 +12,8 @@
 }
 
 .root {
-    -fx-background-color: #000000;
+    -fx-background-color: #f1c8e2;
 }
-
 
 #debugger-title {
     -fx-text-fill: white;
@@ -24,33 +23,33 @@
 
 
 .hbox {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #f1c8e2;
 }
 
 .vbox {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #f1c8e2;
 }
 
 .execution-button:hover,
 #run-button:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #f1c8e2;
 }
 
 .execution-button:pressed,
 #run-button:pressed {
-    -fx-background-color: #555555;
+    -fx-background-color: #f1c8e2;
 }
 
 .radio-button {
     -fx-text-fill: white;
 }
 .radio-button:selected {
-    -fx-mark-color: black;
+    -fx-mark-color: #4d819f;
 }
 
 .panel-left,
 .panel-right {
-    -fx-background-color: #111111;
+    -fx-background-color: #f1c8e2;
     -fx-padding: 5;
 }
 
@@ -71,35 +70,35 @@
 
 
 .table-view {
-    -fx-background-color: #333131;
-    -fx-control-inner-background: #333131;
-    -fx-table-cell-border-color: #333131;
-    -fx-table-header-border-color: #333131;
+    -fx-background-color: #efacd7;
+    -fx-control-inner-background: #e6c9d7;
+    -fx-table-cell-border-color: #df75aa;
+    -fx-table-header-border-color: #df75aa;
 }
 
 .table-view .table-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: #e63493;
 }
 
 .table-view .column-header,
 .table-view .column-header-background {
-    -fx-background-color: black;
+    -fx-background-color: #efacd7;
     -fx-text-fill: white;
 }
 
 .table-row-cell:filled:selected,
 .table-row-cell:filled:selected:focused {
-    -fx-background-color: #5e4848;
+    -fx-background-color: #efacd7;
     -fx-text-fill: white;
 }
 
 .scroll-pane {
-    -fx-background: #1e1e1e;
-    -fx-border-color: #333333;
+    -fx-background: #efacd7;
+    -fx-border-color: #efacd7;
 }
 
 .scroll-pane .viewport {
-    -fx-background-color: #1e1e1e;
+    -fx-background-color: #efacd7;
 }
 
 .label {
@@ -108,5 +107,5 @@
 
 /* flash row when variable changed */
 .table-row-cell:changed {
-    -fx-background-color: rgba(146, 230, 158, 0.9);
+    -fx-background-color: rgba(138, 212, 239, 0.9);
 }

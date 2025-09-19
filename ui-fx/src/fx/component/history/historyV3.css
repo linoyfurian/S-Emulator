@@ -1,5 +1,5 @@
 .root, .vbox, .hbox {
-    -fx-background-color: #000000;
+    -fx-background-color: #f1c8e2;
 }
 
 .history-title {
@@ -14,7 +14,7 @@
 }
 
 .history-button, .button {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: #f1c8e2;
     -fx-text-fill: white;
     -fx-background-radius: 5;
     -fx-border-radius: 5;
@@ -22,36 +22,41 @@
 }
 
 .history-button:hover, .button:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #f1c8e2;
 }
 
 .history-button:pressed, .button:pressed {
-    -fx-background-color: #555555;
+    -fx-background-color: #f1c8e2;
 }
 
 .split-pane {
-    -fx-background-color: #000000;
+    -fx-background-color: #f1c8e2;
 }
 .split-pane:horizontal > .split-pane-divider,
 .split-pane:vertical   > .split-pane-divider {
-    -fx-background-color: #222222;
+    -fx-background-color: #f1c8e2;
     -fx-padding: 0.25em;
 }
 
-/* טבלאות */
 .table-view {
-    -fx-background-color: #1e1e1e;
-    -fx-control-inner-background: #1e1e1e;
-    -fx-table-cell-border-color: #2a2a2a;
-    -fx-table-header-border-color: #2a2a2a;
+    -fx-background-color: #f1c8e2;
+    -fx-control-inner-background: #f39dd3;
+    -fx-table-cell-border-color: #f1c8e2;
+    -fx-table-header-border-color: #a37993;
     -fx-text-background-color: white;
 }
 
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
-    -fx-background-color: #111111;
+    -fx-background-color: #e896ca;
     -fx-text-fill: white;
+}
+
+.table-view {
+    -fx-control-inner-background: #e6c9d7;
+    -fx-table-cell-border-color: #df75aa;
+    -fx-table-header-border-color: #df75aa;
 }
 
 .table-view .table-cell {
@@ -59,24 +64,24 @@
 }
 
 .table-row-cell {
-    -fx-background-color: #1e1e1e;
+    -fx-background-color: #f8e0ef;
     -fx-text-fill: white;
 }
 .table-row-cell:hover {
-    -fx-background-color: #333333;
+    -fx-background-color: #f1c8e2;
 }
 .table-row-cell:filled:selected,
 .table-row-cell:filled:selected:focused {
-    -fx-background-color: #444444;
+    -fx-background-color: #e689c4;
     -fx-text-fill: white;
 }
 
 .scroll-pane {
-    -fx-background: #1e1e1e;
-    -fx-border-color: #333333;
+    -fx-background: #f3a8d7;
+    -fx-border-color: #f1c8e2;
 }
 .scroll-pane .viewport {
-    -fx-background-color: #1e1e1e;
+    -fx-background-color: #f1c8e2;
 }
 
 .label {
@@ -85,5 +90,5 @@
 
 .history-button {
     -fx-text-fill: white;
-    -fx-background-color: #4c3a63;
+    -fx-background-color: #d8529c;
 }

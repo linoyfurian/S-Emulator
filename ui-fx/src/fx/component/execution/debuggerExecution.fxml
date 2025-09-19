@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="500.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="500.0" prefHeight="300.0" prefWidth="550.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
+<VBox fx:id="debuggerRoot" maxHeight="500.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="500.0" prefHeight="300.0" prefWidth="550.0" stylesheets="@debuggerExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.execution.DebuggerExecutionController">
    <children>
       <Label id="debugger-title" text="Debugger\Execution" textAlignment="CENTER">
          <padding>

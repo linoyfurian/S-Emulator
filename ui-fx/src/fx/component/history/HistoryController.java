@@ -1,5 +1,6 @@
 package fx.component.history;
 
+import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 public class HistoryController {
     private SEmulatorSystemController mainController;
+    @FXML private VBox historyRoot;
 
     @FXML private Button btnReRun;
     @FXML private Button btnShowStatus;
@@ -106,6 +108,20 @@ public class HistoryController {
         RunResultDto selectedRun = historyRunsTable.getSelectionModel().getSelectedItem();
         if(selectedRun != null){
             mainController.onReRunButtonListener(selectedRun);
+        }
+    }
+
+    public void onStyleSheetChangedListener(Theme selectedStyleSheet){
+        historyRoot.getStylesheets().clear();
+        switch(selectedStyleSheet) {
+            case Theme.Default:
+                historyRoot.getStylesheets().add("/fx/component/history/history.css");
+                break;
+            case Theme.Dark:
+                historyRoot.getStylesheets().add("/fx/component/history/historyV2.css");
+                break;
+            case Theme.Pink:
+                historyRoot.getStylesheets().add("/fx/component/history/historyV3.css");
         }
     }
 
