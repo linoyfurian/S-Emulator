@@ -1,0 +1,24 @@
+.title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 10 0 0;
+}
+
+
+.args-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #3065d5;
+    -fx-padding: 0 10 0 0;
+}
+
+#add-instruction-btn {
+    -fx-background-color: #32a1e6;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}
+
+#upload-program-btn{
+    -fx-background-color: #32a1e6;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}

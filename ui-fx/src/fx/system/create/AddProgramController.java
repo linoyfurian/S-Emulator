@@ -39,6 +39,7 @@ public class AddProgramController {
     @FXML private VBox additionalVariableVbox;
     @FXML private VBox additionalLabelVbox;
     @FXML private VBox additionalConstantVbox;
+    @FXML private Button uploadProgramBtn;
 
     private final BooleanProperty canAddInstruction = new SimpleBooleanProperty(false);
 
@@ -51,7 +52,6 @@ public class AddProgramController {
     @FXML private TableColumn<InstructionDraft, Long> colConstantValue;
     @FXML private TableColumn<InstructionDraft, String> colLabel;
     @FXML private TableColumn<InstructionDraft, String> colName;
-   // @FXML private TableColumn<InstructionDraft, String> colNumber;
     @FXML private TableColumn<InstructionDraft, String> colVariable;
 
     private ObservableList<InstructionDraft> instructionData = FXCollections.observableArrayList();
@@ -107,6 +107,8 @@ public class AddProgramController {
                 new SimpleLongProperty(cellData.getValue().getConstantValue()).asObject());
 
         newInstructionTbl.setItems(instructionData);
+
+        this.uploadProgramBtn.setDisable(true);
 
     }
 
@@ -222,6 +224,8 @@ public class AddProgramController {
         newInstruction = new InstructionDraft(instructionName, mainVariable, mainLabel, constantValue, additionalVariable, additionalLabel);
 
         this.instructionData.add(newInstruction);
+
+        this.uploadProgramBtn.setDisable(false);
 
         resetAllOptions();
     }

@@ -292,7 +292,6 @@ public class TopBarController {
             mainController.btnCreateAProgramListener();
         }
         catch (Exception e) {
-
         }
     }
 }

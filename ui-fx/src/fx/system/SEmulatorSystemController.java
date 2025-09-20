@@ -41,6 +41,7 @@ public class SEmulatorSystemController {
 
     @FXML private ScrollPane systemScrollPane;
 
+    private Theme currTheme = Theme.Default;
     private String currentProgramName;
     DebugContextDto debugContext = null;
 
@@ -425,12 +426,15 @@ public class SEmulatorSystemController {
         switch(selectedStyleSheet) {
             case Theme.Default:
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystem.css");
+                currTheme = Theme.Default;
                 break;
             case Theme.Dark:
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV2.css");
+                currTheme = Theme.Dark;
                 break;
             case Theme.Pink:
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV3.css");
+                currTheme = Theme.Pink;
                 break;
         }
     }
@@ -439,7 +443,7 @@ public class SEmulatorSystemController {
         final String FXML_PATH = "/fx/system/create/addProgram.fxml";
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH));
-        BorderPane root = loader.load();
+        ScrollPane root = loader.load();
 
         AddProgramController controller = loader.getController();
         controller.setMainController(this);
@@ -447,6 +451,19 @@ public class SEmulatorSystemController {
         Stage dialog = new Stage();
         dialog.setTitle("Create Program");
         dialog.initModality(Modality.WINDOW_MODAL);
+
+        root.getStylesheets().clear();
+        switch(currTheme) {
+            case Theme.Default:
+                root.getStylesheets().add("/fx/system/create/addProgram.css");
+                break;
+            case Theme.Dark:
+                root.getStylesheets().add("/fx/system/create/addProgramV2.css");
+                break;
+            case Theme.Pink:
+                root.getStylesheets().add("/fx/system/create/addProgramV3.css");
+                break;
+        }
 
         Scene scene = new Scene(root);
         dialog.setScene(scene);

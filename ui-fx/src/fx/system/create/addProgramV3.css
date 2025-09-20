@@ -1,0 +1,68 @@
+.root {
+    -fx-background-color: #fad2ec;
+}
+
+.back {
+    -fx-background-color: #fad2ec;
+}
+
+.title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b8fa8;
+    -fx-padding: 0 10 0 0;
+}
+
+.argument {
+    -fx-text-fill: #6b8fa8;
+    -fx-padding: 0 10 0 0;
+}
+.args-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b8fa8;
+    -fx-padding: 0 10 0 0;
+}
+
+#add-instruction-btn {
+    -fx-background-color: #6b8fa8;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}
+
+#upload-program-btn{
+    -fx-background-color: #6b8fa8;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}
+
+.table-view {
+    -fx-background-color: #fad2ec;
+    -fx-control-inner-background: #fad2ec;
+    -fx-text-fill: #6b8fa8;
+    -fx-table-cell-border-color: #f194c3;
+    -fx-table-header-border-color: #f194c3;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER-LEFT;
+}
+
+.table-view .column-header,
+.table-view .column-header-background,
+.table-view .filler {
+    -fx-background-color: #fad2ec;
+    -fx-text-fill: white;
+}
+
+.table-row-cell {
+    -fx-background-color: #fad2ec;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #fad2ec;
+}
+
+.cBox {
+    -fx-background-color: #aedff1;
+}
