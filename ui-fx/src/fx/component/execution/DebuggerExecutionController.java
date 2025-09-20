@@ -37,6 +37,7 @@ import java.util.function.UnaryOperator;
 
 public class DebuggerExecutionController {
 
+    boolean isDebugFinished = false;
     @FXML private VBox debuggerRoot;
 
     private SEmulatorSystemController mainController;
@@ -319,23 +320,37 @@ public class DebuggerExecutionController {
         List<String> changedVars = ProgramUtil.findChangedVariables(prevVariablesValues, currVariablesValues);
 
         variablesData.clear();
+        if(!isDebugFinished) {
+            for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
+                VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+                variablesData.add(row);
+            }
 
-        for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
-            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
-            variablesData.add(row);
+            cyclesProperty.set(debugContext.getPrevCycles());
         }
+        else{
+            for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
+                VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+                variablesData.add(row);
+            }
 
-        cyclesProperty.set(debugContext.getPrevCycles());
-
+            cyclesProperty.set(debugContext.getCycles());
+        }
         long nextInstructionNumber = debugContext.getNextInstructionNumber();
         if (nextInstructionNumber == 0) { //finish debug
-            runBtn.setDisable(false);
-            stopBtn.setDisable(true);
-            resumeBtn.setDisable(true);
-            stepBackBtn.setDisable(true);
-            stepOverBtn.setDisable(true);
-            radioBtnRegular.setDisable(false);
-            cyclesProperty.set(debugContext.getCycles());
+            if(isDebugFinished){
+                runBtn.setDisable(false);
+                stopBtn.setDisable(true);
+                resumeBtn.setDisable(true);
+                stepBackBtn.setDisable(true);
+                stepOverBtn.setDisable(true);
+                radioBtnRegular.setDisable(false);
+                cyclesProperty.set(debugContext.getCycles());
+                isDebugFinished = false;
+            }
+            else
+                isDebugFinished = true;
+
         }
     }
 

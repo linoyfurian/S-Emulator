@@ -178,6 +178,10 @@ public class SEmulatorSystemController {
     }
 
     public void btnStepOverListener(){
+        if(debugContext.getNextInstructionNumber()==0){
+            debuggerController.updateDebugResult(this.debugContext);
+            return;
+        }
         int degreeOfRun = topBarController.getCurrentDegree();
         DebugContextDto debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs());
         this.debugContext = debugDetails;
