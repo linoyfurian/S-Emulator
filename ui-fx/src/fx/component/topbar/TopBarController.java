@@ -158,6 +158,7 @@ public class TopBarController {
             cmbExpand.setDisable(false);
 
         }
+
     }
 
     public void btnCollapseListener(ActionEvent event) {
@@ -172,6 +173,7 @@ public class TopBarController {
         if (mainController != null) {
             mainController.btnCollapseListener(collapseSelected);
         }
+
     }
 
     public void refreshHighlightOptions(ProgramFunctionDto programInContextDetails) {
@@ -255,8 +257,6 @@ public class TopBarController {
         cmbExpand.getSelectionModel().clearSelection();
         cmbCollapse.getSelectionModel().clearSelection();
 
-        cmbExpand.setPromptText("Expand");
-        cmbCollapse.setPromptText("Collapse");
     }
 
     @FXML void onProgramFunctionChangedListener(ActionEvent event) {

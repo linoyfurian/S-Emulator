@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane id="top-bar-grid" fx:id="topBarRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="900.0" stylesheets="@topBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.topbar.TopBarController">
+<GridPane id="top-bar-grid" fx:id="topBarRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="900.0" stylesheets="@topBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fx.component.topbar.TopBarController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -23,21 +24,9 @@
   <rowConstraints>
       <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-    <RowConstraints maxHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <HBox maxHeight="300.0" prefHeight="200.0" prefWidth="200.0" spacing="7.0" GridPane.columnSpan="6" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-         <children>
-            <ComboBox fx:id="cmbProgramOrFunction" onAction="#onProgramFunctionChangedListener" prefWidth="150.0" promptText="Program / function selector" />
-            <ComboBox fx:id="cmbCollapse" maxWidth="100.0" onAction="#btnCollapseListener" prefWidth="150.0" promptText="Collapse" />
-            <Label fx:id="degreeLabel" text="Current/max degree" />
-            <ComboBox fx:id="cmbExpand" maxWidth="100.0" onAction="#btnExpandListener" prefWidth="150.0" promptText="Expand" />
-            <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="159.0" promptText="Highlight selection" />
-         </children>
-         <padding>
-            <Insets left="5.0" top="1.0" />
-         </padding>
-      </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0" GridPane.columnSpan="6" GridPane.rowIndex="1">
          <children>
             <Button mnemonicParsing="false" onAction="#btnLoadFileListener" styleClass="command-button" text="Load File" />
@@ -58,6 +47,50 @@
          </children>
          <padding>
             <Insets left="5.0" top="3.0" />
+         </padding>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0" GridPane.columnSpan="6" GridPane.rowIndex="2">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="150.0">
+               <children>
+                  <Label prefWidth="200.0" text="Program / function selector:" />
+                  <ComboBox fx:id="cmbProgramOrFunction" onAction="#onProgramFunctionChangedListener" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Collapse:" />
+                  <ComboBox fx:id="cmbCollapse" maxWidth="100.0" onAction="#btnCollapseListener" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <VBox maxHeight="150.0" prefHeight="200.0">
+               <children>
+                  <Label />
+                  <Label fx:id="degreeLabel" text="Current/max degree" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Expand:">
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </Label>
+                  <ComboBox fx:id="cmbExpand" maxWidth="100.0" onAction="#btnExpandListener" prefWidth="150.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="110.0">
+               <children>
+                  <Label text="Highlight selection:" />
+                  <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="159.0" />
+               </children>
+            </VBox>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+         <padding>
+            <Insets left="7.0" top="15.0" />
          </padding>
       </HBox>
    </children>
