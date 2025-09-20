@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -41,6 +42,11 @@ public class AddProgramController {
     @FXML private VBox additionalConstantVbox;
     @FXML private Button uploadProgramBtn;
 
+    @FXML private Label mainVariableLbl;
+    @FXML private Label mainLabelLbl;
+    @FXML private Label additionalVariableLbl;
+    @FXML private Label additionalLabelLbl;
+
     private final BooleanProperty canAddInstruction = new SimpleBooleanProperty(false);
 
     private List<InstructionDraft> newProgramInstructions = new ArrayList<>();
@@ -71,10 +77,20 @@ public class AddProgramController {
         this.constantValueTF.setTextFormatter(integerFormatter());
 
 
-        this.additionalVariableVbox.setVisible(false);
-        this.additionalLabelVbox.setVisible(false);
-        this.additionalConstantVbox.setVisible(false);
+        this.mainVariableTF.setVisible(false);
+        this.mainLabelTF.setVisible(false);
+
+        this.additionalLabelTF.setVisible(false);
+        this.additionalLabelCbox.setVisible(false);
+        this.additionalLabelLbl.setVisible(false);
+
+        this.additionalVariableTF.setVisible(false);
+        this.additionalVariableCbox.setVisible(false);
+        this.additionalVariableLbl.setVisible(false);
+
         this.additionalArgsLbl.setVisible(false);
+
+
 
         BooleanBinding addDisabled = Bindings.createBooleanBinding(
                 () -> !isInstructionReadyToAdd(),
@@ -130,6 +146,10 @@ public class AddProgramController {
         boolean isAdditionalVariable = false;
         boolean isAdditionalConstant = false;
 
+        this.variableCbox.setVisible(true);
+        this.mainVariableLbl.setVisible(true);
+
+
         if (selectedInstructionName != null) {
             switch(selectedInstructionName){
                 case "ASSIGNMENT":
@@ -154,6 +174,8 @@ public class AddProgramController {
                     break;
                 case "GOTO_LABEL":
                     isAdditionalLabel = true;
+                    this.variableCbox.setVisible(false);
+                    this.mainVariableLbl.setVisible(false);
                     break;
             }
 
@@ -163,18 +185,26 @@ public class AddProgramController {
             this.additionalArgsLbl.setVisible(true);
         }
 
-        if(isAdditionalVariable)
-            this.additionalVariableVbox.setVisible(true);
-        else
-            this.additionalVariableVbox.setVisible(false);
+        if(isAdditionalVariable) {
+            this.additionalVariableCbox.setVisible(true);
+            this.additionalVariableLbl.setVisible(true);
+        }
+        else {
+            this.additionalVariableCbox.setVisible(false);
+            this.additionalVariableLbl.setVisible(false);
+        }
         if(isAdditionalConstant)
             this.additionalConstantVbox.setVisible(true);
         else
             this.additionalConstantVbox.setVisible(false);
-        if(isAdditionalLabel)
-            this.additionalLabelVbox.setVisible(true);
-        else
-            this.additionalLabelVbox.setVisible(false);
+        if(isAdditionalLabel) {
+            this.additionalLabelCbox.setVisible(true);
+            this.additionalLabelLbl.setVisible(true);
+        }
+        else {
+            this.additionalLabelCbox.setVisible(false);
+            this.additionalLabelLbl.setVisible(false);
+        }
     }
 
     @FXML void onSelectedInstructionName(ActionEvent event) {
@@ -361,6 +391,59 @@ public class AddProgramController {
         stage.close();
     }
 
+    @FXML void onVariableTypeCboxSelected(ActionEvent event) {
+        String selectedVariableType = variableCbox.getSelectionModel().getSelectedItem();
+        if(selectedVariableType==null){
+            return;
+        }
+        if(!selectedVariableType.equals("y")){
+            this.mainVariableTF.setVisible(true);
+        }
+        else
+            this.mainVariableTF.setVisible(false);
+
+    }
+
+
+    @FXML void onLabelCboxSelected(ActionEvent event) {
+        String selectedLabelType = this.labelCbox.getSelectionModel().getSelectedItem();
+        if(selectedLabelType==null){
+            return;
+        }
+        if(selectedLabelType.equals("L")){
+            this.mainLabelTF.setVisible(true);
+        }
+        else
+            this.mainLabelTF.setVisible(false);
+
+    }
+
+    @FXML void onAdditionalVariableTypeCboxSelected(ActionEvent event) {
+        String selectedVariableType = additionalVariableCbox.getSelectionModel().getSelectedItem();
+        if(selectedVariableType==null){
+            return;
+        }
+        if(!selectedVariableType.equals("y")){
+            this.additionalVariableTF.setVisible(true);
+        }
+        else
+            this.additionalVariableTF.setVisible(false);
+
+    }
+
+
+    @FXML void onAdditionalLabelCboxSelected(ActionEvent event) {
+        String selectedLabelType = this.additionalLabelCbox.getSelectionModel().getSelectedItem();
+        if(selectedLabelType==null){
+            return;
+        }
+        if(selectedLabelType.equals("L")){
+            this.additionalLabelTF.setVisible(true);
+        }
+        else
+            this.additionalLabelTF.setVisible(false);
+
+    }
 }
 
 
