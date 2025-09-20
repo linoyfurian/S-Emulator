@@ -287,4 +287,12 @@ public class TopBarController {
         }
     }
 
+    @FXML void btnCreateAProgramListener(ActionEvent event) {
+        try {
+            mainController.btnCreateAProgramListener();
+        }
+        catch (Exception e) {
+
+        }
+    }
 }

@@ -5,6 +5,7 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.api.LoadReport;
 import semulator.api.dto.*;
+import semulator.core.loader.ProgramMapper;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
@@ -26,7 +27,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     private Program programInContext = null;
     private boolean isLoaded = false;
     private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
-    private List<ExecutionRunDto> programRuns = new ArrayList<>();
+    //private List<ExecutionRunDto> programRuns = new ArrayList<>();
 
     @Override
     public ProgramFunctionDto displayProgram(){
@@ -208,10 +209,6 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         return programFunctionDto;
     }
 
-    @Override
-    public List<ExecutionRunDto> historyDisplay(){
-        return this.programRuns;
-    }
 
     @Override
     public void setLoaded(boolean isLoaded){
@@ -233,10 +230,10 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         return this.program.getName();
     }
 
-    @Override
-    public void resetProgramRuns(){
-        this.programRuns = new ArrayList<>();
-    }
+//    @Override
+//    public void resetProgramRuns(){
+//        this.programRuns = new ArrayList<>();
+//    }
 
     @Override
     public int getProgramInContextMaxDegreeOfExpand(){
@@ -292,7 +289,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
           //  this.program = state.getProgram();
             this.isLoaded = state.getLoadedState();
-            this.programRuns = new ArrayList<>(state.getProgramRuns());
+           // this.programRuns = new ArrayList<>(state.getProgramRuns());
         }
     }
 
@@ -321,5 +318,15 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     public List<RunResultDto> getProgramInContextRunHistory(){
         return this.runsHistory.get(this.programInContext.getName());
+    }
+
+    @Override
+    public void uploadCreatedProgram(ProgramDraft newProgram){
+        Program program = ProgramMapper.mapProgram(newProgram);
+        this.program = program;
+        this.programInContext = this.program;
+        this.isLoaded = false;
+        this.runsHistory = new HashMap<>();
+        this.runsHistory.put(this.programInContext.getName(), new ArrayList<>());
     }
 }

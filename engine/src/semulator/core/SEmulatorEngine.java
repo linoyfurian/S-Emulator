@@ -16,12 +16,11 @@ public interface SEmulatorEngine {
     ProgramFunctionDto displayProgram();
     ProgramFunctionDto expand(int desiredDegreeOfExpand);
     ExecutionRunDto runProgram(int desiredDegreeOfExpand, Map<String, Long> originalInputs, long... input);
-    List<ExecutionRunDto> historyDisplay();
     void setLoaded(boolean isLoaded);
     boolean isLoaded();
     int getMaxDegreeOfExpand();
     String getProgramName();
-    void resetProgramRuns();
+    //void resetProgramRuns();
     void saveState(Path filePath) throws IOException;
     void loadState(Path filePath) throws IOException, ClassNotFoundException;
     int getProgramInContextMaxDegreeOfExpand();
@@ -32,4 +31,5 @@ public interface SEmulatorEngine {
     void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun);
     List<RunResultDto> getProgramInContextRunHistory();
     DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
+    void uploadCreatedProgram(ProgramDraft newProgram);
 }

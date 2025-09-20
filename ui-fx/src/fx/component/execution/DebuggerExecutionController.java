@@ -124,7 +124,7 @@ public class DebuggerExecutionController {
             field.setPrefColumnCount(6);
             field.setMaxWidth(90);
 
-            // Optional: allow only integers (or change to decimals)
+            //allow only integers (or change to decimals)
             field.setTextFormatter(integerFormatter());
 
             // Pressing Enter moves to next field (nice UX)

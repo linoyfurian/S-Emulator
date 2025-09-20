@@ -6,12 +6,18 @@ import fx.component.execution.DebuggerExecutionController;
 import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
 import fx.component.topbar.TopBarController;
+import fx.system.create.AddProgramController;
+import semulator.api.dto.ProgramDraft;
 import fx.system.load.ProgressDialog;
 import jakarta.xml.bind.JAXBException;
 import javafx.animation.PauseTransition;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import semulator.api.LoadReport;
@@ -19,7 +25,6 @@ import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
-import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -32,6 +37,7 @@ public class SEmulatorSystemController {
     @FXML private InstructionPaneController instructionsController;
     @FXML private DebuggerExecutionController debuggerController;
     @FXML private HistoryController historyController;
+
 
     @FXML private ScrollPane systemScrollPane;
 
@@ -423,6 +429,46 @@ public class SEmulatorSystemController {
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV3.css");
                 break;
         }
+    }
+
+    public void btnCreateAProgramListener() throws Exception{
+        final String FXML_PATH = "/fx/system/create/addProgram.fxml";
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH));
+        BorderPane root = loader.load();
+
+        AddProgramController controller = loader.getController();
+        controller.setMainController(this);
+
+        Stage dialog = new Stage();
+        dialog.setTitle("Create Program");
+        dialog.initModality(Modality.WINDOW_MODAL);
+
+        Scene scene = new Scene(root);
+        dialog.setScene(scene);
+        dialog.setResizable(false);
+        dialog.show();
+    }
+
+    public void onBtnUploadProgramListenter(ProgramDraft newProgram){
+        if(newProgram == null){
+            return;
+        }
+        engine.uploadCreatedProgram(newProgram);
+
+        ProgramFunctionDto program = engine.displayProgram();
+        instructionsController.displayProgram(program);
+
+        int programDegree = ProgramUtil.getDisplayedProgramDegree(program);
+        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(program);
+        topBarController.updateDegreeLabel(programDegree, maxDegree);
+
+        topBarController.refreshHighlightOptions(program);
+
+        debuggerController.setProgram(program);
+
+        List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
+        topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
     }
 
 }
