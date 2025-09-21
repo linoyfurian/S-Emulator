@@ -5,10 +5,7 @@ import fx.app.util.DisplayUtils;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -29,6 +26,8 @@ public class InstructionPaneController {
 
     private final ToggleGroup breakPoints = new ToggleGroup();           // single selection
     private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
+
+    private final BooleanProperty isRunning = new SimpleBooleanProperty(false);
 
 
     @FXML private VBox instructionRoot;
@@ -312,12 +311,22 @@ public class InstructionPaneController {
                 rb.setFocusTraversable(false);
                 rb.setToggleGroup(breakPoints);
 
+                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, ev -> {
+                    if (isRunning.get()) {
+                        ev.consume();
+                        return;
+                    }
+                    if (rb.isSelected()) {
+                        rb.setSelected(false);
+                        ev.consume();
+                    }
+                });
+
                 // When user clicks this radio, remember the current row index
                 rb.setOnAction(e -> {
                     if (rb.isSelected()) {
                         selectedRowIndex.set(getIndex());
-                        // Optional: select the table row visually too
-                        getTableView().getSelectionModel().select(getIndex());
+                       // getTableView().getSelectionModel().select(getIndex());
                     } else if (selectedRowIndex.get() == getIndex()) {
                         selectedRowIndex.set(-1);
                     }
@@ -352,8 +361,24 @@ public class InstructionPaneController {
                     }
                     rb.setSelected(getIndex() == selectedRowIndex.get());
                     setGraphic(rb);
+                    rb.disableProperty().bind(isRunning);
                 }
             }
         });
+    }
+
+    public int getBreakPointRowIndex() {
+        int result;
+        if (selectedRowIndex.get() == -1) {
+            result = 0;
+        }
+        else
+            result = selectedRowIndex.get() + 1;
+
+        return result;
+    }
+
+    public void setIsRunning(boolean isRunning) {
+        this.isRunning.set(isRunning);
     }
 }
