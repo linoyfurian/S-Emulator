@@ -26,6 +26,11 @@ import java.util.*;
 
 public class InstructionPaneController {
 
+
+    private final ToggleGroup breakPoints = new ToggleGroup();           // single selection
+    private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
+
+
     @FXML private VBox instructionRoot;
 
     private SEmulatorSystemController mainController;
@@ -48,6 +53,8 @@ public class InstructionPaneController {
     @FXML private TableColumn<InstructionDto, String> colLabel;
     @FXML private TableColumn<InstructionDto, String> colCommand;
     @FXML private TableColumn<InstructionDto, Integer> colCycles;
+
+    @FXML private TableColumn<InstructionDto, Void> colBreakPoint;
 
     @FXML private TableView<ParentInstructionDto> tblChainInstructions;
     @FXML private TableColumn<ParentInstructionDto, String> chainColCommand;
@@ -95,14 +102,20 @@ public class InstructionPaneController {
         lblBasicCount.textProperty().bind(basicInstructionsNumber.asString());
         lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
 
+
+
         initCodeTableHighlighting();
         initInstructionsHighlighting();
+
+        initBreakpointColumn();
 
     }
 
     public void setMainController(SEmulatorSystemController mainController) {
         this.mainController = mainController;
     }
+
+
 
     public void displayProgram(ProgramFunctionDto programDetails){
         instructionData.clear();
@@ -290,4 +303,57 @@ public class InstructionPaneController {
         }
     }
 
+
+    private void initBreakpointColumn() {
+        colBreakPoint.setCellFactory(col -> new TableCell<InstructionDto, Void>() {
+            private final RadioButton rb = new RadioButton();
+
+            {
+                rb.setFocusTraversable(false);
+                rb.setToggleGroup(breakPoints);
+
+                // When user clicks this radio, remember the current row index
+                rb.setOnAction(e -> {
+                    if (rb.isSelected()) {
+                        selectedRowIndex.set(getIndex());
+                        // Optional: select the table row visually too
+                        getTableView().getSelectionModel().select(getIndex());
+                    } else if (selectedRowIndex.get() == getIndex()) {
+                        selectedRowIndex.set(-1);
+                    }
+
+                    getTableView().getSelectionModel().clearSelection();
+                });
+
+                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                    if (rb.isSelected()) {
+                        rb.setSelected(false);
+                        event.consume();
+                    }
+                });
+
+                // When the "global" selectedRowIndex changes, refresh this cell's checked state
+                selectedRowIndex.addListener((obs, oldV, newV) -> {
+                    // Cells are virtualized; just reflect whether our index is selected
+                    rb.setSelected(getIndex() == newV.intValue());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    rb.setToggleGroup(null); // detach when not used
+                } else {
+                    // re-attach for visible cell (virtualization-safe)
+                    if (rb.getToggleGroup() == null) {
+                        rb.setToggleGroup(breakPoints);
+                    }
+                    rb.setSelected(getIndex() == selectedRowIndex.get());
+                    setGraphic(rb);
+                }
+            }
+        });
+    }
 }
