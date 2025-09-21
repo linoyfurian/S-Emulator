@@ -83,13 +83,13 @@
 .table-view .column-header,
 .table-view .column-header-background {
     -fx-background-color: #efacd7;
-    -fx-text-fill: white;
+    -fx-text-fill: #e63493;
 }
 
 .table-row-cell:filled:selected,
 .table-row-cell:filled:selected:focused {
     -fx-background-color: #efacd7;
-    -fx-text-fill: white;
+    -fx-text-fill: #e63493;
 }
 
 .scroll-pane {

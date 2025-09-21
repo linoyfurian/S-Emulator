@@ -22,3 +22,7 @@
     -fx-font-weight: bold;
     -fx-text-fill: #f4f2f2;
 }
+
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+}

@@ -23,6 +23,8 @@ import java.util.function.UnaryOperator;
 public class AddProgramController {
     private SEmulatorSystemController mainController;
 
+
+    @FXML private Button deleteInstructionBtn;
     @FXML private Button addInstructionButton;
     @FXML private Label additionalArgsLbl;
     @FXML private HBox additionalArgsRow;
@@ -53,13 +55,11 @@ public class AddProgramController {
 
 
     @FXML private TableView<InstructionDraft> newInstructionTbl;
-    @FXML private TableColumn<InstructionDraft, String> colAdditionalVariable;
-    @FXML private TableColumn<InstructionDraft, String> colAdditionalLabel;
-    @FXML private TableColumn<InstructionDraft, Long> colConstantValue;
+    @FXML private TableColumn<InstructionDraft, Integer> colCycles;
     @FXML private TableColumn<InstructionDraft, String> colLabel;
     @FXML private TableColumn<InstructionDraft, String> colName;
-    @FXML private TableColumn<InstructionDraft, String> colVariable;
-
+    @FXML private TableColumn<InstructionDraft, String> colType;
+    @FXML private TableColumn<InstructionDraft, Integer>  colNumber;
     private ObservableList<InstructionDraft> instructionData = FXCollections.observableArrayList();
 
     @FXML
@@ -110,17 +110,15 @@ public class AddProgramController {
         instructionData.addAll(newProgramInstructions);
 
         colName.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getName()));
-        colVariable.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getMainVariable()));
+                new SimpleStringProperty(cellData.getValue().getCommand()));
+        colType.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getType()));
         colLabel.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMainLabel()));
-        colAdditionalVariable.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getAdditionalVariable()));
-        colAdditionalLabel.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getAdditionalLabel()));
-        colConstantValue.setCellValueFactory(cellData ->
-                new SimpleLongProperty(cellData.getValue().getConstantValue()).asObject());
+        colCycles.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getCycles()).asObject());
+        colNumber.setCellValueFactory(cellData ->
+                        new ReadOnlyObjectWrapper<>(newInstructionTbl.getItems().indexOf(cellData.getValue()) + 1));
 
         newInstructionTbl.setItems(instructionData);
 
@@ -271,6 +269,19 @@ public class AddProgramController {
         this.additionalLabelTF.clear();
         this.mainLabelTF.clear();
         this.mainVariableTF.clear();
+
+        this.mainVariableTF.setVisible(false);
+        this.mainLabelTF.setVisible(false);
+
+        this.additionalLabelTF.setVisible(false);
+        this.additionalLabelCbox.setVisible(false);
+        this.additionalLabelLbl.setVisible(false);
+
+        this.additionalVariableTF.setVisible(false);
+        this.additionalVariableCbox.setVisible(false);
+        this.additionalVariableLbl.setVisible(false);
+
+        this.additionalArgsLbl.setVisible(false);
     }
     private boolean isInstructionReadyToAdd(){
         String selectedLabelType;
@@ -432,7 +443,8 @@ public class AddProgramController {
     }
 
 
-    @FXML void onAdditionalLabelCboxSelected(ActionEvent event) {
+    @FXML
+    void onAdditionalLabelCboxSelected(ActionEvent event) {
         String selectedLabelType = this.additionalLabelCbox.getSelectionModel().getSelectedItem();
         if(selectedLabelType==null){
             return;
@@ -443,6 +455,18 @@ public class AddProgramController {
         else
             this.additionalLabelTF.setVisible(false);
 
+    }
+
+
+    @FXML
+    void onInstructionSelectedListener(MouseEvent event) {
+        this.deleteInstructionBtn.setVisible(true);
+    }
+
+    @FXML
+    void onBtnDeleteInstructionListener(ActionEvent event) {
+        this.instructionData.remove(this.newInstructionTbl.getSelectionModel().getSelectedItem());
+        this.deleteInstructionBtn.setVisible(false);
     }
 }
 

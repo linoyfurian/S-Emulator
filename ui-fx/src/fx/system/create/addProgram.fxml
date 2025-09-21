@@ -20,19 +20,25 @@
          <center>
             <SplitPane dividerPositions="0.48578595317725753" prefHeight="160.0" prefWidth="200.0" styleClass="back" BorderPane.alignment="CENTER">
                <items>
-                  <VBox minWidth="590.0" prefHeight="200.0" prefWidth="500.0" styleClass="back">
+                  <VBox minWidth="450.0" prefHeight="548.0" prefWidth="417.0" styleClass="back">
                      <children>
-                        <TableView fx:id="newInstructionTbl" prefHeight="200.0" prefWidth="550.0">
+                        <TableView fx:id="newInstructionTbl" onMouseClicked="#onInstructionSelectedListener" prefHeight="200.0">
                           <columns>
-                            <TableColumn fx:id="colNumber" prefWidth="50.0" text="number" />
-                              <TableColumn fx:id="colLabel" prefWidth="50.0" text="Label" />
-                              <TableColumn fx:id="colVariable" prefWidth="60.0" text="Variable" />
-                              <TableColumn fx:id="colName" prefWidth="100.0" text="Instruction name" />
-                              <TableColumn fx:id="colAdditionalVariable" prefWidth="110.0" text="additional variable" />
-                              <TableColumn fx:id="colAdditionalLabel" prefWidth="110.0" text="additionalLabel" />
-                              <TableColumn fx:id="colConstantValue" prefWidth="110.0" text="constant value" />
+                            <TableColumn fx:id="colNumber" prefWidth="70.0" text="number" />
+                              <TableColumn fx:id="colType" prefWidth="60.0" text="B\S" />
+                              <TableColumn fx:id="colLabel" prefWidth="75.0" text="Label" />
+                              <TableColumn fx:id="colName" prefWidth="150.0" text="Instruction" />
+                              <TableColumn fx:id="colCycles" prefWidth="75.0" text="Cycles" />
                           </columns>
                         </TableView>
+                        <HBox prefWidth="200.0">
+                           <children>
+                              <Button fx:id="deleteInstructionBtn" mnemonicParsing="false" onAction="#onBtnDeleteInstructionListener" text="Delete instruction" visible="false" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox minWidth="300.0" prefHeight="200.0" prefWidth="100.0" styleClass="back">
