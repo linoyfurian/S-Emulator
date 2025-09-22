@@ -145,11 +145,22 @@ public class SEmulatorSystemController {
             int breakPointRowIndex = 0;
             breakPointRowIndex = instructionsController.getBreakPointRowIndex();
 
-            System.out.println(breakPointRowIndex);
-
             debuggerController.initialStartOfDebugging();
-            DebugContextDto debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
-            this.debugContext = debugDetails;
+            DebugContextDto debugDetails;
+
+            if(breakPointRowIndex != 0){
+                long instructionToDebug = 1;
+                while(instructionToDebug <= breakPointRowIndex){
+                    debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
+                    this.debugContext = debugDetails;
+                    instructionToDebug = debugDetails.getNextInstructionNumber();
+                }
+            }
+            else{
+                 debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
+                this.debugContext = debugDetails;
+            }
+
             debuggerController.updateDebugResult(this.debugContext);
             long nextInstructionNumber = debugContext.getNextInstructionNumber();
             long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
