@@ -6,12 +6,14 @@ import semulator.logic.instruction.SimpleInstruction;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 
+import java.util.ArrayList;
+
 public class ParentInstructionDto {
     private final String label;
     private final String command;
     private final char type;
     private final long number;
-    private final int cycles;
+    private final String cycles;
 
     public ParentInstructionDto(Instruction instruction, Program program) {
         this.label = instruction.getLabel().getLabelRepresentation();
@@ -25,7 +27,12 @@ public class ParentInstructionDto {
         }
         this.type = instruction.getType().getType();
         this.number = instruction.getInstructionNumber();
-        this.cycles = instruction.cycles();
+
+        Integer cyclesValue = instruction.cycles();
+        if(instruction instanceof ComplexInstruction)
+            this.cycles = "X+" + cyclesValue;
+        else
+            this.cycles = cyclesValue.toString();
     }
 
     public long getNumber() {
@@ -44,7 +51,7 @@ public class ParentInstructionDto {
         return command;
     }
 
-    public int getCycles() {
+    public String getCycles() {
         return cycles;
     }
 }

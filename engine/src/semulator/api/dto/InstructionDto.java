@@ -14,7 +14,7 @@ public class InstructionDto {
     private final String command;
     private final char type;
     private final long number;
-    private final int cycles;
+    private final String cycles;
     private final List<ParentInstructionDto> parents;
     private final List<String> allLabels;
     private final List<String> allVariables;
@@ -34,7 +34,12 @@ public class InstructionDto {
         }
         this.type = instruction.getType().getType();
         this.number = instruction.getInstructionNumber();
-        this.cycles = instruction.cycles();
+
+        Integer cyclesValue = instruction.cycles();
+        if(instruction instanceof ComplexInstruction)
+            this.cycles = "X+" + cyclesValue;
+        else
+            this.cycles = cyclesValue.toString();
         this.parents = new ArrayList<>();
         Instruction parent;
         parent = instruction.getParent();
@@ -94,7 +99,7 @@ public class InstructionDto {
         return command;
     }
 
-    public int getCycles() {
+    public String getCycles() {
         return cycles;
     }
 

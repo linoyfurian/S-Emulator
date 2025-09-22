@@ -51,13 +51,13 @@ public class InstructionPaneController {
     @FXML private TableColumn<InstructionDto, String> colType;
     @FXML private TableColumn<InstructionDto, String> colLabel;
     @FXML private TableColumn<InstructionDto, String> colCommand;
-    @FXML private TableColumn<InstructionDto, Integer> colCycles;
+    @FXML private TableColumn<InstructionDto, String> colCycles;
 
     @FXML private TableColumn<InstructionDto, Void> colBreakPoint;
 
     @FXML private TableView<ParentInstructionDto> tblChainInstructions;
     @FXML private TableColumn<ParentInstructionDto, String> chainColCommand;
-    @FXML private TableColumn<ParentInstructionDto, Integer> chainColCycles;
+    @FXML private TableColumn<ParentInstructionDto, String> chainColCycles;
     @FXML private TableColumn<ParentInstructionDto, String> chainColLabel;
     @FXML private TableColumn<ParentInstructionDto, String> chainColNumber;
     @FXML private TableColumn<ParentInstructionDto, String> chainColType;
@@ -80,7 +80,7 @@ public class InstructionPaneController {
         colCommand.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCommand()));
         colCycles.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getCycles()).asObject());
+                new SimpleStringProperty(cellData.getValue().getCycles()));
 
         tblInstructions.setItems(instructionData);
 
@@ -94,7 +94,7 @@ public class InstructionPaneController {
         chainColCommand.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCommand()));
         chainColCycles.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getCycles()).asObject());
+                new SimpleStringProperty(cellData.getValue().getCycles()));
 
         tblChainInstructions.setItems(instructionChainData);
 
