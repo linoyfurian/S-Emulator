@@ -210,6 +210,9 @@ public class SEmulatorSystemController {
         if(debugContext.getNextInstructionNumber()==0){
             debuggerController.updateDebugResult(this.debugContext);
             instructionsController.setIsRunning(false);
+            long currInstruction =  debugContext.getPreviousInstructionNumber();
+            String variableToHighLight = this.instructionsController.getInstructionsMainVariable(currInstruction);
+            debuggerController.updateVariableHighlight(variableToHighLight);
             return;
         }
         int degreeOfRun = topBarController.getCurrentDegree();
