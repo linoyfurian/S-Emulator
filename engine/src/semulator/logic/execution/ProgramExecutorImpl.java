@@ -33,8 +33,10 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         //add input variables
         for (int i=0; i<inputs.length; i++) {
             String variableName = "x"+(i+1);
-            Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
-            context.updateVariable(variable, inputs[i]);
+            if(originalInputs.containsKey(variableName)){
+                Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
+                context.updateVariable(variable, inputs[i]);
+            }
         }
 
         for (Variable variable : programToRun.getVariables()) {

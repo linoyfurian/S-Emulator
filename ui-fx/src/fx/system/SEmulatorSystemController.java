@@ -110,6 +110,8 @@ public class SEmulatorSystemController {
             });
             debuggerController.setProgram(expandedProgramDetails);
         }
+
+        instructionsController.resetBreakPointSelection();
     }
 
     public void btnCollapseListener(int degreeToCollapse) {
@@ -122,6 +124,8 @@ public class SEmulatorSystemController {
                 topBarController.updateCurrentDegreeLabel(degreeToCollapse);
             });
         }
+
+        instructionsController.resetBreakPointSelection();
     }
 
     public void onHighlightChangedListener(String highlightSelected){
@@ -151,9 +155,11 @@ public class SEmulatorSystemController {
             if(breakPointRowIndex != 0){
                 long instructionToDebug = 1;
                 while(instructionToDebug <= breakPointRowIndex){
-                    debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
+                    debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, originalInputs, inputs);
                     this.debugContext = debugDetails;
                     instructionToDebug = debugDetails.getNextInstructionNumber();
+                    if(debugDetails.getPreviousInstructionNumber() == breakPointRowIndex)
+                        break;
                 }
             }
             else{
@@ -177,6 +183,7 @@ public class SEmulatorSystemController {
 
     public void onProgramFunctionChangedListener(String programFunctionSelected){
         instructionsController.setIsRunning(false);
+        instructionsController.resetBreakPointSelection();
 
         if (programFunctionSelected == null || programFunctionSelected.isBlank())
             return;
@@ -216,11 +223,11 @@ public class SEmulatorSystemController {
             historyController.updateHistoryRunTable(programInContextRunHistory);
 
         }
-        else{
-            long prevInstructionNumber = debugContext.getPrevDebugContext().getPreviousInstructionNumber();
-            String variableToHighLight = this.instructionsController.getInstructionsMainVariable(prevInstructionNumber);
-            debuggerController.updateVariableHighlight(variableToHighLight);
-        }
+        long prevInstructionNumber = debugContext.getPrevDebugContext().getPreviousInstructionNumber();
+        String variableToHighLight = this.instructionsController.getInstructionsMainVariable(prevInstructionNumber);
+        debuggerController.updateVariableHighlight(variableToHighLight);
+
+
         long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
         instructionsController.highlightLine((int)currInstructionToHighlight - 1);
         debuggerController.updateDebugResult(this.debugContext);
@@ -259,6 +266,8 @@ public class SEmulatorSystemController {
 
     public void onReRunButtonListener(RunResultDto selectedRun){
         instructionsController.setIsRunning(false);
+        instructionsController.resetBreakPointSelection();
+
         int currentDegree = topBarController.getCurrentDegree();
         int degreeOfRun = selectedRun.getDegreeOfRun();
         updateSystemToTheDesiredDegree(currentDegree, degreeOfRun);
@@ -301,6 +310,7 @@ public class SEmulatorSystemController {
         instructionsController.setIsRunning(false);
         instructionsController.highlightLine(-1);
         debuggerController.updateVariableHighlight("");
+        instructionsController.resetBreakPointSelection();
     }
 
     public void loadFileAsync(String xmlFile) {
@@ -319,7 +329,7 @@ public class SEmulatorSystemController {
                 updateProgress(-1, 1); // indeterminate
 
                 // Simulate short delay as required (1.5–2s), still responsive to cancel:
-                long ms = 1500;
+                long ms = 1000;
                 long slept = 0;
                 while (slept < ms) {
                     if (isCancelled()) {
@@ -411,8 +421,7 @@ public class SEmulatorSystemController {
                 List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
                 topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
 
-                // NOTE: “Only one file loaded at a time” happens naturally:
-                // a successful load replaces the previous program in the engine/UI.
+                instructionsController.resetBreakPointSelection();
 
             } catch (Exception ex) {
                 progress.close();

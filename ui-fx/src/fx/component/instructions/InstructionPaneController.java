@@ -381,4 +381,8 @@ public class InstructionPaneController {
     public void setIsRunning(boolean isRunning) {
         this.isRunning.set(isRunning);
     }
+
+    public void resetBreakPointSelection(){
+        selectedRowIndex.set(-1);
+    }
 }

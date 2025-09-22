@@ -121,7 +121,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
         ProgramDebugger debugger;
         if(context == null)
-            debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
+            debugger = new ProgramDebuggerImpl(programToRun, this.program, originalInputs, input);
         else
             debugger = new ProgramDebuggerImpl(programToRun, context, this.program);
 
@@ -148,7 +148,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
         ProgramDebugger debugger;
         if(context == null)
-            debugger = new ProgramDebuggerImpl(programToRun, this.program, input);
+            debugger = new ProgramDebuggerImpl(programToRun, this.program, originalInputs, input);
         else
             debugger = new ProgramDebuggerImpl(programToRun, context, this.program);
 

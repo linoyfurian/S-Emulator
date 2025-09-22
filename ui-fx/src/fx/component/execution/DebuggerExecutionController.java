@@ -317,7 +317,6 @@ public class DebuggerExecutionController {
     public void updateDebugResult(DebugContextDto debugContext) {
         Map<String, Long> prevVariablesValues = debugContext.getPreviousVariablesValues();
         Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
-        List<String> changedVars = ProgramUtil.findChangedVariables(prevVariablesValues, currVariablesValues);
 
         variablesData.clear();
         if(!isDebugFinished) {

@@ -23,7 +23,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     private final Program mainProgram;
     private int cycles;
 
-    public ProgramDebuggerImpl(Program programToDebug, Program mainProgram, long ... input) {
+    public ProgramDebuggerImpl(Program programToDebug, Program mainProgram, Map<String, Long> originalInputs, long ... input) {
         this.programToDebug = programToDebug;
         this.mainProgram = mainProgram;
         this.context = new ExecutionContextImpl();
@@ -31,8 +31,10 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         //add input variables
         for (int i=0; i<input.length; i++) {
             String variableName = "x"+(i+1);
-            Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
-            context.updateVariable(variable, input[i]);
+            if(originalInputs.containsKey(variableName)){
+                Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
+                context.updateVariable(variable, input[i]);
+            }
         }
 
         for (Variable variable : programToDebug.getVariables()) {
