@@ -83,3 +83,6 @@
     -fx-background-radius: 0;
 }
 
+.breakpoint-radio-button {
+    -fx-mark-color: #a80606;
+}

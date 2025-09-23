@@ -311,6 +311,7 @@ public class InstructionPaneController {
                 rb.setFocusTraversable(false);
                 rb.setToggleGroup(breakPoints);
 
+                rb.getStyleClass().add("breakpoint-radio-button");
                 rb.addEventFilter(MouseEvent.MOUSE_PRESSED, ev -> {
                     if (isRunning.get()) {
                         ev.consume();
