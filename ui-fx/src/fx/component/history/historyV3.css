@@ -43,14 +43,14 @@
     -fx-control-inner-background: #f39dd3;
     -fx-table-cell-border-color: #f1c8e2;
     -fx-table-header-border-color: #a37993;
-    -fx-text-background-color: white;
+    -fx-text-background-color: #e12d8c;
 }
 
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
     -fx-background-color: #e896ca;
-    -fx-text-fill: white;
+    -fx-text-fill: #f631b2;
 }
 
 .table-view {
@@ -60,12 +60,12 @@
 }
 
 .table-view .table-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: #df2ca7;
 }
 
 .table-row-cell {
     -fx-background-color: #f8e0ef;
-    -fx-text-fill: white;
+    -fx-text-fill: #f45ebf;
 }
 .table-row-cell:hover {
     -fx-background-color: #f1c8e2;
