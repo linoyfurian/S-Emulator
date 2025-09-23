@@ -36,8 +36,6 @@ import java.util.function.UnaryOperator;
 
 
 public class DebuggerExecutionController {
-
-    boolean isDebugFinished = false;
     @FXML private VBox debuggerRoot;
 
     private SEmulatorSystemController mainController;
@@ -315,41 +313,26 @@ public class DebuggerExecutionController {
     }
 
     public void updateDebugResult(DebugContextDto debugContext) {
-        Map<String, Long> prevVariablesValues = debugContext.getPreviousVariablesValues();
         Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
 
         variablesData.clear();
-        if(!isDebugFinished) {
-            for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
-                VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
-                variablesData.add(row);
-            }
 
-            cyclesProperty.set(debugContext.getPrevCycles());
+        for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
+            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+            variablesData.add(row);
         }
-        else{
-            for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
-                VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
-                variablesData.add(row);
-            }
 
-            cyclesProperty.set(debugContext.getCycles());
-        }
+        cyclesProperty.set(debugContext.getCycles());
+
         long nextInstructionNumber = debugContext.getNextInstructionNumber();
         if (nextInstructionNumber == 0) { //finish debug
-            if(isDebugFinished){
-                runBtn.setDisable(false);
-                stopBtn.setDisable(true);
-                resumeBtn.setDisable(true);
-                stepBackBtn.setDisable(true);
-                stepOverBtn.setDisable(true);
-                radioBtnRegular.setDisable(false);
-                cyclesProperty.set(debugContext.getCycles());
-                isDebugFinished = false;
-            }
-            else
-                isDebugFinished = true;
-
+            runBtn.setDisable(false);
+            stopBtn.setDisable(true);
+            resumeBtn.setDisable(true);
+            stepBackBtn.setDisable(true);
+            stepOverBtn.setDisable(true);
+            radioBtnRegular.setDisable(false);
+            cyclesProperty.set(debugContext.getCycles());
         }
     }
 
@@ -357,30 +340,6 @@ public class DebuggerExecutionController {
         List<String> vars = new ArrayList<>();
         vars.add(variablesToHighLight);
         markVariablesChanged(vars);
-    }
-
-    public void updateDebugPrevResult(DebugContextDto debugContext){
-        Map<String, Long> prevVariablesValues = debugContext.getPreviousVariablesValues();
-        Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
-        List<String> changedVars = ProgramUtil.findChangedVariables(prevVariablesValues, currVariablesValues);
-        variablesData.clear();
-
-        for (Map.Entry<String, Long> entry : prevVariablesValues.entrySet()) {
-            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
-            variablesData.add(row);
-        }
-        cyclesProperty.set(debugContext.getPrevCycles());
-
-        long nextInstructionNumber = debugContext.getNextInstructionNumber();
-        if (nextInstructionNumber == 0) { //finish debug
-            runBtn.setDisable(false);
-            stopBtn.setDisable(true);
-            resumeBtn.setDisable(true);
-            stepOverBtn.setDisable(true);
-            stepBackBtn.setDisable(true);
-            radioBtnRegular.setDisable(false);
-            cyclesProperty.set(debugContext.getCycles());
-        }
     }
 
     @FXML void btnStepOverListener(ActionEvent event) {

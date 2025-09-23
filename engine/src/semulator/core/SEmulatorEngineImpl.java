@@ -109,6 +109,26 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
     }
 
     @Override
+    public DebugContextDto initialStartOfDebugger(int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long... inputs){
+        DebugContextDto result;
+        Program programToRun;
+        if(programInContext instanceof ProgramImpl programImpl){
+            programToRun = programImpl.expand(degreeOfRun);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            programToRun = function.expand(degreeOfRun, this.program);
+        }
+
+        ProgramDebugger debugger;
+        debugger = new ProgramDebuggerImpl(programToRun, this.program, originalInputs, inputs);
+        result = debugger.initialDebugger(originalInputs);
+
+        return  result;
+
+    }
+
+    @Override
     public DebugContextDto debugProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
         if(programInContext instanceof ProgramImpl programImpl){

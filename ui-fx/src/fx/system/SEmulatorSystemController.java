@@ -150,40 +150,35 @@ public class SEmulatorSystemController {
             breakPointRowIndex = instructionsController.getBreakPointRowIndex();
 
             debuggerController.initialStartOfDebugging();
-            DebugContextDto debugDetails;
+          //  instructionsController.highlightLine(0);
+
+            DebugContextDto initialDebugContext;
+
+            initialDebugContext = engine.initialStartOfDebugger(degreeOfRun, this.debugContext, originalInputs, inputs);
+            this.debugContext = initialDebugContext;
 
             if(breakPointRowIndex != 0){
+                DebugContextDto debugDetails;
                 long instructionToDebug = 1;
                 while(instructionToDebug != breakPointRowIndex && instructionToDebug!=0){
                     debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, originalInputs, inputs);
                     this.debugContext = debugDetails;
                     instructionToDebug = debugDetails.getNextInstructionNumber();
-                    if(debugDetails.getPreviousInstructionNumber() == breakPointRowIndex)
-                        break;
                 }
-                if(instructionToDebug == breakPointRowIndex){
-                    debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, originalInputs, inputs);
-                    this.debugContext = debugDetails;
-                }
-            }
-            else{
-                 debugDetails = engine.debugProgram(degreeOfRun,this.debugContext, originalInputs, inputs);
-                this.debugContext = debugDetails;
             }
 
+            long currInstructionToHighlight = 1;
+            currInstructionToHighlight = this.debugContext.getNextInstructionNumber();
+            instructionsController.highlightLine((int)(currInstructionToHighlight-1));
             debuggerController.updateDebugResult(this.debugContext);
-            long nextInstructionNumber = debugContext.getNextInstructionNumber();
-            long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
-            instructionsController.highlightLine((int)currInstructionToHighlight - 1);
-            if(nextInstructionNumber == 0) {
+
+            if(currInstructionToHighlight == 0) {
                 instructionsController.resetBreakPointSelection();
-                debuggerController.updateDebugResult(this.debugContext);
-                instructionsController.setIsRunning(true);
+                instructionsController.setIsRunning(false);
                 engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
                 List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
                 historyController.updateHistoryRunTable(programInContextRunHistory);
             }
-
         }
     }
 
@@ -213,50 +208,37 @@ public class SEmulatorSystemController {
     }
 
     public void btnStepOverListener(){
-        if(debugContext.getNextInstructionNumber()==0){
-            debuggerController.updateDebugResult(this.debugContext);
-            instructionsController.setIsRunning(false);
-            long currInstruction =  debugContext.getPreviousInstructionNumber();
-            String variableToHighLight = this.instructionsController.getInstructionsMainVariable(currInstruction);
-            debuggerController.updateVariableHighlight(variableToHighLight);
-            return;
-        }
         int degreeOfRun = topBarController.getCurrentDegree();
         DebugContextDto debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs());
         this.debugContext = debugDetails;
-        long nextInstructionNumber = debugContext.getNextInstructionNumber();
-        if(nextInstructionNumber == 0){
 
-            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
-            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
-            historyController.updateHistoryRunTable(programInContextRunHistory);
-
-        }
-        long prevInstructionNumber = debugContext.getPrevDebugContext().getPreviousInstructionNumber();
+        long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
         String variableToHighLight = this.instructionsController.getInstructionsMainVariable(prevInstructionNumber);
         debuggerController.updateVariableHighlight(variableToHighLight);
 
-
-        long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
-        instructionsController.highlightLine((int)currInstructionToHighlight - 1);
+        long currInstructionToHighlight = debugContext.getNextInstructionNumber();
+        if(currInstructionToHighlight == 0){
+            instructionsController.resetBreakPointSelection();
+            instructionsController.setIsRunning(false);
+            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+            historyController.updateHistoryRunTable(programInContextRunHistory);
+        }
+        else
+            instructionsController.highlightLine((int)currInstructionToHighlight - 1);
         debuggerController.updateDebugResult(this.debugContext);
 
     }
 
     public void btnStepBackListener(){
         if(this.debugContext!=null){
-            long presInstructionNumber = this.debugContext.getPreviousInstructionNumber();
-            if(presInstructionNumber==1){
-                debuggerController.updateDebugPrevResult(this.debugContext);
+            this.debugContext = this.debugContext.getPrevDebugContext();
+            long currInstructionToHighlight = debugContext.getNextInstructionNumber();
+            instructionsController.highlightLine((int)currInstructionToHighlight - 1);
+            debuggerController.updateDebugResult(this.debugContext);
+
+            if(currInstructionToHighlight==1)
                 debuggerController.disableStepBackBtn();
-                instructionsController.highlightLine(0);
-            }
-            else{
-                this.debugContext = this.debugContext.getPrevDebugContext();
-                debuggerController.updateDebugResult(this.debugContext);
-                long currInstructionToHighlight = debugContext.getPreviousInstructionNumber();
-                instructionsController.highlightLine((int)currInstructionToHighlight - 1);
-            }
 
             debuggerController.updateVariableHighlight("");
         }
@@ -408,8 +390,8 @@ public class SEmulatorSystemController {
                 pt.setOnFinished(e2 -> progress.close());
                 pt.play();
 
-//                // Close the progress before updating UI
-//                progress.close();
+                // Close the progress before updating UI
+                progress.close();
 
                 //update in UI
                 if (currentProgramName == null) {

@@ -32,4 +32,5 @@ public interface SEmulatorEngine {
     List<RunResultDto> getProgramInContextRunHistory();
     DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
     void uploadCreatedProgram(ProgramDraft newProgram);
-}
+    DebugContextDto initialStartOfDebugger(int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long ... inputs);
+    }

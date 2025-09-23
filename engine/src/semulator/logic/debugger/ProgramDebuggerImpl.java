@@ -162,4 +162,15 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
+
+    @Override
+    public DebugContextDto initialDebugger(Map<String, Long> originalInputs){
+        DebugContextDto result;
+        int instructionToExecuteNumber = 0;
+        int nextInstructionNumber = 1;
+        int prevCycles = this.cycles; //todo delete
+        Map<String,Long> previousVariablesValues = this.context.getAllValues();
+        result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, null, originalInputs, prevCycles);
+        return result;
+    }
 }
