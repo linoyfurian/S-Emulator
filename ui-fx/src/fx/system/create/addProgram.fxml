@@ -64,6 +64,7 @@
                                  <children>
                                     <Label fx:id="mainVariableLbl" styleClass="argument" text="Variable type:" />
                                     <ChoiceBox fx:id="variableCbox" onAction="#onVariableTypeCboxSelected" prefWidth="150.0" styleClass="cBox" />
+                                    <Label fx:id="mainVariableIndexLbl" styleClass="argument" text="Variable index:" />
                                     <TextField fx:id="mainVariableTF" />
                                  </children>
                               </VBox>
@@ -71,6 +72,7 @@
                                  <children>
                                     <Label fx:id="mainLabelLbl" styleClass="argument" text="Label (L*\EXIT):" />
                                     <ChoiceBox fx:id="labelCbox" onAction="#onLabelCboxSelected" prefWidth="100.0" styleClass="cBox" />
+                                    <Label fx:id="mainLabelIndexLbl" styleClass="argument" text="Label index:" />
                                     <TextField fx:id="mainLabelTF" prefWidth="100.0" />
                                  </children>
                               </VBox>
@@ -90,6 +92,7 @@
                                  <children>
                                     <Label fx:id="additionalVariableLbl" styleClass="argument" text="Variable type:" />
                                     <ChoiceBox fx:id="additionalVariableCbox" onAction="#onAdditionalVariableTypeCboxSelected" prefWidth="150.0" styleClass="cBox" />
+                                    <Label fx:id="additionalVariableIndexLbl" styleClass="argument" text="Variable index:" />
                                     <TextField fx:id="additionalVariableTF" />
                                  </children>
                               </VBox>
@@ -97,6 +100,7 @@
                                  <children>
                                     <Label fx:id="additionalLabelLbl" styleClass="argument" text="Label (L*\EXIT):" />
                                     <ChoiceBox fx:id="additionalLabelCbox" onAction="#onAdditionalLabelCboxSelected" prefWidth="100.0" styleClass="cBox" />
+                                    <Label fx:id="additionalLabelIndexLbl" styleClass="argument" text="Label index:" />
                                     <TextField fx:id="additionalLabelTF" prefWidth="100.0" />
                                  </children>
                               </VBox>

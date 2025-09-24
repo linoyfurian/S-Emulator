@@ -25,6 +25,11 @@ import java.util.function.UnaryOperator;
 public class AddProgramController {
     private SEmulatorSystemController mainController;
 
+    @FXML private Label mainVariableIndexLbl;
+    @FXML private Label mainLabelIndexLbl;
+    @FXML private Label additionalVariableIndexLbl;
+    @FXML private Label additionalLabelIndexLbl;
+
     @FXML private Button saveToFileBtn;
 
     @FXML private Button deleteInstructionBtn;
@@ -82,14 +87,19 @@ public class AddProgramController {
 
         this.mainVariableTF.setVisible(false);
         this.mainLabelTF.setVisible(false);
+        this.mainVariableIndexLbl.setVisible(false);
+
+        this.mainLabelIndexLbl.setVisible(false);
 
         this.additionalLabelTF.setVisible(false);
         this.additionalLabelCbox.setVisible(false);
         this.additionalLabelLbl.setVisible(false);
+        this.additionalLabelIndexLbl.setVisible(false);
 
         this.additionalVariableTF.setVisible(false);
         this.additionalVariableCbox.setVisible(false);
         this.additionalVariableLbl.setVisible(false);
+        this.additionalVariableIndexLbl.setVisible(false);
 
         this.additionalArgsLbl.setVisible(false);
 
@@ -178,9 +188,9 @@ public class AddProgramController {
                     isAdditionalLabel = true;
                     this.variableCbox.setVisible(false);
                     this.mainVariableLbl.setVisible(false);
+                    this.mainVariableIndexLbl.setVisible(false);
                     break;
             }
-
         }
 
         if(isAdditionalVariable||isAdditionalLabel||isAdditionalConstant){
@@ -207,6 +217,8 @@ public class AddProgramController {
             this.additionalLabelCbox.setVisible(false);
             this.additionalLabelLbl.setVisible(false);
         }
+
+        resetAllOptions();
     }
 
     @FXML void onSelectedInstructionName(ActionEvent event) {
@@ -260,11 +272,11 @@ public class AddProgramController {
         this.uploadProgramBtn.setDisable(false);
         this.saveToFileBtn.setDisable(false);
 
+        this.instructionNameCbox.getSelectionModel().clearSelection();
         resetAllOptions();
     }
 
     private void resetAllOptions(){
-        this.instructionNameCbox.getSelectionModel().clearSelection();
         this.variableCbox.getSelectionModel().clearSelection();
         this.additionalVariableCbox.getSelectionModel().clearSelection();
         this.additionalLabelCbox.getSelectionModel().clearSelection();
@@ -277,17 +289,25 @@ public class AddProgramController {
 
         this.mainVariableTF.setVisible(false);
         this.mainLabelTF.setVisible(false);
+        this.mainVariableTF.setVisible(false);
+        this.mainVariableIndexLbl.setVisible(false);
+        this.mainLabelIndexLbl.setVisible(false);
+
 
         this.additionalLabelTF.setVisible(false);
         this.additionalLabelCbox.setVisible(false);
         this.additionalLabelLbl.setVisible(false);
+        this.additionalLabelIndexLbl.setVisible(false);
 
         this.additionalVariableTF.setVisible(false);
         this.additionalVariableCbox.setVisible(false);
         this.additionalVariableLbl.setVisible(false);
+        this.additionalVariableIndexLbl.setVisible(false);
 
         this.additionalArgsLbl.setVisible(false);
     }
+
+
     private boolean isInstructionReadyToAdd(){
         String selectedLabelType;
 
@@ -414,10 +434,12 @@ public class AddProgramController {
         }
         if(!selectedVariableType.equals("y")){
             this.mainVariableTF.setVisible(true);
+            this.mainVariableIndexLbl.setVisible(true);
         }
-        else
+        else {
             this.mainVariableTF.setVisible(false);
-
+            this.mainVariableIndexLbl.setVisible(false);
+        }
     }
 
 
@@ -428,10 +450,12 @@ public class AddProgramController {
         }
         if(selectedLabelType.equals("L")){
             this.mainLabelTF.setVisible(true);
+            this.mainLabelIndexLbl.setVisible(true);
         }
-        else
+        else {
             this.mainLabelTF.setVisible(false);
-
+            this.mainLabelIndexLbl.setVisible(false);
+        }
     }
 
     @FXML void onAdditionalVariableTypeCboxSelected(ActionEvent event) {
@@ -441,10 +465,12 @@ public class AddProgramController {
         }
         if(!selectedVariableType.equals("y")){
             this.additionalVariableTF.setVisible(true);
+            this.additionalVariableIndexLbl.setVisible(true);
         }
-        else
+        else {
             this.additionalVariableTF.setVisible(false);
-
+            this.additionalVariableIndexLbl.setVisible(false);
+        }
     }
 
 
@@ -456,10 +482,12 @@ public class AddProgramController {
         }
         if(selectedLabelType.equals("L")){
             this.additionalLabelTF.setVisible(true);
+            this.additionalLabelIndexLbl.setVisible(true);
         }
-        else
+        else {
             this.additionalLabelTF.setVisible(false);
-
+            this.additionalLabelIndexLbl.setVisible(false);
+        }
     }
 
 
