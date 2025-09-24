@@ -17,11 +17,11 @@
          </padding></Label>
       <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0">
         <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0">
                <children>
-                  <TableView fx:id="historyRunsTable" maxWidth="600.0" minWidth="300.0" onMouseClicked="#onHistoryRunSelectedListener" prefHeight="200.0" prefWidth="400.0">
+                  <TableView fx:id="historyRunsTable" maxWidth="600.0" minWidth="300.0" onMouseClicked="#onHistoryRunSelectedListener" prefHeight="200.0">
                     <columns>
-                      <TableColumn fx:id="runNumberCol" prefWidth="75.0" text="Run Number" />
+                      <TableColumn fx:id="runNumberCol" text="Run Number" />
                       <TableColumn fx:id="degreeCol" prefWidth="75.0" text="Degree" />
                         <TableColumn fx:id="resultYCol" prefWidth="75.0" text="y" />
                         <TableColumn fx:id="cyclesCol" prefWidth="75.0" text="Cycles" />

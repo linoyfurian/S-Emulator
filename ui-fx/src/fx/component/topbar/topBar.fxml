@@ -51,10 +51,10 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0" GridPane.columnSpan="6" GridPane.rowIndex="2">
          <children>
-            <VBox prefHeight="200.0" prefWidth="150.0">
+            <VBox prefHeight="200.0">
                <children>
-                  <Label prefWidth="200.0" text="Program / function selector:" />
-                  <ComboBox fx:id="cmbProgramOrFunction" onAction="#onProgramFunctionChangedListener" prefWidth="150.0" />
+                  <Label text="Program / function selector:" />
+                  <ComboBox fx:id="cmbProgramOrFunction" onAction="#onProgramFunctionChangedListener" prefWidth="165.0" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
@@ -79,10 +79,10 @@
                   <ComboBox fx:id="cmbExpand" maxWidth="100.0" onAction="#btnExpandListener" prefWidth="150.0" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="110.0">
+            <VBox prefHeight="200.0">
                <children>
                   <Label text="Highlight selection:" />
-                  <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="159.0" />
+                  <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="120.0" />
                </children>
             </VBox>
          </children>

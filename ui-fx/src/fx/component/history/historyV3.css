@@ -16,8 +16,8 @@
 .history-button, .button {
     -fx-background-color: #f1c8e2;
     -fx-text-fill: white;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-padding: 5 12 5 12;
 }
 
@@ -86,9 +86,13 @@
 
 .label {
     -fx-text-fill: white;
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 11px;
+
 }
 
 .history-button {
     -fx-text-fill: white;
     -fx-background-color: #d8529c;
+    -fx-font-family: "Tahoma";
 }

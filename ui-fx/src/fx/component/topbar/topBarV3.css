@@ -4,13 +4,17 @@
 
 .label {
     -fx-text-fill: white;
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 11pt;
 }
 
 .button {
     -fx-background-color: #fa64c3;
     -fx-text-fill: white;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-font-size: 11pt;
+    -fx-font-family: "Tahoma";
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-padding: 5 12 5 12;
 }
 

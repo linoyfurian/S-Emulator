@@ -1,11 +1,9 @@
-/* Root container */
 .instructions-root {
     -fx-padding: 8;
     -fx-spacing: 6;
     -fx-background-color: #fafafa;
 }
 
-/* ====== TableView styling ====== */
 .table-view {
     -fx-background-color: white;
     -fx-border-color: #dcdcdc;
@@ -73,4 +71,3 @@
 .breakpoint-radio-button {
     -fx-mark-color: #a80606;
 }
-

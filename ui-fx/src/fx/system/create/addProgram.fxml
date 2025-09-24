@@ -67,11 +67,11 @@
                                     <TextField fx:id="mainVariableTF" />
                                  </children>
                               </VBox>
-                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                              <VBox prefHeight="200.0" spacing="5.0">
                                  <children>
                                     <Label fx:id="mainLabelLbl" styleClass="argument" text="Label (L*\EXIT):" />
-                                    <ChoiceBox fx:id="labelCbox" onAction="#onLabelCboxSelected" prefWidth="150.0" styleClass="cBox" />
-                                    <TextField fx:id="mainLabelTF" />
+                                    <ChoiceBox fx:id="labelCbox" onAction="#onLabelCboxSelected" prefWidth="100.0" styleClass="cBox" />
+                                    <TextField fx:id="mainLabelTF" prefWidth="100.0" />
                                  </children>
                               </VBox>
                            </children>
@@ -93,17 +93,17 @@
                                     <TextField fx:id="additionalVariableTF" />
                                  </children>
                               </VBox>
-                              <VBox fx:id="additionalLabelVbox" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                              <VBox fx:id="additionalLabelVbox" prefHeight="200.0" spacing="5.0">
                                  <children>
                                     <Label fx:id="additionalLabelLbl" styleClass="argument" text="Label (L*\EXIT):" />
-                                    <ChoiceBox fx:id="additionalLabelCbox" onAction="#onAdditionalLabelCboxSelected" prefWidth="150.0" styleClass="cBox" />
-                                    <TextField fx:id="additionalLabelTF" />
+                                    <ChoiceBox fx:id="additionalLabelCbox" onAction="#onAdditionalLabelCboxSelected" prefWidth="100.0" styleClass="cBox" />
+                                    <TextField fx:id="additionalLabelTF" prefWidth="100.0" />
                                  </children>
                               </VBox>
-                              <VBox fx:id="additionalConstantVbox" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                              <VBox fx:id="additionalConstantVbox" prefHeight="200.0" spacing="5.0">
                                  <children>
                                     <Label styleClass="argument" text="Constant Value:" />
-                                    <TextField fx:id="constantValueTF" />
+                                    <TextField fx:id="constantValueTF" prefWidth="100.0" />
                                  </children>
                               </VBox>
                            </children>

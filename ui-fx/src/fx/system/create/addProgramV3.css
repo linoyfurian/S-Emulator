@@ -66,3 +66,17 @@
 .cBox {
     -fx-background-color: #aedff1;
 }
+
+
+
+.label {
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 10pt;
+}
+
+.button {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Tahoma";
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}

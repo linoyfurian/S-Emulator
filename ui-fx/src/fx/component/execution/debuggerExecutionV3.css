@@ -1,13 +1,17 @@
 #run-button {
     -fx-background-color: #e619ad;
     -fx-text-fill: white;
+    -fx-font-family: "Tahoma";
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
 }
 
 .execution-button {
     -fx-background-color: #a16580;
     -fx-text-fill: white;
-    -fx-background-radius: 5;
-    -fx-border-radius: 5;
+    -fx-font-family: "Tahoma";
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-padding: 5 12 5 12;
 }
 
@@ -103,6 +107,8 @@
 
 .label {
     -fx-text-fill: white;
+    -fx-font-size: 11pt;
+    -fx-font-family: "Tahoma";
 }
 
 /* flash row when variable changed */

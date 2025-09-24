@@ -63,3 +63,15 @@
     -fx-background-color: #444444;
     -fx-text-fill: white;
 }
+
+.label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 10pt;
+}
+
+.button {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Arial";
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+}

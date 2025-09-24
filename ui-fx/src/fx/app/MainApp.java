@@ -18,7 +18,7 @@ public class MainApp extends Application {
         ScrollPane root = loader.load();
         SEmulatorSystemController system = loader.getController();
 
-        Scene scene = new Scene(root, 1100, 680);
+        Scene scene = new Scene(root, 1150, 680);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
