@@ -158,6 +158,8 @@ public class AddProgramController {
         boolean isAdditionalVariable = false;
         boolean isAdditionalConstant = false;
 
+        resetAllOptions();
+
         this.variableCbox.setVisible(true);
         this.mainVariableLbl.setVisible(true);
 
@@ -217,8 +219,6 @@ public class AddProgramController {
             this.additionalLabelCbox.setVisible(false);
             this.additionalLabelLbl.setVisible(false);
         }
-
-        resetAllOptions();
     }
 
     @FXML void onSelectedInstructionName(ActionEvent event) {

@@ -33,7 +33,13 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         //add input variables
         for (int i=0; i<inputs.length; i++) {
             String variableName = "x"+(i+1);
-            if(originalInputs.containsKey(variableName)){
+            if(originalInputs!=null) {
+                if(originalInputs.containsKey(variableName)){
+                    Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
+                    context.updateVariable(variable, inputs[i]);
+                }
+            }
+            else{
                 Variable variable = new VariableImpl(VariableType.INPUT,i+1, variableName);
                 context.updateVariable(variable, inputs[i]);
             }
@@ -50,6 +56,8 @@ public class ProgramExecutorImpl implements ProgramExecutor {
             }
         }
 
+
+
         int pc = 0;
         List<Instruction> instructions = programToRun.getInstructions();
         Instruction currentInstruction = instructions.get(pc); //first instruction
@@ -62,7 +70,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
                 nextLabel = simpleInstruction.execute(context);
             }
             else{
-                ComplexInstruction complexInstruction =  (ComplexInstruction) currentInstruction;
+                ComplexInstruction complexInstruction = (ComplexInstruction) currentInstruction;
                 executeResult = complexInstruction.execute(context, mainProgram);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();

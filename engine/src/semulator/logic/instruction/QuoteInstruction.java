@@ -49,10 +49,9 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
         if(functionToRun != null) {
             ProgramExecutor programExecutor = new ProgramExecutorImpl(functionToRun, program);
-
             List<String> arguments = FunctionUtils.splitFunctionArguments(functionArguments);
-            long [] inputs = new long[arguments.size()];
 
+            long [] inputs = new long[arguments.size()];
 
             for(int i = 0; i < arguments.size(); i++) {
                 inputs[i] = ExecutionUtils.findInputValue(program,arguments.get(i), context);

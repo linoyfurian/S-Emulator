@@ -152,8 +152,6 @@ public class SEmulatorSystemController {
             breakPointRowIndex = instructionsController.getBreakPointRowIndex();
 
             debuggerController.initialStartOfDebugging();
-          //  instructionsController.highlightLine(0);
-
             DebugContextDto initialDebugContext;
 
             initialDebugContext = engine.initialStartOfDebugger(degreeOfRun, this.debugContext, originalInputs, inputs);
@@ -175,7 +173,6 @@ public class SEmulatorSystemController {
             debuggerController.updateDebugResult(this.debugContext);
 
             if(currInstructionToHighlight == 0) {
-                instructionsController.resetBreakPointSelection();
                 instructionsController.setIsRunning(false);
                 engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
                 List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
@@ -220,7 +217,6 @@ public class SEmulatorSystemController {
 
         long currInstructionToHighlight = debugContext.getNextInstructionNumber();
         if(currInstructionToHighlight == 0){
-            instructionsController.resetBreakPointSelection();
             instructionsController.setIsRunning(false);
             engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
             List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();

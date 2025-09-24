@@ -38,3 +38,7 @@
 .table-row-cell:changed {
     -fx-background-color: rgba(255, 230, 150, 0.9);
 }
+
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+}

@@ -82,6 +82,7 @@
 
 .table-view .table-cell {
     -fx-text-fill: #e63493;
+    -fx-alignment: CENTER;
 }
 
 .table-view .column-header,

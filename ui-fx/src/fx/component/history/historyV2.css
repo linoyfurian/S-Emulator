@@ -55,6 +55,7 @@
 
 .table-view .table-cell {
     -fx-text-fill: white;
+    -fx-alignment: CENTER;
 }
 
 .table-row-cell {

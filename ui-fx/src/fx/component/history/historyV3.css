@@ -61,6 +61,7 @@
 
 .table-view .table-cell {
     -fx-text-fill: #df2ca7;
+    -fx-alignment: CENTER;
 }
 
 .table-row-cell {

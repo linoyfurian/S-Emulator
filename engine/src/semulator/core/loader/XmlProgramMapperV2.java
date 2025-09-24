@@ -148,6 +148,9 @@ public class XmlProgramMapperV2 {
         if(sVariable==null){
             return null;
         }
+        if(sVariable.equals("")){
+            return null;
+        }
         type = sVariable.charAt(0);
         int number;
 

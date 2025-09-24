@@ -118,7 +118,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     public DebugContextDto debug (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
         ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
-        //todo check size of instructions
+
         Instruction instructionToExecute = instructions.get((int)(instructionToExecuteNumber - 1));
         Label nextLabel;
         int cycles=0;

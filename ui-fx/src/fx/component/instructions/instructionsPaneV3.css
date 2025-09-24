@@ -12,7 +12,7 @@
 
 .table-view .table-cell {
     -fx-text-fill: black;
-    -fx-alignment: CENTER-LEFT;
+    -fx-alignment: CENTER;
 }
 
 .table-view .col {

@@ -38,6 +38,7 @@ public class ExecutionUtils {
 
                 // Run the function
                 ProgramExecutor executor = new ProgramExecutorImpl(targetFunction, program);
+
                 ExecutionRunDto runDetails = executor.run(0, 0, null, inputs);
                 if(runDetails != null) {
                     result = runDetails.getResult();
