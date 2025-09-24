@@ -5,6 +5,7 @@ import semulator.api.LoadReport;
 import semulator.api.dto.*;
 import semulator.logic.program.Program;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -33,4 +34,5 @@ public interface SEmulatorEngine {
     DebugContextDto resumeProgram(int desiredDegreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long ... input);
     void uploadCreatedProgram(ProgramDraft newProgram);
     DebugContextDto initialStartOfDebugger(int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long ... inputs);
+    void saveCreatedProgramToFile(ProgramDraft newProgram, File fileToSave);
     }

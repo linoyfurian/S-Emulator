@@ -12,10 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import semulator.api.dto.InstructionDraft;
 import semulator.api.dto.ProgramDraft;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -23,6 +25,7 @@ import java.util.function.UnaryOperator;
 public class AddProgramController {
     private SEmulatorSystemController mainController;
 
+    @FXML private Button saveToFileBtn;
 
     @FXML private Button deleteInstructionBtn;
     @FXML private Button addInstructionButton;
@@ -123,6 +126,7 @@ public class AddProgramController {
         newInstructionTbl.setItems(instructionData);
 
         this.uploadProgramBtn.setDisable(true);
+        this.saveToFileBtn.setDisable(true);
 
     }
 
@@ -254,6 +258,7 @@ public class AddProgramController {
         this.instructionData.add(newInstruction);
 
         this.uploadProgramBtn.setDisable(false);
+        this.saveToFileBtn.setDisable(false);
 
         resetAllOptions();
     }
@@ -467,6 +472,35 @@ public class AddProgramController {
     void onBtnDeleteInstructionListener(ActionEvent event) {
         this.instructionData.remove(this.newInstructionTbl.getSelectionModel().getSelectedItem());
         this.deleteInstructionBtn.setVisible(false);
+    }
+
+    @FXML void onSaveToFileBtnListener(ActionEvent event) {
+        ProgramDraft newProgram;
+        String programName;
+
+        programName = this.programNameTF.getText();
+        if (programName.isEmpty() || programName == null) {
+            programName = "";
+        }
+
+        newProgram = new ProgramDraft(programName, this.instructionData);
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Program As...");
+
+        FileChooser.ExtensionFilter extFilter =
+                new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        fileChooser.setInitialFileName("new-created-program.xml");
+
+        File file = fileChooser.showSaveDialog(saveToFileBtn.getScene().getWindow());
+        if (file != null) {
+            try {
+                mainController.saveProgramToFile(newProgram, file);
+            } catch (Exception e) {
+            }
+        }
     }
 }
 

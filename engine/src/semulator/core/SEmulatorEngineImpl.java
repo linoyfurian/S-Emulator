@@ -2,12 +2,12 @@ package semulator.core;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import semulator.api.LoadReport;
 import semulator.api.dto.*;
-import semulator.core.loader.ProgramMapper;
 import semulator.core.loader.XmlProgramMapperV2;
-import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
+import semulator.core.loader.jaxb.schema.version2.generated.*;
 import semulator.logic.Function.Function;
 import semulator.logic.debugger.ProgramDebugger;
 import semulator.logic.debugger.ProgramDebuggerImpl;
@@ -342,11 +342,124 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
     @Override
     public void uploadCreatedProgram(ProgramDraft newProgram){
-        Program program = ProgramMapper.mapProgram(newProgram);
+        SProgram newCreatedProgram = generateSProgramFromNewCreatedProgram(newProgram);
+        Program program = XmlProgramMapperV2.fromSProgramToProgramImpl(newCreatedProgram);
+
         this.program = program;
         this.programInContext = this.program;
         this.isLoaded = false;
         this.runsHistory = new HashMap<>();
         this.runsHistory.put(this.programInContext.getName(), new ArrayList<>());
+    }
+
+    @Override
+    public void saveCreatedProgramToFile(ProgramDraft newProgram, File fileToSave) {
+        SProgram programToSave = generateSProgramFromNewCreatedProgram(newProgram);
+        //save current program to file
+        try {
+            saveSProgramToXml(programToSave, fileToSave);
+        }
+        catch(Exception e){
+
+        }
+    }
+
+    public static void saveSProgramToXml(SProgram program, File file) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance("semulator.core.loader.jaxb.schema.version2.generated");
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "S-Emulator-v1.xsd");
+        marshaller.marshal(program, file);
+    }
+
+    private SProgram generateSProgramFromNewCreatedProgram(ProgramDraft newProgram) {
+        SProgram programToSave;
+        programToSave = new SProgram();
+        programToSave.setName(newProgram.getProgramName());
+
+        List<SInstruction> programToSaveInstructions = new ArrayList<>();
+        List<InstructionDraft> newProgramInstructions = newProgram.getInstructions();
+
+        for (InstructionDraft instructionDraft : newProgramInstructions) {
+            SInstruction newInstruction = new SInstruction();
+            newInstruction.setName(instructionDraft.getName());
+            String instructionType = instructionDraft.getType();
+            String type = "basic";
+            if(instructionType.equals("S"))
+                type = "synthetic";
+            newInstruction.setType(type);
+            newInstruction.setSLabel(instructionDraft.getMainLabel());
+            newInstruction.setSVariable(instructionDraft.getMainVariable());
+
+            List<SInstructionArgument>  newInstructionArguments = new ArrayList<>();
+            SInstructionArgument newInstructionArgument;
+            switch(instructionDraft.getName()){
+                case "ASSIGNMENT":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("assignedVariable");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalVariable());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case "CONSTANT_ASSIGNMENT":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("constantValue");
+                    newInstructionArgument.setValue(instructionDraft.getConstantValue().toString());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case "JUMP_NOT_ZERO":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("JNZLabel");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalLabel());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case"JUMP_ZERO":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("JZLabel");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalLabel());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case "JUMP_EQUAL_VARIABLE":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("variableName");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalVariable());
+                    newInstructionArguments.add(newInstructionArgument);
+
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("JEVariableLabel");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalLabel());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case "JUMP_EQUAL_CONSTANT":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("constantValue");
+                    newInstructionArgument.setValue(instructionDraft.getConstantValue().toString());
+                    newInstructionArguments.add(newInstructionArgument);
+
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("JEConstantLabel");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalLabel());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+                case "GOTO_LABEL":
+                    newInstructionArgument = new SInstructionArgument();
+                    newInstructionArgument.setName("gotoLabel");
+                    newInstructionArgument.setValue(instructionDraft.getAdditionalLabel());
+                    newInstructionArguments.add(newInstructionArgument);
+                    break;
+            }
+
+            SInstructionArguments instructionArguments = new SInstructionArguments();
+            instructionArguments.getSInstructionArgument().addAll(newInstructionArguments);
+
+            newInstruction.setSInstructionArguments(instructionArguments);
+
+            programToSaveInstructions.add(newInstruction);
+        }
+
+        SInstructions instructionsToSave =  new SInstructions();
+        instructionsToSave.getSInstruction().addAll(programToSaveInstructions);
+        programToSave.setSInstructions(instructionsToSave);
+
+        return programToSave;
     }
 }

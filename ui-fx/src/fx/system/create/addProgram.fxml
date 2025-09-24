@@ -130,6 +130,7 @@
                   <Label styleClass="title" text="New Program Name: " />
                   <TextField fx:id="programNameTF" />
                   <Button id="upload-program-btn" fx:id="uploadProgramBtn" mnemonicParsing="false" onAction="#onBtnUploadProgramListenter" text="upload program" />
+                  <Button id="save-to-file-btn" fx:id="saveToFileBtn" mnemonicParsing="false" onAction="#onSaveToFileBtnListener" text="save to file" />
                </children>
                <padding>
                   <Insets left="10.0" top="10.0" />

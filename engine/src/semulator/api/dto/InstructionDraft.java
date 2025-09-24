@@ -95,7 +95,7 @@ public class InstructionDraft {
     public String getMainLabel() {
         return mainLabel;
     }
-    public long getConstantValue() {
+    public Long getConstantValue() {
         return constantValue;
     }
     public String getAdditionalVariable() {

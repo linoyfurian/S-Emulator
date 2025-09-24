@@ -23,6 +23,12 @@
     -fx-text-fill: #f4f2f2;
 }
 
+#save-to-file-btn{
+    -fx-background-color: #32a1e6;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}
+
 .table-view .table-cell {
     -fx-alignment: CENTER;
 }

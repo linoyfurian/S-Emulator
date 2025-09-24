@@ -90,6 +90,9 @@ public class DebuggerExecutionController {
 
     /** Call this when a program is loaded or when switching program */
     public void setProgram(ProgramFunctionDto programInContextDetails) {
+        if (cyclesLabel != null) {
+            cyclesProperty.set(0);
+        }
         buildInputsUI(programInContextDetails);
         variablesData.clear();
         stepBackBtn.setDisable(true);

@@ -7,6 +7,7 @@ import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
 import fx.component.topbar.TopBarController;
 import fx.system.create.AddProgramController;
+import javafx.stage.FileChooser;
 import semulator.api.dto.ProgramDraft;
 import fx.system.load.ProgressDialog;
 import jakarta.xml.bind.JAXBException;
@@ -25,6 +26,7 @@ import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -517,6 +519,10 @@ public class SEmulatorSystemController {
 
         List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
         topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
+    }
+
+    public void saveProgramToFile(ProgramDraft newProgram, File fileToSave){
+        engine.saveCreatedProgramToFile(newProgram, fileToSave);
     }
 
 }
