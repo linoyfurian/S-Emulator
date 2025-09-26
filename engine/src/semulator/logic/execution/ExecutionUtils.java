@@ -12,8 +12,9 @@ public class ExecutionUtils {
     private ExecutionUtils() {}
 
 
-    public static long findInputValue(Program program, String argument, ExecutionContext context) {
+    public static ArgumentResult findInputValue(Program program, String argument, ExecutionContext context) {
         long result = 0L;
+        int cycles = 0;
 
         // Case 1: simple variable
         if(!FunctionUtils.isVariableIsAFunction(argument)) {
@@ -33,7 +34,9 @@ public class ExecutionUtils {
                 List<String> innerArgs = FunctionUtils.splitFunctionArguments(funcArgs);
                 long[] inputs = new long[innerArgs.size()];
                 for(int i = 0; i < innerArgs.size(); i++) {
-                    inputs[i] = findInputValue(program, innerArgs.get(i), context);
+                    ArgumentResult currArgumentResult = findInputValue(program, innerArgs.get(i), context);
+                    inputs[i] = currArgumentResult.getArgumentValue();
+                    cycles += currArgumentResult.getCycles();
                 }
 
                 // Run the function
@@ -42,10 +45,11 @@ public class ExecutionUtils {
                 ExecutionRunDto runDetails = executor.run(0, 0, null, inputs);
                 if(runDetails != null) {
                     result = runDetails.getResult();
+                    cycles = cycles + runDetails.getCycles();
                 }
             }
         }
 
-        return result;
+        return new ArgumentResult(result, cycles);
     }
 }

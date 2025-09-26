@@ -412,6 +412,9 @@ public class SEmulatorSystemController {
 
                 instructionsController.resetBreakPointSelection();
 
+                List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+                historyController.updateHistoryRunTable(programInContextRunHistory);
+
             } catch (Exception ex) {
                 progress.close();
             }
@@ -515,6 +518,9 @@ public class SEmulatorSystemController {
 
         List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
         topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
+
+        List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+        historyController.updateHistoryRunTable(programInContextRunHistory);
     }
 
     public void saveProgramToFile(ProgramDraft newProgram, File fileToSave){

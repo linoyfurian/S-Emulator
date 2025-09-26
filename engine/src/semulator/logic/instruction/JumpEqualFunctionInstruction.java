@@ -58,8 +58,11 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
             long [] inputs = new long[arguments.size()];
 
 
+            ArgumentResult currArgument;
             for(int i = 0; i < arguments.size(); i++) {
-                inputs[i] = ExecutionUtils.findInputValue(program,arguments.get(i), context);
+                currArgument = ExecutionUtils.findInputValue(program,arguments.get(i), context);
+                inputs[i] = currArgument.getArgumentValue();
+                runCycles = runCycles + currArgument.getCycles();
             }
 
             ExecutionRunDto runDetails = programExecutor.run(0, 0, null, inputs);
@@ -67,7 +70,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
             if(runDetails!=null) {
                 functionResult = runDetails.getResult();
                 long variableValue = context.getVariableValue(this.getVariable());
-                runCycles = runDetails.getCycles();
+                runCycles = runCycles + runDetails.getCycles();
                 if(variableValue==functionResult) {
                     return new ComplexExecuteResult(JEFunctionLabel, runCycles);
                 }

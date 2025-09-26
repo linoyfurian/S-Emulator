@@ -83,6 +83,8 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
                 this.program = mappedProgram;
                 this.isLoaded = true;
 
+                this.runsHistory.clear();
+
                 this.runsHistory.put(mappedProgram.getName(), new ArrayList<>());
                 for (Program function : functions) {
                     this.runsHistory.put(function.getName(), new ArrayList<>());

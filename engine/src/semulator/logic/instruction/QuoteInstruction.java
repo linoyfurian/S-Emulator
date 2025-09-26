@@ -52,16 +52,18 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
             List<String> arguments = FunctionUtils.splitFunctionArguments(functionArguments);
 
             long [] inputs = new long[arguments.size()];
-
+            ArgumentResult currArgument;
             for(int i = 0; i < arguments.size(); i++) {
-                inputs[i] = ExecutionUtils.findInputValue(program,arguments.get(i), context);
+                currArgument = ExecutionUtils.findInputValue(program,arguments.get(i), context);
+                inputs[i] = currArgument.getArgumentValue();
+                runCycles = runCycles + currArgument.getCycles();
             }
 
             ExecutionRunDto runDetails = programExecutor.run(0, 0, null, inputs);
             if(runDetails!=null) {
                 assignedValue = runDetails.getResult();
                 context.updateVariable(this.getVariable(), assignedValue);
-                runCycles = runDetails.getCycles();
+                runCycles = runCycles + runDetails.getCycles();
             }
         }
 
