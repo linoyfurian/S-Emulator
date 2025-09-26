@@ -1,15 +1,15 @@
 .root {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 .border-pane{
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 .split-pane{
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 
 .scroll-pane{
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 
 .summary-line {

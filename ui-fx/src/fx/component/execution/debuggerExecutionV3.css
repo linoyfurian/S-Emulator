@@ -1,5 +1,5 @@
 #run-button {
-    -fx-background-color: #e619ad;
+    -fx-background-color: #37cf3c;
     -fx-text-fill: white;
     -fx-font-family: "Tahoma";
     -fx-background-radius: 8;
@@ -7,7 +7,7 @@
 }
 
 .execution-button {
-    -fx-background-color: #a16580;
+    -fx-background-color: #4485d8;
     -fx-text-fill: white;
     -fx-font-family: "Tahoma";
     -fx-background-radius: 8;
@@ -16,7 +16,7 @@
 }
 
 .root {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 
 #debugger-title {
@@ -27,33 +27,33 @@
 
 
 .hbox {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 
 .vbox {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
 }
 
 .execution-button:hover,
 #run-button:hover {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #6b98d3;
 }
 
 .execution-button:pressed,
 #run-button:pressed {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #6b98d3;
 }
 
 .radio-button {
     -fx-text-fill: white;
 }
 .radio-button:selected {
-    -fx-mark-color: #4d819f;
+    -fx-mark-color: #f3873b;
 }
 
 .panel-left,
 .panel-right {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: #04294e;
     -fx-padding: 5;
 }
 
@@ -74,36 +74,37 @@
 
 
 .table-view {
-    -fx-background-color: #efacd7;
-    -fx-control-inner-background: #e6c9d7;
-    -fx-table-cell-border-color: #df75aa;
-    -fx-table-header-border-color: #df75aa;
+    -fx-background-color: #3c70bf;
+    -fx-control-inner-background: #3c70bf;
+    -fx-text-fill: #83a6ef;
+    -fx-table-cell-border-color: #3c70bf;
+    -fx-table-header-border-color: #3c70bf;
 }
 
 .table-view .table-cell {
-    -fx-text-fill: #e63493;
+    -fx-text-fill: #ffffff;
     -fx-alignment: CENTER;
 }
 
 .table-view .column-header,
 .table-view .column-header-background {
-    -fx-background-color: #efacd7;
-    -fx-text-fill: #e63493;
+    -fx-background-color: #163987;
+    -fx-text-fill: #ffffff;
 }
 
 .table-row-cell:filled:selected,
 .table-row-cell:filled:selected:focused {
-    -fx-background-color: #efacd7;
-    -fx-text-fill: #e63493;
+    -fx-background-color: #163987;
+    -fx-text-fill: #ffffff;
 }
 
 .scroll-pane {
-    -fx-background: #efacd7;
-    -fx-border-color: #efacd7;
+    -fx-background: #04294e;
+    -fx-border-color: #04294e;
 }
 
 .scroll-pane .viewport {
-    -fx-background-color: #efacd7;
+    -fx-background-color: #04294e;
 }
 
 .label {
@@ -114,5 +115,5 @@
 
 /* flash row when variable changed */
 .table-row-cell:changed {
-    -fx-background-color: rgba(138, 212, 239, 0.9);
+    -fx-background-color: rgba(250, 138, 47, 0.9);
 }

@@ -1,9 +1,9 @@
 .root {
-    -fx-background-color: #fad2ec;
+    -fx-background-color: #04294e;
 }
 
 .back {
-    -fx-background-color: #fad2ec;
+    -fx-background-color: #04294e;
 }
 
 .title {
@@ -34,12 +34,24 @@
     -fx-text-fill: #f4f2f2;
 }
 
+#save-to-file-btn{
+    -fx-background-color: #6b8fa8;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f4f2f2;
+}
+
 .table-view {
-    -fx-background-color: #fad2ec;
-    -fx-control-inner-background: #fad2ec;
-    -fx-text-fill: #6b8fa8;
-    -fx-table-cell-border-color: #f194c3;
-    -fx-table-header-border-color: #f194c3;
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+
+    -fx-background-image: url("/fx/app/display/waves.jpeg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+
+    -fx-table-cell-border-color: rgba(255,255,255,0.18);
+    -fx-table-header-border-color: rgba(255,255,255,0.18);
 }
 
 .table-view .table-cell {
@@ -47,21 +59,34 @@
     -fx-alignment: CENTER;
 }
 
+
+.table-view .col {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
-    -fx-background-color: #f490d1;
+    -fx-background-color: rgba(4,30,66,0.85);  /* navy band */
+    -fx-text-fill: white;
+}
+
+/* Selection color (cyan-ish) */
+.table-view:focused .table-row-cell:filled:focused:selected,
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: rgba(0,163,224,0.65);
     -fx-text-fill: white;
 }
 
 .table-row-cell {
-    -fx-background-color: #e8b0d5;
-    -fx-text-fill: white;
+    -fx-background-color: rgba(0,0,0,0.20);
+    -fx-text-fill: #f4f8ff;
+}
+.table-row-cell:hover {
+    -fx-background-color: rgba(0,0,0,0.32);
 }
 
-.table-row-cell:hover {
-    -fx-background-color: #fad2ec;
-}
 
 .cBox {
     -fx-background-color: #aedff1;
@@ -70,6 +95,7 @@
 .label {
     -fx-font-family: "Tahoma";
     -fx-font-size: 10pt;
+    -fx-text-fill: #41a7e8;
 }
 
 .button {

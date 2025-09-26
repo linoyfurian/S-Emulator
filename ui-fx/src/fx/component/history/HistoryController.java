@@ -120,7 +120,7 @@ public class HistoryController {
             case Theme.Dark:
                 historyRoot.getStylesheets().add("/fx/component/history/historyV2.css");
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 historyRoot.getStylesheets().add("/fx/component/history/historyV3.css");
         }
     }

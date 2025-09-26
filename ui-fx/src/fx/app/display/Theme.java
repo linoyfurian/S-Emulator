@@ -3,7 +3,7 @@ package fx.app.display;
 public enum Theme {
     Default( "Default"),
     Dark("Dark"),
-    Pink("Pink");
+    Ocean("Ocean");
 
     public final String display;
 

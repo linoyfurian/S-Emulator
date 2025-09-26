@@ -471,9 +471,9 @@ public class SEmulatorSystemController {
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV2.css");
                 currTheme = Theme.Dark;
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 systemScrollPane.getStylesheets().add("/fx/system/semulatorSystemV3.css");
-                currTheme = Theme.Pink;
+                currTheme = Theme.Ocean;
                 break;
         }
     }
@@ -499,7 +499,7 @@ public class SEmulatorSystemController {
             case Theme.Dark:
                 root.getStylesheets().add("/fx/system/create/addProgramV2.css");
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 root.getStylesheets().add("/fx/system/create/addProgramV3.css");
                 break;
         }

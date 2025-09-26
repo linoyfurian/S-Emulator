@@ -281,7 +281,7 @@ public class TopBarController {
             case Theme.Dark:
                 topBarRoot.getStylesheets().add("/fx/component/topbar/topBarV2.css");
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 topBarRoot.getStylesheets().add("/fx/component/topbar/topBarV3.css");
                 break;
         }

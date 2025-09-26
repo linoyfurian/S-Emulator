@@ -1,17 +1,46 @@
-.root {
-    -fx-background-color: #f1c8e2;
+.instructionVbox{
+    -fx-background-color: #ed9b6f;
 }
 
-.table-view {
-    -fx-background-color: #f1c8e2;
-    -fx-control-inner-background: #f1c8e2;
-    -fx-text-fill: #f167d5;
-    -fx-table-cell-border-color: #f1c8e2;
-    -fx-table-header-border-color: #f1c8e2;
+.summary-line{
+    -fx-background-color: #04294e;
+}
+
+.root {
+    -fx-background-color: #04294e;
+}
+
+#instructions-table {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+
+
+    -fx-background-image: url("/fx/app/display/waves.jpeg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+
+    -fx-table-cell-border-color: rgba(255,255,255,0.18);
+    -fx-table-header-border-color: rgba(255,255,255,0.18);
+}
+
+#instructions-chain-table {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+
+    -fx-background-image: url("/fx/app/display/waves.jpeg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+
+    -fx-table-cell-border-color: rgba(255,255,255,0.18);
+    -fx-table-header-border-color: rgba(255,255,255,0.18);
 }
 
 .table-view .table-cell {
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-alignment: CENTER;
 }
 
@@ -23,66 +52,50 @@
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
-    -fx-background-color: #e18dc2;
-    -fx-text-fill: f167d5;
+    -fx-background-color: rgba(4,30,66,0.85);
+    -fx-text-fill: white;
 }
 
 .table-view:focused .table-row-cell:filled:focused:selected,
 .table-view .table-row-cell:filled:selected {
-    -fx-background-color: #98f1a0;
+    -fx-background-color: rgba(0,163,224,0.65);
     -fx-text-fill: white;
 }
 
 .table-row-cell {
-    -fx-background-color: #f3ddeb;
-    -fx-text-fill: #f167d5;
+    -fx-background-color: rgba(0,0,0,0.20);
+    -fx-text-fill: #f4f8ff;
 }
-
 .table-row-cell:hover {
-    -fx-background-color: #f1c8e2;
+    -fx-background-color: rgba(0,0,0,0.32);
 }
 
-.label {
-    -fx-text-fill: white;
+.label { -fx-text-fill: #ffffff; }
 
+.summary-line, .instructionVbox {
+    -fx-background-color: #04294e;
 }
-
-.summary-line {
-    -fx-background-color: #f1c8e2;
-}
-
-.instructionVbox {
-    -fx-background-color: #f1c8e2;
-}
-
 
 .summary-title {
-    -fx-text-fill: #e649ba;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
 }
-
-.summary-subtitle {
-    -fx-text-fill: #e157c0;
-}
-
+.summary-subtitle { -fx-text-fill: #cfe6ff; }
 .summary-value {
-    -fx-text-fill: white;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
 }
 
-/* active instruction line highlighted in reddish */
 .table-row-cell:current {
-    -fx-background-color: rgba(239, 120, 120, 0.8);
+    -fx-background-color: rgba(113, 211, 248, 0.75);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
-
 .table-row-cell:changed {
-    -fx-background-color: rgba(140, 244, 180, 0.8);
+    -fx-background-color: rgba(81, 122, 227, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 
-.breakpoint-radio-button {
-    -fx-mark-color: #a80606;
-}
+/* Breakpoint radio mark */
+.breakpoint-radio-button { -fx-mark-color: #a80606; }

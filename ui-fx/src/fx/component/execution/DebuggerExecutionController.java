@@ -437,7 +437,7 @@ public class DebuggerExecutionController {
             case Theme.Dark:
                 debuggerRoot.getStylesheets().add("/fx/component/execution/debuggerExecutionV2.css");
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 debuggerRoot.getStylesheets().add("/fx/component/execution/debuggerExecutionV3.css");
                 break;
         }

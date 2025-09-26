@@ -296,7 +296,7 @@ public class InstructionPaneController {
             case Theme.Dark:
                 instructionRoot.getStylesheets().add("/fx/component/instructions/instructionsPaneV2.css");
                 break;
-            case Theme.Pink:
+            case Theme.Ocean:
                 instructionRoot.getStylesheets().add("/fx/component/instructions/instructionsPaneV3.css");
                 break;
         }
