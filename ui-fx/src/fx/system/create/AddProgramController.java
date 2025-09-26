@@ -114,8 +114,11 @@ public class AddProgramController {
                 mainVariableTF.textProperty(),
                 additionalVariableTF.textProperty(),
                 additionalLabelTF.textProperty(),
-                constantValueTF.textProperty()
+                constantValueTF.textProperty(),
+                mainLabelTF.textProperty(),
+                labelCbox.valueProperty()
         );
+
         addInstructionButton.disableProperty().bind(addDisabled);
 
         updateExtraSections(instructionNameCbox.getValue());
@@ -308,6 +311,17 @@ public class AddProgramController {
     }
 
 
+    private static boolean validateTextField(TextField textField) {
+        if (textField.getText() == null)
+            return false;
+        else if ((textField.getText().isEmpty())) {
+            return false;
+        } else if (textField.getText().startsWith("0"))
+            return false;
+        return true;
+    }
+
+
     private boolean isInstructionReadyToAdd(){
         String selectedLabelType;
 
@@ -323,10 +337,17 @@ public class AddProgramController {
             if(!currentInstructionName.equals("GOTO_LABEL")){
                 String selectedVariableType = variableCbox.getSelectionModel().getSelectedItem();
                 if (!selectedVariableType.equals("y")) {
-                    if ((mainVariableTF.getText().isEmpty() || mainVariableTF.getText() == null)) {
+                    if(!validateTextField(mainVariableTF))
                         return false;
-                    }
                 }
+            }
+        }
+
+        String currLabelType = labelCbox.getSelectionModel().getSelectedItem();
+        if(currLabelType != null){
+            if (currLabelType.equals("L")) {
+                if(!validateTextField(mainLabelTF))
+                    return false;
             }
         }
 
@@ -337,9 +358,8 @@ public class AddProgramController {
                     return false;
                 selectedVariableType = additionalVariableCbox.getSelectionModel().getSelectedItem();
                 if (!selectedVariableType.equals("y")) {
-                    if ((additionalVariableTF.getText().isEmpty() || additionalVariableTF.getText() == null)) {
+                    if(!validateTextField(additionalVariableTF))
                         return false;
-                    }
                 }
                 break;
             case "CONSTANT_ASSIGNMENT":
@@ -352,7 +372,7 @@ public class AddProgramController {
                     return false;
                 }
                 else if(selectedLabelType.equals("L")){
-                    if(additionalLabelTF.getText().isEmpty()|| additionalLabelTF.getText()==null)
+                    if(!validateTextField(additionalLabelTF))
                         return false;
                 }
                 break;
@@ -362,7 +382,7 @@ public class AddProgramController {
                     return false;
                 }
                 else if(selectedLabelType.equals("L")){
-                    if(additionalLabelTF.getText().isEmpty()|| additionalLabelTF.getText()==null)
+                    if(!validateTextField(additionalLabelTF))
                         return false;
                 }
                 break;
@@ -372,7 +392,7 @@ public class AddProgramController {
                     return false;
                 }
                 else if(selectedLabelType.equals("L")){
-                    if(additionalLabelTF.getText().isEmpty()|| additionalLabelTF.getText()==null)
+                    if(!validateTextField(additionalLabelTF))
                         return false;
                 }
 
@@ -380,9 +400,8 @@ public class AddProgramController {
                     return false;
                 selectedVariableType = additionalVariableCbox.getSelectionModel().getSelectedItem();
                 if (!selectedVariableType.equals("y")) {
-                    if ((additionalVariableTF.getText().isEmpty() || additionalVariableTF.getText() == null)) {
+                    if(!validateTextField(additionalVariableTF))
                         return false;
-                    }
                 }
                 break;
             case "GOTO_LABEL":
@@ -391,7 +410,7 @@ public class AddProgramController {
                     return false;
                 }
                 else if(selectedLabelType.equals("L")){
-                    if(additionalLabelTF.getText().isEmpty()|| additionalLabelTF.getText()==null)
+                    if(!validateTextField(additionalLabelTF))
                         return false;
                 }
                 break;
@@ -401,7 +420,7 @@ public class AddProgramController {
                     return false;
                 }
                 else if(selectedLabelType.equals("L")){
-                    if(additionalLabelTF.getText().isEmpty()|| additionalLabelTF.getText()==null)
+                    if(!validateTextField(additionalLabelTF))
                         return false;
                 }
                 if(constantValueTF.getText().isEmpty()|| constantValueTF.getText()==null)
