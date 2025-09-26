@@ -159,12 +159,19 @@ public class SEmulatorSystemController {
 
             if(breakPointRowIndex != 0){
                 DebugContextDto debugDetails;
+                debugDetails = engine.breakPointRun(breakPointRowIndex, degreeOfRun, originalInputs, inputs);
+                this.debugContext = debugDetails;
+
+                /**option of saving history, costs a lot of time*/
+                /*
                 long instructionToDebug = 1;
                 while(instructionToDebug != breakPointRowIndex && instructionToDebug!=0){
                     debugDetails = engine.debugProgram(degreeOfRun, this.debugContext, originalInputs, inputs);
                     this.debugContext = debugDetails;
                     instructionToDebug = debugDetails.getNextInstructionNumber();
                 }
+
+                 */
             }
 
             long currInstructionToHighlight = 1;
@@ -239,7 +246,11 @@ public class SEmulatorSystemController {
                 debuggerController.disableStepBackBtn();
 
             debuggerController.updateVariableHighlight("");
+
+            if(this.debugContext.getPrevDebugContext().getPrevDebugContext()==null)
+                debuggerController.disableStepBackBtn();
         }
+
     }
 
     public void btnStopListener(){

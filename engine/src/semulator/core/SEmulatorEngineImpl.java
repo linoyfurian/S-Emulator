@@ -465,4 +465,25 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
 
         return programToSave;
     }
+
+    @Override
+    public DebugContextDto breakPointRun(long breakPointIndex, int degreeOfRun, Map<String, Long> originalInputs, long ... inputs){
+        DebugContextDto result;
+        Program programToRun;
+        if(programInContext instanceof ProgramImpl programImpl){
+            programToRun = programImpl.expand(degreeOfRun);
+        }
+        else{
+            Function function =  (Function) programInContext;
+            programToRun = function.expand(degreeOfRun, this.program);
+        }
+
+        ProgramDebugger debugger;
+        debugger = new ProgramDebuggerImpl(programToRun, this.program, originalInputs, inputs);
+        result = debugger.initialDebugger(originalInputs);
+
+        result = debugger.breakPointMode(breakPointIndex, result,  originalInputs);
+
+        return result;
+    }
 }

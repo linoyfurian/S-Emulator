@@ -1,6 +1,7 @@
 package semulator.logic.debugger;
 
 import semulator.api.dto.DebugContextDto;
+import semulator.api.dto.RunResultDto;
 import semulator.logic.execution.ComplexExecuteResult;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ExecutionContextImpl;
@@ -171,6 +172,58 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         int prevCycles = this.cycles; //todo delete
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
         result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, null, originalInputs, prevCycles);
+        return result;
+    }
+
+    @Override
+    public DebugContextDto breakPointMode(long breakPointIndex, DebugContextDto debugDetails, Map<String, Long> originalInputs) {
+        DebugContextDto result;
+        int instructionToExecuteNumber = 1;
+        List<Instruction> instructions = programToDebug.getInstructions();
+        Label nextLabel;
+        int cycles = 0;
+        ComplexExecuteResult executeResult;
+
+        Map<String,Long> previousVariablesValues = this.context.getAllValues();
+
+        while(instructionToExecuteNumber != breakPointIndex && instructionToExecuteNumber!=0){
+            Instruction instruction = instructions.get(instructionToExecuteNumber-1);
+
+            if(instruction instanceof SimpleInstruction simpleInstruction)
+                nextLabel = simpleInstruction.execute(this.context);
+            else {
+                ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
+                executeResult = complexInstruction.execute(this.context, mainProgram);
+                nextLabel = executeResult.getNextLabel();
+                cycles = cycles + executeResult.getRunCycles();
+            }
+
+            cycles = cycles + instruction.cycles();
+
+            long nextInstructionNumber, nextInstructionIndex = 0;
+
+            if (nextLabel == FixedLabel.EMPTY) {//next instruction
+                nextInstructionNumber = instructionToExecuteNumber + 1;
+            } else if (nextLabel != FixedLabel.EXIT) {
+                for (Instruction inst : instructions) {
+                    if (inst.getLabel().getLabelRepresentation().equals(nextLabel.getLabelRepresentation())) {
+                        break;
+                    } else
+                        nextInstructionIndex++;
+                }
+                nextInstructionNumber = nextInstructionIndex + 1;
+            }
+            else
+                nextInstructionNumber = 0;
+
+
+            if (nextInstructionNumber <= 0 || nextInstructionNumber > instructions.size()) { //exit
+                nextInstructionNumber = 0;
+            }
+            instructionToExecuteNumber = (int) nextInstructionNumber;
+        }
+
+        result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, instructionToExecuteNumber, cycles, previousVariablesValues, debugDetails, originalInputs, 0);
         return result;
     }
 }

@@ -35,4 +35,5 @@ public interface SEmulatorEngine {
     void uploadCreatedProgram(ProgramDraft newProgram);
     DebugContextDto initialStartOfDebugger(int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long ... inputs);
     void saveCreatedProgramToFile(ProgramDraft newProgram, File fileToSave);
+    DebugContextDto breakPointRun(long breakPointIndex, int degreeOfRun, Map<String, Long> originalInputs, long ... inputs);
     }
