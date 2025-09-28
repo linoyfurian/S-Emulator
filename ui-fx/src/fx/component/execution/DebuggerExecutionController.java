@@ -270,10 +270,13 @@ public class DebuggerExecutionController {
                     }
                     catch(NumberFormatException ex){
                         value = 0L;
+                        input.getValue().setText("0");
                     }
                 }
-                else
+                else {
                     value = 0L;
+                    input.getValue().setText("0");
+                }
                 inputsValues.put(index, value);
                 originalInputs.put(input.getKey(), value);
                 if (index > maxIndex)
