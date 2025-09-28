@@ -68,11 +68,10 @@
 .table-view .column-header,
 .table-view .column-header-background,
 .table-view .filler {
-    -fx-background-color: rgba(4,30,66,0.85);  /* navy band */
+    -fx-background-color: rgba(4,30,66,0.85);
     -fx-text-fill: white;
 }
 
-/* Selection color (cyan-ish) */
 .table-view:focused .table-row-cell:filled:focused:selected,
 .table-view .table-row-cell:filled:selected {
     -fx-background-color: rgba(0,163,224,0.65);

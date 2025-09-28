@@ -2,7 +2,6 @@ package fx.component.instructions;
 
 import fx.app.display.Theme;
 import fx.app.util.DisplayUtils;
-import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -11,11 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.css.PseudoClass;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import semulator.api.dto.*;
 
@@ -24,7 +21,7 @@ import java.util.*;
 public class InstructionPaneController {
 
 
-    private final ToggleGroup breakPoints = new ToggleGroup();           // single selection
+    private final ToggleGroup breakPoints = new ToggleGroup(); // single selection
     private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
 
     private final BooleanProperty isRunning = new SimpleBooleanProperty(false);
@@ -136,7 +133,6 @@ public class InstructionPaneController {
         }
         List<ParentInstructionDto> parents = selected.getParents();
         if (parents == null || parents.isEmpty()) {
-            // leave table empty; placeholder will be shown
             return;
         }
         instructionChainData.addAll(parents);
@@ -146,7 +142,6 @@ public class InstructionPaneController {
         InstructionDto sel = tblInstructions.getSelectionModel().getSelectedItem();
         showParentChain(sel);
     }
-
 
 
     public void highlightSelectionOnTable(String highlightSelected) {
@@ -228,7 +223,7 @@ public class InstructionPaneController {
         });
     }
 
-    // call this whenever you move to a new line during debug
+    // highlight a new line during debug
     public void highlightLine(int index) {
         Platform.runLater(() -> {
             currentLine.set(index);
@@ -327,7 +322,6 @@ public class InstructionPaneController {
                 rb.setOnAction(e -> {
                     if (rb.isSelected()) {
                         selectedRowIndex.set(getIndex());
-                       // getTableView().getSelectionModel().select(getIndex());
                     } else if (selectedRowIndex.get() == getIndex()) {
                         selectedRowIndex.set(-1);
                     }

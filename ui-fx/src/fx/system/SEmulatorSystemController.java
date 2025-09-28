@@ -7,7 +7,6 @@ import fx.component.history.HistoryController;
 import fx.component.instructions.InstructionPaneController;
 import fx.component.topbar.TopBarController;
 import fx.system.create.AddProgramController;
-import javafx.stage.FileChooser;
 import semulator.api.dto.ProgramDraft;
 import fx.system.load.ProgressDialog;
 import jakarta.xml.bind.JAXBException;
@@ -17,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -265,6 +263,8 @@ public class SEmulatorSystemController {
     }
 
     public void onReRunButtonListener(RunResultDto selectedRun){
+        if(selectedRun==null)
+            return;
         instructionsController.setIsRunning(false);
         instructionsController.resetBreakPointSelection();
 
@@ -328,7 +328,7 @@ public class SEmulatorSystemController {
                 updateMessage("Loading…");
                 updateProgress(-1, 1); // indeterminate
 
-                // Simulate short delay as required (1.5–2s), still responsive to cancel:
+                // Simulate short delay as required, still responsive to cancel:
                 long ms = 1000;
                 long slept = 0;
                 while (slept < ms) {
@@ -354,7 +354,7 @@ public class SEmulatorSystemController {
         };
 
         // Small progress window
-        Stage owner = /* any app stage you have, e.g. primaryStage */ null;
+        Stage owner =  null;
         ProgressDialog progress = new ProgressDialog(owner, "Loading Program");
         progress.bindToTask(task);
         progress.show();
@@ -431,7 +431,7 @@ public class SEmulatorSystemController {
             }
         });
 
-        // On failure (exception thrown in call)
+        // On failure
         task.setOnFailed(ev -> {
             Throwable ex = task.getException();
             String msg = (ex != null && ex.getMessage() != null) ? ex.getMessage() : "Unknown load error.";

@@ -1,10 +1,8 @@
 package fx.component.execution;
 
 import fx.app.display.Theme;
-import fx.app.util.ProgramUtil;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -26,7 +24,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import semulator.api.dto.DebugContextDto;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramFunctionDto;
@@ -88,7 +85,7 @@ public class DebuggerExecutionController {
     }
 
 
-    /** Call this when a program is loaded or when switching program */
+    /** When a program is loaded or when switching program */
     public void setProgram(ProgramFunctionDto programInContextDetails) {
         if (cyclesLabel != null) {
             cyclesProperty.set(0);
@@ -126,10 +123,10 @@ public class DebuggerExecutionController {
             field.setPrefColumnCount(6);
             field.setMaxWidth(90);
 
-            //allow only integers (or change to decimals)
+            //allow only integers
             field.setTextFormatter(integerFormatter());
 
-            // Pressing Enter moves to next field (nice UX)
+            // Pressing Enter moves to next field
             field.setOnAction(e -> focusNextField(field));
 
             HBox.setHgrow(field, Priority.NEVER);
@@ -161,7 +158,7 @@ public class DebuggerExecutionController {
         return result;
     }
 
-    /** Allow only optional leading minus and digits */
+    /** Allow only positive decimal numbers */
     private TextFormatter<String> integerFormatter() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String newText = change.getControlNewText();
@@ -413,7 +410,7 @@ public class DebuggerExecutionController {
             changedVarNames.clear();
             if (names != null)
                 changedVarNames.addAll(names);
-            //variablesTable.getSelectionModel().clearSelection();
+
             variablesTable.refresh();
 
             if (names != null && !names.isEmpty()) {

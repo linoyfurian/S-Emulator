@@ -70,12 +70,12 @@ public class InstructionDraft {
                 cycles = 1;
                 break;
             case "JUMP_EQUAL_CONSTANT":
-                commandDescription = ("IF " + this.mainVariable + "!=" + this.constantValue +  "GOTO " + this.additionalLabel);
+                commandDescription = ("IF " + this.mainVariable + "=" + this.constantValue +  " GOTO " + this.additionalLabel);
                 type = "S";
                 cycles = 2;
                 break;
             case "JUMP_EQUAL_VARIABLE":
-                commandDescription = ("IF " + this.mainVariable + "!=" + this.additionalVariable +  "GOTO " + this.additionalLabel);
+                commandDescription = ("IF " + this.mainVariable + "=" + this.additionalVariable +  " GOTO " + this.additionalLabel);
                 type = "S";
                 cycles = 2;
                 break;

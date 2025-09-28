@@ -116,11 +116,11 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
         String zVariableName = "z" + availableZnumber;
         availableZvariable = new VariableImpl(VariableType.WORK, availableZnumber, zVariableName); //z1
 
-        newInstruction = new QuoteInstruction(availableZvariable, this.functionName, this.functionArguments, this.getLabel(),instructionNumber, this); //z1<-Q(x1..)
+        newInstruction = new QuoteInstruction(availableZvariable, this.functionName, this.functionArguments, this.getLabel(),instructionNumber, this);
         nextInstructions.add(newInstruction);
         instructionNumber++;
 
-        newInstruction = new JumpEqualVariableInstruction(this.getVariable(), this.JEFunctionLabel, availableZvariable, instructionNumber, this); // IF V = Q(X1..) GOTO L
+        newInstruction = new JumpEqualVariableInstruction(this.getVariable(), this.JEFunctionLabel, availableZvariable, instructionNumber, this);
         nextInstructions.add(newInstruction);
 
         return nextInstructions;

@@ -104,7 +104,6 @@ public class TopBarController {
         String xmlFile = selectedFile.getAbsolutePath();
 
         if (mainController != null) {
-            //mainController.btnLoadFileListener(xmlFile);
             mainController.loadFileAsync(xmlFile);
         }
     }

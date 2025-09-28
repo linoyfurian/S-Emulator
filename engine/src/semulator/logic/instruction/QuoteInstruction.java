@@ -130,7 +130,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 newVariable = XmlProgramMapperV2.variableMapper(oldAndNew.get(inputArgument));
                 newAssignedVariable = XmlProgramMapperV2.variableMapper(currArgument);
 
-                if(FunctionUtils.isVariableIsAFunction(currArgument)) { //todo functionutils
+                if(FunctionUtils.isVariableIsAFunction(currArgument)) {
                     String newFunctionName = FunctionUtils.getFunctionName(currArgument);
                     String newFunctionArguments = FunctionUtils.getFunctionarguments(currArgument);
 

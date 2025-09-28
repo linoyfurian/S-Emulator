@@ -4,7 +4,6 @@ import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import fx.app.util.VariableRow;
 import fx.system.SEmulatorSystemController;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,11 +17,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import semulator.api.dto.InstructionDto;
 import semulator.api.dto.RunResultDto;
 
 import java.util.List;
-import java.util.Map;
 
 public class HistoryController {
     private SEmulatorSystemController mainController;
@@ -30,7 +27,6 @@ public class HistoryController {
 
     @FXML private Button btnReRun;
     @FXML private Button btnShowStatus;
-    @FXML private Label chosenRunVariablesLbl;
     @FXML private TableView<RunResultDto> historyRunsTable;
     @FXML private TableView<VariableRow> variablesStatusTable;
 

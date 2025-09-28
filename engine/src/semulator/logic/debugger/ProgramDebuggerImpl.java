@@ -1,7 +1,6 @@
 package semulator.logic.debugger;
 
 import semulator.api.dto.DebugContextDto;
-import semulator.api.dto.RunResultDto;
 import semulator.logic.execution.ComplexExecuteResult;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ExecutionContextImpl;
@@ -64,7 +63,6 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     public DebugContextDto resume (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
         ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
-        //todo check size of instructions
 
         Label nextLabel;
         int cycles = this.cycles;

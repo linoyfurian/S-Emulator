@@ -283,7 +283,7 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         }
     }
 
-    //todo fix engine state
+    //todo fix engine state (exercise 1 bonus)
     @Override
     public void saveState(Path filePath) throws IOException {
         if (filePath == null) {
