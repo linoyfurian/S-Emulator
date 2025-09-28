@@ -439,4 +439,17 @@ public class DebuggerExecutionController {
                 break;
         }
     }
+
+    public void disableChangeOfInput(boolean disable){
+        if(disable){
+            for(TextField tf : inputFields.values()){
+                tf.setDisable(true);
+            }
+        }
+        else{
+            for(TextField tf : inputFields.values()){
+                tf.setDisable(false);
+            }
+        }
+    }
 }

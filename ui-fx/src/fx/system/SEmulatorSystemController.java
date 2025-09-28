@@ -135,6 +135,8 @@ public class SEmulatorSystemController {
     public void btnRunListener(boolean isDebugMode, Map<String, Long> originalInputs, long ... inputs){
         instructionsController.highlightLine(-1);
 
+        debuggerController.disableChangeOfInput(true);
+
         int degreeOfRun = topBarController.getCurrentDegree();
         if(!isDebugMode) {
             ExecutionRunDto runResult= engine.runProgram(degreeOfRun, originalInputs, inputs);
@@ -143,6 +145,8 @@ public class SEmulatorSystemController {
                 List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
                 historyController.updateHistoryRunTable(programInContextRunHistory);
             }
+            debuggerController.disableChangeOfInput(false);
+
         }
         else {
             instructionsController.setIsRunning(true);
@@ -182,6 +186,8 @@ public class SEmulatorSystemController {
                 engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
                 List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
                 historyController.updateHistoryRunTable(programInContextRunHistory);
+
+                debuggerController.disableChangeOfInput(false);
             }
         }
     }
@@ -226,6 +232,8 @@ public class SEmulatorSystemController {
             engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
             List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
             historyController.updateHistoryRunTable(programInContextRunHistory);
+
+            debuggerController.disableChangeOfInput(false);
         }
         else
             instructionsController.highlightLine((int)currInstructionToHighlight - 1);
@@ -260,6 +268,8 @@ public class SEmulatorSystemController {
         instructionsController.setIsRunning(false);
         instructionsController.highlightLine(-1);
         debuggerController.updateVariableHighlight("");
+
+        debuggerController.disableChangeOfInput(false);
     }
 
     public void onReRunButtonListener(RunResultDto selectedRun){
@@ -277,6 +287,8 @@ public class SEmulatorSystemController {
 
         instructionsController.highlightLine(-1);
         debuggerController.updateVariableHighlight("");
+
+        debuggerController.disableChangeOfInput(false);
     }
 
     private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
@@ -304,6 +316,8 @@ public class SEmulatorSystemController {
         debuggerController.updateDebugResult(this.debugContext);
         debuggerController.updateVariableHighlight("");
         instructionsController.highlightLine(-1);
+
+        debuggerController.disableChangeOfInput(false);
     }
 
     public void btnNewRunListener(){
@@ -311,6 +325,8 @@ public class SEmulatorSystemController {
         instructionsController.highlightLine(-1);
         debuggerController.updateVariableHighlight("");
         instructionsController.resetBreakPointSelection();
+
+        debuggerController.disableChangeOfInput(false);
     }
 
     public void loadFileAsync(String xmlFile) {
