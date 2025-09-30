@@ -1,9 +1,9 @@
 .root {
-    -fx-background-color: black;
+    -fx-background-color: #201e20;
 }
 
 .back {
-    -fx-background-color: black;
+    -fx-background-color: #201e20;
 }
 
 .cBox {
@@ -74,4 +74,16 @@
     -fx-font-family: "Arial";
     -fx-background-radius: 7;
     -fx-border-radius: 7;
+}
+
+.back {
+    -fx-background-color: #201e20;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport,
+.scroll-pane .corner {
+    -fx-background-color: #201e20;
+    -fx-background-insets: 0;
 }

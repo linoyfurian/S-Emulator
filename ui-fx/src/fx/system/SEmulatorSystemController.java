@@ -505,7 +505,6 @@ public class SEmulatorSystemController {
 
         Stage dialog = new Stage();
         dialog.setTitle("Create Program");
-        dialog.initModality(Modality.WINDOW_MODAL);
 
         root.getStylesheets().clear();
         switch(currTheme) {
@@ -521,9 +520,11 @@ public class SEmulatorSystemController {
         }
 
         Scene scene = new Scene(root);
+        dialog.initOwner(this.systemScrollPane.getScene().getWindow());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setAlwaysOnTop(true);
         dialog.setScene(scene);
-        dialog.setResizable(false);
-        dialog.show();
+        dialog.showAndWait();
     }
 
     public void onBtnUploadProgramListenter(ProgramDraft newProgram){

@@ -103,3 +103,15 @@
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
+
+.back {
+    -fx-background-color: #04294e;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport,
+.scroll-pane .corner {
+    -fx-background-color: #04294e;
+    -fx-background-insets: 0;
+}

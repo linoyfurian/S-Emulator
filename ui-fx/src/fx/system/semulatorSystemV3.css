@@ -37,3 +37,15 @@
     -fx-text-fill: #2a5bd7;
     -fx-padding: 0 15 0 3;
 }
+
+.back {
+    -fx-background-color: #04294e;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport,
+.scroll-pane .corner {
+    -fx-background-color: #04294e;
+    -fx-background-insets: 0;
+}
