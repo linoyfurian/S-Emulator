@@ -261,15 +261,6 @@ public class InstructionPaneController {
             if (instructionsToMark != null)
                 instructionsToHighlight.addAll(instructionsToMark);
             tblInstructions.refresh();
-
-            if (instructionsToMark != null && !instructionsToMark.isEmpty()) {
-                Long first = instructionsToMark.iterator().next();
-                int idx = -1;
-                for (int i = 0; i < tblInstructions.getItems().size(); i++) {
-                    if (first.equals(tblInstructions.getItems().get(i).getNumber())) { idx = i; break; }
-                }
-                if (idx >= 0) tblInstructions.scrollTo(Math.max(idx - 2, 0));
-            }
         });
 
     }
