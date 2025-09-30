@@ -37,5 +37,3 @@
 - `XmlProgramMapperV2` – JAXB mapping from XML.  
 - `DebuggerExecutionController`, `HistoryController`, `AddProgramController`, `TopBarController`.  
 - Helpers: `DisplayUtils`, `ProgramUtil`.  
-
-🔗 GitHub: [linoyfurian/S-Emulator](https://github.com/linoyfurian/S-Emulator)
