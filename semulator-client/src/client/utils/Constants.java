@@ -9,7 +9,7 @@ public class Constants {
     public final static String CHAT_LINE_FORMATTING = "%tH:%tM:%tS | %.10s: %s%n";
 
     // fxml locations
-    public final static String MAIN_PAGE_FXML_RESOURCE_LOCATION = "";
+    public final static String DASHBOARD_FXML_RESOURCE_LOCATION = "/client/component/dashboard/dashboard.fxml";
     public final static String LOGIN_PAGE_FXML_RESOURCE_LOCATION = "/client/component/login/login.fxml";
 
     // Server resources locations
