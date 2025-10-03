@@ -13,24 +13,24 @@
             <Insets top="5.0" />
          </padding>
       </Label>
-      <TableView prefHeight="200.0">
+      <TableView fx:id="programsTbl" prefHeight="200.0">
         <columns>
-          <TableColumn prefWidth="101.0" text="Name" />
-          <TableColumn prefWidth="89.0" text="User Name" />
-            <TableColumn prefWidth="118.0" text="Instructions Number" />
-            <TableColumn prefWidth="75.0" text="Max Degree" />
-            <TableColumn prefWidth="89.0" text="Runs Number" />
-            <TableColumn prefWidth="101.0" text="Average Credits" />
+          <TableColumn fx:id="programsTblNameCol" prefWidth="101.0" text="Name" />
+          <TableColumn fx:id="programsTblUserNameCol" prefWidth="89.0" text="User Name" />
+            <TableColumn fx:id="programsTblInstructionsCol" prefWidth="118.0" text="Instructions Number" />
+            <TableColumn fx:id="programsTblMaxDegreeCol" prefWidth="75.0" text="Max Degree" />
+            <TableColumn fx:id="programsTblRunsCol" prefWidth="89.0" text="Runs Number" />
+            <TableColumn fx:id="programsTblAverageCol" prefWidth="101.0" text="Average Credits" />
         </columns>
       </TableView>
       <Label text="Available Functions" />
-      <TableView prefHeight="200.0">
+      <TableView fx:id="functionsTbl" prefHeight="200.0">
         <columns>
-          <TableColumn prefWidth="95.0" text="Name" />
-          <TableColumn prefWidth="128.0" text="Program Name" />
-            <TableColumn prefWidth="97.0" text="User Name" />
-            <TableColumn prefWidth="127.0" text="Instructions Number" />
-            <TableColumn prefWidth="75.0" text="Max Degree" />
+          <TableColumn fx:id="functionsTblNameCol" prefWidth="95.0" text="Name" />
+          <TableColumn fx:id="functionsTblProgramNameCol" prefWidth="128.0" text="Program Name" />
+            <TableColumn fx:id="functionsTblUserNameCol" prefWidth="97.0" text="User Name" />
+            <TableColumn fx:id="functionsTblInstructionsCol" prefWidth="127.0" text="Instructions Number" />
+            <TableColumn fx:id="functionsTblMaxDegreeCol" prefWidth="75.0" text="Max Degree" />
         </columns>
       </TableView>
    </children>
