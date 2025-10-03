@@ -28,17 +28,13 @@ public class SEmulatorClient extends Application {
             Scene scene = new Scene(root, 400, 200);
             primaryStage.setScene(scene);
             primaryStage.show();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-//
-//    @Override
-//    public void stop() throws Exception {
-//        HttpClientUtil.shutdown();
-//        chatAppMainController.close();
-//    }
 
     public static void main(String[] args) {
         launch(args);

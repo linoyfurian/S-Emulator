@@ -1,5 +1,6 @@
 package client.component.login;
 
+import client.component.dashboard.DashboardController;
 import client.utils.Constants;
 import client.utils.http.HttpClientUtil;
 import javafx.application.Platform;
@@ -75,12 +76,11 @@ public class LoginController {
                     );
                 } else {
                     Platform.runLater(() -> {
-                        onLoginSuccess(userName);
+                       // onLoginSuccess(userName);
                         errorMessageProperty.set("Login Successful");
 
                         try{
-                            switchToDashBoard();
-
+                            switchToDashBoard(userName);
                         }
                         catch (Exception e){
 
@@ -91,35 +91,29 @@ public class LoginController {
         });
     }
 
-   public void onLoginSuccess(String userName) {
-        //todo open dashboard
 
-   }
-
-    public void switchToDashBoard() throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.DASHBOARD_FXML_RESOURCE_LOCATION));
+    public void switchToDashBoard(String username) throws Exception{
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(Constants.DASHBOARD_FXML_RESOURCE_LOCATION));
         Parent dashboardRoot = loader.load();
 
-        Stage dashboard = new Stage();
-        Scene dashboardScene = dashboard.getScene();
-        if (dashboardScene == null) {
-            dashboard.setScene(new Scene(dashboardRoot));
-        } else {
-            dashboardScene.setRoot(dashboardRoot);
-        }
+        Stage stage = (Stage) userNameTextField.getScene().getWindow();
 
-        Stage stage = (Stage) this.userNameTextField.getScene().getWindow();
-        stage = dashboard;
+        Scene dashboardScene = new Scene(dashboardRoot);
+        stage.setScene(dashboardScene);
 
         stage.setTitle("Dashboard");
-        stage.sizeToScene();
-        stage.centerOnScreen();
-
         stage.setResizable(true);
 
+        dashboardRoot.applyCss();
+        dashboardRoot.autosize();
+
+        stage.setOnCloseRequest(e -> Platform.exit());
         stage.sizeToScene();
         stage.centerOnScreen();
+        stage.show();
 
-      stage.show();
+        DashboardController controller = loader.getController();
+        controller.initializeUser(username);
     }
 }
