@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="700.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.46298217773438" minWidth="10.0" prefWidth="241.71701049804688" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.22625732421875" minWidth="10.0" prefWidth="155.28298950195312" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label alignment="CENTER_RIGHT" styleClass="sub-title" text="Available Credits:" GridPane.columnIndex="3">
+         <padding>
+            <Insets left="40.0" />
+         </padding>
+      </Label>
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="5.0">
+         <children>
+            <Label styleClass="sub-title" text="User Name: ">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label text="name" />
+         </children>
+      </HBox>
+      <HBox prefHeight="30.0" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <children>
+            <Button mnemonicParsing="false" text="Charge Credits" />
+            <TextField prefWidth="80.0" />
+         </children>
+      </HBox>
+      <HBox prefWidth="410.0" spacing="5.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+         <children>
+            <Button mnemonicParsing="false" text="Load File" />
+            <TextField prefHeight="26.0" prefWidth="430.0" />
+         </children>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </HBox>
+   </children>
+</GridPane>

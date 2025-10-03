@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fx:id="systemScrollPane" fitToWidth="true" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.dashboard.DashboardController">
+    <content>
+        <BorderPane maxHeight="350.0" styleClass="border-pane">
+
+            <top>
+                <fx:include fx:id="topBar" source="topBar/topBar.fxml" BorderPane.alignment="TOP_LEFT" />
+            </top>
+
+            <right>
+
+            </right>
+            <center>
+                <SplitPane dividerPositions="0.4978298611111111" BorderPane.alignment="CENTER">
+                    <items>
+                        <VBox alignment="TOP_LEFT">
+                            <fx:include fx:id="users" source="users/users.fxml" VBox.vgrow="ALWAYS" />
+                        </VBox>
+                        <VBox alignment="TOP_LEFT">
+                            <fx:include fx:id="programsFunctions" source="programsFunctions/programsFunctions.fxml" VBox.vgrow="ALWAYS" />
+                        </VBox>
+                    </items>
+                </SplitPane>
+            </center>
+
+        </BorderPane>
+    </content>
+</ScrollPane>

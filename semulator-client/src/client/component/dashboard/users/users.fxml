@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="570.0" spacing="3.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label styleClass="sub-title" text="Available Users:">
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
+      </Label>
+      <TableView prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Name" />
+          <TableColumn prefWidth="118.0" text="Programs Number" />
+            <TableColumn prefWidth="110.0" text="Functions Number" />
+            <TableColumn prefWidth="75.0" text="Credits" />
+            <TableColumn prefWidth="100.0" text="Used Credits" />
+            <TableColumn prefWidth="90.0" text="Runs Number" />
+        </columns>
+      </TableView>
+      <Label alignment="CENTER" styleClass="sub-title" text="Users History\Statistics Table:">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Label>
+      <TableView prefHeight="200.0" prefWidth="200.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Run Number" />
+          <TableColumn prefWidth="109.0" text="Program\Function" />
+            <TableColumn prefWidth="108.0" text="Name" />
+            <TableColumn prefWidth="109.0" text="Architecture type" />
+            <TableColumn prefWidth="51.0" text="Degree" />
+            <TableColumn prefWidth="45.0" text="y" />
+            <TableColumn prefWidth="72.0" text="Cycles" />
+        </columns>
+      </TableView>
+   </children>
+</VBox>
