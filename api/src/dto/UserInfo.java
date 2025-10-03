@@ -16,4 +16,28 @@ public class UserInfo {
         this.usedCredits = 0;
         this.runsNumber = 0;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getProgramsNumber() {
+        return programsNumber;
+    }
+
+    public int getFunctionsNumber() {
+        return functionsNumber;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public int getUsedCredits() {
+        return usedCredits;
+    }
+
+    public int getRunsNumber() {
+        return runsNumber;
+    }
 }
