@@ -13,14 +13,14 @@
             <Insets left="5.0" top="5.0" />
          </padding>
       </Label>
-      <TableView prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="availableUsersTbl" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Name" />
-          <TableColumn prefWidth="118.0" text="Programs Number" />
-            <TableColumn prefWidth="110.0" text="Functions Number" />
-            <TableColumn prefWidth="75.0" text="Credits" />
-            <TableColumn prefWidth="100.0" text="Used Credits" />
-            <TableColumn prefWidth="90.0" text="Runs Number" />
+          <TableColumn fx:id="availableUsersColName" prefWidth="75.0" text="Name" />
+          <TableColumn fx:id="availableUsersColProgramsNumber" prefWidth="118.0" text="Programs Number" />
+            <TableColumn fx:id="availableUsersColFunctionsNumber" prefWidth="110.0" text="Functions Number" />
+            <TableColumn fx:id="availableUsersColCredits" prefWidth="75.0" text="Credits" />
+            <TableColumn fx:id="availableUsersColUsedCredit" prefWidth="100.0" text="Used Credits" />
+            <TableColumn fx:id="availableUsersColRunsNumber" prefWidth="90.0" text="Runs Number" />
         </columns>
       </TableView>
       <Label alignment="CENTER" styleClass="sub-title" text="Users History\Statistics Table:">

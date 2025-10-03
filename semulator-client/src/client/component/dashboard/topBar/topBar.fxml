@@ -44,7 +44,7 @@
       </HBox>
       <HBox prefWidth="410.0" spacing="5.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
          <children>
-            <Button mnemonicParsing="false" text="Load File" />
+            <Button mnemonicParsing="false" onAction="#onLoadFileBtnListener" text="Load File" />
             <TextField prefHeight="26.0" prefWidth="430.0" />
          </children>
          <padding>

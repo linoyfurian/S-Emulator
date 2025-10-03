@@ -1,31 +1,31 @@
 package utils.users;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import dto.UserInfo;
+
+import java.util.*;
 
 public class UserManager {
 
-    private final Set<String> usersSet;
+    private final Map<String, UserInfo> users;
 
     public UserManager() {
-        usersSet = new HashSet<>();
+        users = new HashMap<>();
     }
 
     public synchronized void addUser(String username) {
-        usersSet.add(username);
+        users.put(username, new UserInfo(username));
     }
 
     public synchronized void removeUser(String username) {
-        usersSet.remove(username);
+        users.remove(username);
     }
 
-    public synchronized Set<String> getUsers() {
-        return Collections.unmodifiableSet(usersSet);
+    public synchronized Map<String,UserInfo> getUsers() {
+        return Collections.unmodifiableMap(users);
     }
 
     public boolean isUserExists(String username) {
-        return usersSet.contains(username);
+        return users.containsKey(username);
     }
 }
 
