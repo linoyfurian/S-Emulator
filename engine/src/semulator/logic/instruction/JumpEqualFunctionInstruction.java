@@ -80,27 +80,19 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
     }
 
     @Override
-    public String getInstructionDescription(Program program) {
+    public String getInstructionDescription(Map<String, Program> functions) {
         String functionUserName = "";
 
-        if(program instanceof ProgramImpl programImpl) {
-            List<Program> functions = programImpl.getFunctions();
-            for (Program function : functions) {
-                if (function instanceof Function f) {
-                    if (functionName.equals(f.getName())) {
-                        functionUserName = f.getUserString();
-                        break;
-                    }
-                }
-            }
+        Function f = (Function) functions.get(functionName);
+        if(f!=null)
+            functionUserName = f.getUserString();
+
             if (functionArguments.equals("") || functionArguments == null)
                 return ("IF " + getVariable().getRepresentation() + " = " + "(" + functionUserName + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
             else {
                 String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
                 return ("IF " + getVariable().getRepresentation() + " = " + "(" + functionUserName + "," + useStringFunctionArguments + ") GOTO " + JEFunctionLabel.getLabelRepresentation());
             }
-        }
-        return "";
     }
 
 
@@ -302,5 +294,10 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
     @Override
     public Label getTargetLabel(){
         return this.JEFunctionLabel;
+    }
+
+    @Override
+    public String getNameOfFunction(){
+        return this.functionName;
     }
 }

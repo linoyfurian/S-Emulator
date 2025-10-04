@@ -4,9 +4,8 @@ import semulator.logic.instruction.ComplexInstruction;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.SimpleInstruction;
 import semulator.logic.program.Program;
-import semulator.logic.program.ProgramImpl;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 public class ParentInstructionDto {
     private final String label;
@@ -15,13 +14,13 @@ public class ParentInstructionDto {
     private final long number;
     private final String cycles;
 
-    public ParentInstructionDto(Instruction instruction, Program program) {
+    public ParentInstructionDto(Instruction instruction, Map<String, Program> functions) {
         this.label = instruction.getLabel().getLabelRepresentation();
         if(instruction instanceof SimpleInstruction simpleInstruction)
             this.command = simpleInstruction.getInstructionDescription();
         else {
             if(instruction instanceof ComplexInstruction complexInstruction)
-                this.command = complexInstruction.getInstructionDescription(program);
+                this.command = complexInstruction.getInstructionDescription(functions);
             else
                 this.command = "";
         }

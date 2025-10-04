@@ -13,7 +13,7 @@ public class FunctionUtils {
 
 
 
-    public static String mapArgument(String functionArg, List<Program> functions) {
+    public static String mapArgument(String functionArg, Map<String, Program> functions) {
         String result = "";
         boolean isFunctionName = true;
         boolean isArg = false;
@@ -35,7 +35,7 @@ public class FunctionUtils {
                         isArg = true;
                         isFunctionName = false;
                         isArg = true;
-                        Function currFunction = ExpansionUtils.findFunctionInProgram(functions, functionName);
+                        Function currFunction = (Function)functions.get(functionName);
                         String userStringFunctionName = currFunction.getUserString();
                         result += userStringFunctionName;
                         functionName = "";
@@ -45,7 +45,7 @@ public class FunctionUtils {
             }
             else if(c==')'){
                 if(isFunctionName) {
-                    Function currFunction = ExpansionUtils.findFunctionInProgram(functions, functionName);
+                    Function currFunction = (Function)functions.get(functionName);
                     String userStringFunctionName = currFunction.getUserString();
                     result += userStringFunctionName;
                 }
@@ -102,7 +102,7 @@ public class FunctionUtils {
     }
 
 
-    public static String generateUserStringFunctionArguments(String functionArguments, List<Program> functions) {
+    public static String generateUserStringFunctionArguments(String functionArguments, Map<String, Program> functions) {
         String result;
         boolean isFunction;
 

@@ -9,10 +9,7 @@ import semulator.logic.program.Program;
 import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 public class FunctionDto implements ProgramFunctionDto{
     private final String functionName;
@@ -24,7 +21,7 @@ public class FunctionDto implements ProgramFunctionDto{
     private final int maxDegree;
     private final String userString;
 
-    public FunctionDto(Program function, Program program) {
+    public FunctionDto(Program function, Map<String,Program> functions) {
         Function functionToDto = (Function) function;
 
         this.functionName = function.getName();
@@ -93,7 +90,7 @@ public class FunctionDto implements ProgramFunctionDto{
         this.instructions = new ArrayList<>();
 
         for (Instruction instruction : functionInstruction) {
-            this.instructions.add(new InstructionDto(instruction, program));
+            this.instructions.add(new InstructionDto(instruction, functions));
         }
 
         this.functionDegree = function.getDegree();

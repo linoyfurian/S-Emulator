@@ -5,7 +5,6 @@ import semulator.core.loader.jaxb.schema.version2.generated.*;
 import semulator.logic.Function.Function;
 import semulator.logic.Function.FunctionUtils;
 import semulator.logic.instruction.*;
-import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
 import semulator.logic.label.LabelImpl;
@@ -37,7 +36,7 @@ public class XmlProgramMapperV2 {
             List<SFunction> functions = sFunctions.getSFunction();
 
             for (SFunction function : functions) {
-                Program newProgram = fromSFunctionToFunction(function);
+                Program newProgram = fromSFunctionToFunction(function, programName);
                 if(program instanceof ProgramImpl programImpl) {
                     programImpl.addFunction(newProgram);
                 }
@@ -237,10 +236,10 @@ public class XmlProgramMapperV2 {
     }
 
 
-    public static Program fromSFunctionToFunction(SFunction sFunction) {
+    public static Program fromSFunctionToFunction(SFunction sFunction, String programParent) {
         String functionName = sFunction.getName().trim();
         String userString = sFunction.getUserString().trim();
-        Program program = new Function(functionName, userString, 0);
+        Program program = new Function(functionName, userString, 0, programParent);
 
         SInstructions instructions = sFunction.getSInstructions();
         long instructionCounter = 1;

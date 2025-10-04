@@ -3,7 +3,6 @@ package app.run;
 import app.display.DisplayManager;
 import app.menu.Command;
 import app.menu.Menu;
-import semulator.api.LoadReport;
 import semulator.api.dto.ExecutionRunDto;
 import semulator.api.dto.ProgramDto;
 import validation.UserInputHandler;

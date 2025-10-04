@@ -11,10 +11,11 @@ import java.util.Set;
 public interface ComplexInstruction {
     ComplexExecuteResult execute(ExecutionContext context, Program program);
     List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program);
-    String getInstructionDescription(Program program);
+    String getInstructionDescription(Map<String, Program> functions);
     boolean isComposite();
     void updateDegreeOfExpansion(Program program);
     Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent);
     Instruction cloneWithDifferentNumber(long instructionNumber);
     int findDepthOfFunction();
+    String getNameOfFunction();
 }

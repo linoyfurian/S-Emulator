@@ -1,4 +1,4 @@
-package semulator.api;
+package dto;
 
 public class LoadReport {
     private final boolean success;

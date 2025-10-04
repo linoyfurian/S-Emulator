@@ -8,6 +8,7 @@ import semulator.logic.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class InstructionDto {
     private final String label;
@@ -21,13 +22,13 @@ public class InstructionDto {
     private final String mainVariable;
     private final boolean isJumpInstruction;
 
-    public InstructionDto(Instruction instruction, Program program) {
+    public InstructionDto(Instruction instruction, Map<String, Program> functions) {
         this.label = instruction.getLabel().getLabelRepresentation();
         if(instruction instanceof SimpleInstruction simpleInstruction)
             this.command = simpleInstruction.getInstructionDescription();
         else {
             if(instruction instanceof ComplexInstruction complexInstruction){
-                this.command = complexInstruction.getInstructionDescription(program);
+                this.command = complexInstruction.getInstructionDescription(functions);
             }
             else
                 this.command = "";
@@ -44,7 +45,7 @@ public class InstructionDto {
         Instruction parent;
         parent = instruction.getParent();
         while(parent != null){
-            this.parents.add(new ParentInstructionDto(parent, program));
+            this.parents.add(new ParentInstructionDto(parent, functions));
             parent = parent.getParent();
         }
 

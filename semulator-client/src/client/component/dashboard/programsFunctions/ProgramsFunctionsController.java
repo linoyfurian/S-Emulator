@@ -72,6 +72,4 @@ public class ProgramsFunctionsController {
 
         programsTbl.setItems(programsData);
     }
-
-
 }

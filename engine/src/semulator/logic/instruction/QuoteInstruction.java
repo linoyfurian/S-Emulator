@@ -71,29 +71,19 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     }
 
     @Override
-    public String getInstructionDescription(Program program) {
+    public String getInstructionDescription(Map<String, Program> functions) {
         String functionUserName = "";
 
-        if(program instanceof ProgramImpl programImpl) {
-            List<Program> functions = programImpl.getFunctions();
-            for (Program function : functions) {
-                if(function instanceof Function f) {
-                    if(functionName.equalsIgnoreCase(f.getName())) {
-                        functionUserName = f.getUserString();
-                        break;
-                    }
-                }
-            }
+        Function f = (Function) functions.get(functionName);
+        if(f!=null)
+            functionUserName = f.getUserString();
 
-            if (functionArguments.equals(""))
-                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName +  ")");
-            else{
-                String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
-                return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + useStringFunctionArguments + ")");
-            }
-       }
-
-        return "";
+        if (functionArguments.equals(""))
+            return (getVariable().getRepresentation() + " <- " + "(" + functionUserName +  ")");
+        else{
+            String useStringFunctionArguments = FunctionUtils.generateUserStringFunctionArguments(this.functionArguments, functions);
+            return (getVariable().getRepresentation() + " <- " + "(" + functionUserName + "," + useStringFunctionArguments + ")");
+        }
     }
 
 
@@ -368,5 +358,10 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     @Override
     public int findDepthOfFunction(){
         return FunctionUtils.findDepthOfFunction(this.functionArguments);
+    }
+
+    @Override
+    public String getNameOfFunction(){
+        return this.functionName;
     }
 }

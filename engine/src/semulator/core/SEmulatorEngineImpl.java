@@ -1,10 +1,10 @@
 package semulator.core;
 
+import dto.LoadReport;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
-import semulator.api.LoadReport;
 import semulator.api.dto.*;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.*;
@@ -289,10 +289,10 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
         if (filePath == null) {
             throw new IOException("Error: Path is null");
         }
-       // EngineState currentState = new EngineState(this.program, this.isLoaded, this.programRuns);
+        // EngineState currentState = new EngineState(this.program, this.isLoaded, this.programRuns);
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(Files.newOutputStream(filePath)))) {
-           // oos.writeObject(currentState);
+            // oos.writeObject(currentState);
             oos.flush();
         }
     }
@@ -310,9 +310,9 @@ public class SEmulatorEngineImpl implements SEmulatorEngine {
             Object obj = ois.readObject();
             EngineState state = (EngineState) obj;
 
-          //  this.program = state.getProgram();
+            //  this.program = state.getProgram();
             this.isLoaded = state.getLoadedState();
-           // this.programRuns = new ArrayList<>(state.getProgramRuns());
+            // this.programRuns = new ArrayList<>(state.getProgramRuns());
         }
     }
 

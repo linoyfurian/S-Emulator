@@ -17,14 +17,16 @@ public class Function implements Program, Serializable {
     private final LinkedHashSet<Label> labels;
     private final int degree;
     private final String userString;
+    private final String programParent;
 
-    public Function(String name, String userString, int degree) {
+    public Function(String name, String userString, int degree, String programParent) {
         this.name = name;
         this.userString = userString;
         instructions = new ArrayList<>();
         variables = new LinkedHashSet<>();
         labels = new LinkedHashSet<>();
         this.degree = degree;
+        this.programParent = programParent;
     }
 
     @Override
@@ -206,5 +208,9 @@ public class Function implements Program, Serializable {
             }
         }
         return maxDepth;
+    }
+
+    public String getProgramParent(){
+        return programParent;
     }
 }

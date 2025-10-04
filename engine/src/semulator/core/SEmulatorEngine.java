@@ -1,9 +1,8 @@
 package semulator.core;
 
+import dto.LoadReport;
 import jakarta.xml.bind.JAXBException;
-import semulator.api.LoadReport;
 import semulator.api.dto.*;
-import semulator.logic.program.Program;
 
 import java.io.File;
 import java.io.IOException;
