@@ -1,8 +1,14 @@
 package client.component.dashboard.programsFunctions;
 
 import client.component.dashboard.DashboardController;
+import client.utils.Constants;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import dto.FunctionInfo;
 import dto.ProgramInfo;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -10,11 +16,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.util.Duration;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.Scanner;
 
 public class ProgramsFunctionsController {
 
     private DashboardController mainController;
-
 
     //Available Functions
     @FXML private TableView<FunctionInfo> functionsTbl;
@@ -71,5 +82,57 @@ public class ProgramsFunctionsController {
                 new SimpleStringProperty(cellData.getValue().getUserName()));
 
         programsTbl.setItems(programsData);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(2), event -> refreshProgramsAndFunctions())
+        );
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+
+    }
+
+
+    private void refreshProgramsAndFunctions() {
+        new Thread(() -> {
+            try {
+                URL url = new URL(Constants.PROGRAMS_PAGE);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                try (Scanner scanner = new Scanner(conn.getInputStream())) {
+                    StringBuilder json = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        json.append(scanner.nextLine());
+                    }
+
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
+                    List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
+
+                    Platform.runLater(() -> programsData.setAll(programs));
+                }
+
+                url = new URL(Constants.FUNCTIONS_PAGE);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                try (Scanner scanner = new Scanner(conn.getInputStream())) {
+                    StringBuilder json = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        json.append(scanner.nextLine());
+                    }
+
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<List<FunctionInfo>>() {}.getType();
+                    List<FunctionInfo> functions = gson.fromJson(json.toString(), listType);
+
+                    Platform.runLater(() -> functionsData.setAll(functions));
+                }
+
+
+            } catch (Exception e) {
+            }
+        }).start();
     }
 }

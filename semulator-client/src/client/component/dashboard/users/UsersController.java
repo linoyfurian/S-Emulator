@@ -1,6 +1,7 @@
 package client.component.dashboard.users;
 
 import client.component.dashboard.DashboardController;
+import client.utils.Constants;
 import com.google.gson.reflect.TypeToken;
 import dto.UserInfo;
 import javafx.animation.KeyFrame;
@@ -69,7 +70,7 @@ public class UsersController {
     private void refreshUsers() {
         new Thread(() -> {
             try {
-                URL url = new URL("http://localhost:8080/semulator/users");
+                URL url = new URL(Constants.USERS_PAGE);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
 

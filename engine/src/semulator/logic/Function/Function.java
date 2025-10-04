@@ -18,8 +18,9 @@ public class Function implements Program, Serializable {
     private final int degree;
     private final String userString;
     private final String programParent;
+    private final String ownerName;
 
-    public Function(String name, String userString, int degree, String programParent) {
+    public Function(String name, String userString, int degree, String programParent, String ownerName) {
         this.name = name;
         this.userString = userString;
         instructions = new ArrayList<>();
@@ -27,6 +28,7 @@ public class Function implements Program, Serializable {
         labels = new LinkedHashSet<>();
         this.degree = degree;
         this.programParent = programParent;
+        this.ownerName = ownerName;
     }
 
     @Override
@@ -119,7 +121,7 @@ public class Function implements Program, Serializable {
         int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
+            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree, this.ownerName); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
@@ -213,5 +215,10 @@ public class Function implements Program, Serializable {
 
     public String getProgramParent(){
         return programParent;
+    }
+
+    @Override
+    public String getUsername(){
+        return this.ownerName;
     }
 }

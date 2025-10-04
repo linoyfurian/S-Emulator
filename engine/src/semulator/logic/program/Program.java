@@ -19,4 +19,5 @@ public interface Program {
     LinkedHashSet<Label> getLabels();
     int getDegree();
     int findMaxDepth();
+    String getUsername();
 }

@@ -18,14 +18,16 @@ public class ProgramImpl implements Program, Serializable {
     private final LinkedHashSet<Label> labels;
     private final int degree;
     private final List<Program> functions;
+    private final String ownerName;
 
-    public ProgramImpl(String name, int degree) {
+    public ProgramImpl(String name, int degree, String ownerName) {
         this.name = name;
         instructions = new ArrayList<>();
         variables = new LinkedHashSet<>();
         labels = new LinkedHashSet<>();
         this.degree = degree;
         functions = new ArrayList<>();
+        this.ownerName = ownerName;
 
     }
 
@@ -147,7 +149,7 @@ public class ProgramImpl implements Program, Serializable {
         int programDegree =  degreeOfExpand;
 
         while(degreeOfExpand>0){
-            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree); //new program
+            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree, this.ownerName); //new program
             Set<Integer> zUsedNumbers, usedLabelsNumbers;
 
             zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
@@ -223,5 +225,10 @@ public class ProgramImpl implements Program, Serializable {
             }
         }
         return maxDepth;
+    }
+
+    @Override
+    public String getUsername(){
+        return this.ownerName;
     }
 }

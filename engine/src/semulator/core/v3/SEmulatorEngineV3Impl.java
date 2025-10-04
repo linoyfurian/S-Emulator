@@ -1,6 +1,8 @@
 package semulator.core.v3;
 
+import dto.FunctionInfo;
 import dto.LoadReport;
+import dto.ProgramInfo;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -15,6 +17,7 @@ import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +49,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public LoadReport loadProgramDetails(InputStream in) throws JAXBException {
+    public LoadReport loadProgramDetails(InputStream in, String username) throws JAXBException {
         if (in == null) {
             return new LoadReport(false, "Error: No input stream was provided");
         }
@@ -55,7 +58,11 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             Unmarshaller u = JAXB_CTX.createUnmarshaller();
             SProgram sProgram = (SProgram) u.unmarshal(in);
 
-            Program mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram);
+            if(this.programs.containsKey(sProgram.getName())){
+                return new LoadReport(false, "Error: Program with this name is already exist");
+            }
+            Program mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram, username);
+
 
             boolean isValidProgram = mappedProgram.validate();
             if (!isValidProgram) {
@@ -70,6 +77,9 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
             List<Program> funcs = programImpl.getFunctions();
             for (Program f : funcs) {
+                if(this.functions.containsKey(f.getName())){
+                    return new LoadReport(false, "Error: Program is not valid, there is a reference to a function that already exits");
+                }
                 Function fn = (Function) f;
                 if (fn.hasInvalidFunctionReferences(funcs, functions)) {
                     return new LoadReport(false, "Error: Program is not valid, there is a reference in a function to a function that doesnt exits");
@@ -90,5 +100,28 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         } catch (JAXBException e) {
             return new LoadReport(false, e.getMessage());
         }
+    }
+
+    @Override
+    public List<ProgramInfo> getPrograms(){
+        List<ProgramInfo> result = new ArrayList<>();
+        ProgramInfo newProgram;
+        for(Program program : programs.values()){
+            newProgram = new ProgramInfo(program.getName(),program.getUsername(),program.getInstructions().size(),program.calculateMaxDegree(),0,0);
+            result.add(newProgram);
+        }
+        return result;
+    }
+
+    @Override
+    public List<FunctionInfo> getFunctions(){
+        List<FunctionInfo> result = new ArrayList<>();
+        FunctionInfo newFunction;
+        for(Program function : functions.values()){
+            Function func = (Function) function;
+            newFunction = new FunctionInfo(func.getUserString(),func.getProgramParent(),func.getUsername(), func.getInstructions().size(),func.calculateMaxDegree());
+            result.add(newFunction);
+        }
+        return result;
     }
 }

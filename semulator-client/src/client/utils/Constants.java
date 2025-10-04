@@ -20,6 +20,10 @@ public class Constants {
 
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/login";
     public final static String LOAD_FILE_PAGE = FULL_SERVER_PATH + "/load-file";
+    public final static String USERS_PAGE = FULL_SERVER_PATH + "/users";
+    public final static String PROGRAMS_PAGE = FULL_SERVER_PATH + "/programs";
+    public final static String FUNCTIONS_PAGE = FULL_SERVER_PATH + "/functions";
+
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

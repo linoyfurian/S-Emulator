@@ -1,5 +1,6 @@
 package semulator.core.loader;
 
+import jakarta.xml.bind.JAXBException;
 import semulator.core.loader.jaxb.schema.version2.generated.*;
 
 import semulator.logic.Function.Function;
@@ -16,9 +17,9 @@ import semulator.logic.variable.VariableType;
 import java.util.List;
 
 public class XmlProgramMapperV2 {
-    public static Program fromSProgramToProgramImpl(SProgram sProgram) {
+    public static Program fromSProgramToProgramImpl(SProgram sProgram, String username) {
         String programName = sProgram.getName().trim();
-        Program program = new ProgramImpl(programName, 0);
+        Program program = new ProgramImpl(programName, 0, username);
 
         SInstructions instructions = sProgram.getSInstructions();
         long instructionCounter = 1;
@@ -36,7 +37,7 @@ public class XmlProgramMapperV2 {
             List<SFunction> functions = sFunctions.getSFunction();
 
             for (SFunction function : functions) {
-                Program newProgram = fromSFunctionToFunction(function, programName);
+                Program newProgram = fromSFunctionToFunction(function, programName, username);
                 if(program instanceof ProgramImpl programImpl) {
                     programImpl.addFunction(newProgram);
                 }
@@ -236,10 +237,10 @@ public class XmlProgramMapperV2 {
     }
 
 
-    public static Program fromSFunctionToFunction(SFunction sFunction, String programParent) {
+    public static Program fromSFunctionToFunction(SFunction sFunction, String programParent, String username) {
         String functionName = sFunction.getName().trim();
         String userString = sFunction.getUserString().trim();
-        Program program = new Function(functionName, userString, 0, programParent);
+        Program program = new Function(functionName, userString, 0, programParent, username);
 
         SInstructions instructions = sFunction.getSInstructions();
         long instructionCounter = 1;

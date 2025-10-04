@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import semulator.core.v3.SEmulatorEngineV3;
+import utils.SessionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,20 +24,19 @@ public class LoadFileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
         ServletContext ctx = getServletContext();
-
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) ctx.getAttribute("engine");
 
         try {
             Part filePart = req.getPart("file");
           //TODO GET USERNAME FROM SESSION:  String owner   = req.getParameter("user");
-
+            String usernameFromSession = SessionUtils.getUsername(req);
             if (filePart == null || filePart.getSize() == 0) {
                 write(resp, new LoadReport(false, "No file uploaded"));
                 return;
             }
 
             try (InputStream in = filePart.getInputStream()) {
-                LoadReport loadReport = engine.loadProgramDetails(in);
+                LoadReport loadReport = engine.loadProgramDetails(in, usernameFromSession);
                 write(resp, loadReport);
             }
 

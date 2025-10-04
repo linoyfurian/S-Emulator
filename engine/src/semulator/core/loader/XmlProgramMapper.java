@@ -17,7 +17,7 @@ public class XmlProgramMapper {
 
     public static Program fromSProgramToProgramImpl(SProgram sProgram) {
         String programName = sProgram.getName().trim();
-        Program program = new ProgramImpl(programName, 0);
+        Program program = new ProgramImpl(programName, 0, "");
 
         SInstructions instructions = sProgram.getSInstructions();
         long instructionCounter = 1;
