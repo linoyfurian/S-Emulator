@@ -35,10 +35,6 @@ public class LoginController {
     @FXML
     public void initialize() {
         errorMessageLabel.textProperty().bind(errorMessageProperty);
-        //todo cookies
-//        HttpClientUtil.setCookieManagerLoggingFacility(line ->
-//                Platform.runLater(() ->
-//                        updateHttpStatusLine(line)));
     }
 
     @FXML

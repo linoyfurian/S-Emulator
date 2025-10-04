@@ -5,10 +5,7 @@ import dto.LoadReport;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import semulator.core.v3.SEmulatorEngineV3;
 import utils.SessionUtils;
 
@@ -28,8 +25,10 @@ public class LoadFileServlet extends HttpServlet {
 
         try {
             Part filePart = req.getPart("file");
-          //TODO GET USERNAME FROM SESSION:  String owner   = req.getParameter("user");
             String usernameFromSession = SessionUtils.getUsername(req);
+
+
+            System.out.println("usernameFromSession: " + usernameFromSession);
             if (filePart == null || filePart.getSize() == 0) {
                 write(resp, new LoadReport(false, "No file uploaded"));
                 return;

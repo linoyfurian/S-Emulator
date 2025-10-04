@@ -73,8 +73,6 @@ public class TopBarController {
                             if (report != null && report.isSuccess()) {
                                 progress.setStatus("Loaded successfully.");
                                 progress.close();
-
-                                System.out.println("Successfully loaded");
                             } else {
                                 String msg = (report != null ? report.getMessage() : "Invalid server response");
                                 progress.setStatus("Error: " + msg);

@@ -4,24 +4,19 @@ import okhttp3.*;
 
 import java.io.File;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class HttpClientUtil {
 
-   //todo cookies:  private final static SimpleCookieManager simpleCookieManager = new SimpleCookieManager();
+    private static final CookiesManager COOKIES_MANAGER = new CookiesManager();
     private final static OkHttpClient HTTP_CLIENT =
             new OkHttpClient.Builder()
-                    /*todo.cookieJar(simpleCookieManager)*/
+                    .cookieJar(COOKIES_MANAGER)
                     .followRedirects(false)
                     .build();
 
-//    public static void setCookieManagerLoggingFacility(Consumer<String> logConsumer) {
-//        simpleCookieManager.setLogData(logConsumer);
-//    }
-
-//    public static void removeCookiesOf(String domain) {
-//        simpleCookieManager.removeCookiesOf(domain);
-//    }
+    public static CookiesManager getCookiesManager() {
+        return COOKIES_MANAGER;
+    }
 
     public static void runAsync(String finalUrl, Callback callback) {
         Request request = new Request.Builder()
