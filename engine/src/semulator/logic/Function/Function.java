@@ -175,7 +175,7 @@ public class Function implements Program, Serializable {
         return userString;
     }
 
-    public boolean hasInvalidFunctionReferences(List<Program> functions) {
+    public boolean hasInvalidFunctionReferences(List<Program> functions, Map<String, Program> allFunctions) {
         boolean isFunctionFound;
         boolean hasInvalidFunctionReferences = false;
         List<Instruction> instructions = this.getInstructions();
@@ -185,10 +185,11 @@ public class Function implements Program, Serializable {
                 String functionName = quoteInstruction.getFunctionName();
                 isFunctionFound = FunctionUtils.isFunctionExist(functionName, functions);
                 if(!isFunctionFound){
-                    hasInvalidFunctionReferences = true;
-                    break;
+                    if(!allFunctions.containsKey(functionName)){
+                        hasInvalidFunctionReferences = true;
+                        break;
+                    }
                 }
-
             }
         }
         return hasInvalidFunctionReferences;

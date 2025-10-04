@@ -4,8 +4,8 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import semulator.core.SEmulatorEngine;
-import semulator.core.SEmulatorEngineImpl;
+import semulator.core.v3.SEmulatorEngineV3;
+import semulator.core.v3.SEmulatorEngineV3Impl;
 
 @WebListener
 public class AppContextListener implements ServletContextListener {
@@ -14,7 +14,7 @@ public class AppContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
 
-        SEmulatorEngine engine = new SEmulatorEngineImpl();
+        SEmulatorEngineV3 engine = new SEmulatorEngineV3Impl();
 
         ctx.setAttribute("engine", engine);
         System.out.println("Server initialized and Engine stored in context.");

@@ -23,7 +23,7 @@ public class ProgramDto implements ProgramFunctionDto{
     private final List<FunctionDto> functions;
 
 
-    public ProgramDto(Program program) {
+    public ProgramDto(Program program, Map<String, Program> functions) {
         this.programName = program.getName();
 
         this.inputVariablesInOrder =  new ArrayList<>();
@@ -91,7 +91,7 @@ public class ProgramDto implements ProgramFunctionDto{
         this.instructions = new ArrayList<>();
 
         for (Instruction instruction : programInstructions) {
-            this.instructions.add(new InstructionDto(instruction, program));
+            this.instructions.add(new InstructionDto(instruction, functions));
         }
 
         this.programDegree = program.getDegree();
@@ -100,7 +100,7 @@ public class ProgramDto implements ProgramFunctionDto{
         List<Program> programFunctions = programImpl.getFunctions();
 
         for (Program function : programFunctions) {
-            FunctionDto newFunctionDto = new FunctionDto(function, program);
+            FunctionDto newFunctionDto = new FunctionDto(function, functions);
             this.functions.add(newFunctionDto);
         }
 

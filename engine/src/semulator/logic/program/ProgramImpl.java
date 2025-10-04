@@ -93,21 +93,22 @@ public class ProgramImpl implements Program, Serializable {
         return valid;
     }
 
-    public boolean hasInvalidFunctionReferences(){
+    public boolean hasInvalidFunctionReferences(Map<String, Program> functions) {
         boolean isFunctionFound;
         boolean hasInvalidFunctionReferences = false;
         List<Instruction> instructions = this.getInstructions();
-        List<Program> functions = this.getFunctions();
+        List<Program> currProgramFunctions = this.getFunctions();
 
         for (Instruction instr : instructions) {
             if(instr instanceof QuoteInstruction quoteInstruction){
                 String functionName = quoteInstruction.getFunctionName();
-                isFunctionFound = FunctionUtils.isFunctionExist(functionName, functions);
+                isFunctionFound = FunctionUtils.isFunctionExist(functionName, currProgramFunctions);
                 if(!isFunctionFound){
-                    hasInvalidFunctionReferences = true;
-                    break;
+                    if(!functions.containsKey(functionName)){
+                        hasInvalidFunctionReferences = true;
+                        break;
+                    }
                 }
-
             }
         }
         return hasInvalidFunctionReferences;

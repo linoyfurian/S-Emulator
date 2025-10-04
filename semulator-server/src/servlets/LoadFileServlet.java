@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import semulator.core.SEmulatorEngine;
+import semulator.core.v3.SEmulatorEngineV3;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,11 +24,11 @@ public class LoadFileServlet extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
         ServletContext ctx = getServletContext();
 
-        SEmulatorEngine engine = (SEmulatorEngine) ctx.getAttribute("engine");
+        SEmulatorEngineV3 engine = (SEmulatorEngineV3) ctx.getAttribute("engine");
 
         try {
-            Part filePart = req.getPart("file");     // שם השדה בטופס
-            String owner   = req.getParameter("user"); // אופציונלי
+            Part filePart = req.getPart("file");
+          //TODO GET USERNAME FROM SESSION:  String owner   = req.getParameter("user");
 
             if (filePart == null || filePart.getSize() == 0) {
                 write(resp, new LoadReport(false, "No file uploaded"));
@@ -36,34 +36,16 @@ public class LoadFileServlet extends HttpServlet {
             }
 
             try (InputStream in = filePart.getInputStream()) {
-                var loadReport = engine.loadProgramDetails(in);
-                if (loadReport == null || !loadReport.isSuccess()) {
-                    String msg = (loadReport != null && loadReport.getMessage() != null) ? loadReport.getMessage() : "Validation failed";
-                    write(resp, new LoadResponse(false, msg));
-                    return;
-                }
-
-                // שליפת ה-Program מה-Engine (כמו שעשית בתרגיל 2)
-                var program = engine.displayProgram();
-                if (program == null) {
-                    write(resp, new LoadResponse(false, "Program is empty"));
-                    return;
-                }
-
-                // הוספה לקטלוג משותף (את מיישמת בפנים UUID וכו')
-                ProgramDto saved = catalog.addProgram(program, owner);
-
-                // תשובה מוצלחת
-                write(resp, new LoadResponse(true, "OK", saved));
+                LoadReport loadReport = engine.loadProgramDetails(in);
+                write(resp, loadReport);
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            write(resp, new LoadResponse(false, ex.getMessage() != null ? ex.getMessage() : "Upload error"));
+            write(resp, new LoadReport(false, ex.getMessage() != null ? ex.getMessage() : "Upload error"));
         }
     }
 
-    private void write(HttpServletResponse resp, Object body) throws IOException {
-        resp.getWriter().write(gson.toJson(body));
+    private void write(HttpServletResponse resp, LoadReport loadReport) throws IOException {
+        resp.getWriter().write(gson.toJson(loadReport));
     }
 }
