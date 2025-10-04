@@ -1,13 +1,17 @@
 package servlets;
 
 import com.google.gson.Gson;
+import constants.Constants;
 import dto.LoadReport;
+import dto.UserInfo;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import semulator.core.v3.SEmulatorEngineV3;
+import utils.ServletUtils;
 import utils.SessionUtils;
+import utils.users.UserManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +40,10 @@ public class LoadFileServlet extends HttpServlet {
 
             try (InputStream in = filePart.getInputStream()) {
                 LoadReport loadReport = engine.loadProgramDetails(in, usernameFromSession);
+                UserManager userManager = ServletUtils.getUserManager(ctx);
+                UserInfo user = userManager.getUsers().get(usernameFromSession);
+                user.updateProgramsNumber(loadReport.getProgramsNumber());
+                user.updateFunctionsNumber(loadReport.getFunctionsNumber());
                 write(resp, loadReport);
             }
 

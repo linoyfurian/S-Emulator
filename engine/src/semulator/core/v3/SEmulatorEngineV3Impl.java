@@ -95,7 +95,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
             this.runsHistory.clear();
 
-            return new LoadReport(true, "Program loaded successfully");
+            return new LoadReport(true, "Program loaded successfully",1, funcs.size());
 
         } catch (JAXBException e) {
             return new LoadReport(false, e.getMessage());

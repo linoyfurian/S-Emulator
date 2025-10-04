@@ -2,11 +2,11 @@ package dto;
 
 public class UserInfo {
     private final String name;
-    private final int programsNumber;
-    private final int functionsNumber;
-    private final int credits;
-    private final int usedCredits;
-    private final int runsNumber;
+    private  int programsNumber;
+    private  int functionsNumber;
+    private  int credits;
+    private  int usedCredits;
+    private  int runsNumber;
 
     public UserInfo(String name){
         this.name = name;
@@ -15,6 +15,14 @@ public class UserInfo {
         this.credits = 0;
         this.usedCredits = 0;
         this.runsNumber = 0;
+    }
+
+    public void updateProgramsNumber(int programsNumber){
+        this.programsNumber+=programsNumber;
+    }
+
+    public void updateFunctionsNumber(int functionsNumber){
+        this.functionsNumber+=functionsNumber;
     }
 
     public String getName() {
