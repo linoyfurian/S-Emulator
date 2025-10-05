@@ -17,6 +17,7 @@ public interface Instruction {
     List<Variable> getAllVariables();
     List<Label> getAllLabels();
     Instruction getParent();
+    String getArchitecture();
 }
 
 

@@ -86,6 +86,11 @@ public abstract class AbstractInstruction implements Instruction, Serializable {
         return parent;
     }
 
+    @Override
+    public String getArchitecture() {
+        return instructionData.getArchitecture();
+    }
+
     public void setMaxDegreeOfExpansion(int maxDegreeOfExpansion) {
         this.degreeOfExpansion = maxDegreeOfExpansion;
     }
