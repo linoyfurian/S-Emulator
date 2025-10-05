@@ -14,18 +14,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProgramsFunctionsController {
 
     private DashboardController mainController;
+
+    @FXML private Button executeProgramBtn;
 
     //Available Functions
     @FXML private TableView<FunctionInfo> functionsTbl;
@@ -90,6 +92,9 @@ public class ProgramsFunctionsController {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
+        programsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            executeProgramBtn.setDisable(newSelection == null);
+        });
     }
 
 
@@ -110,7 +115,8 @@ public class ProgramsFunctionsController {
                     Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
                     List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
 
-                    Platform.runLater(() -> programsData.setAll(programs));
+                    List<ProgramInfo> programsDelta = getProgramsDelta(programsData, programs);
+                    Platform.runLater(() -> programsData.addAll(programsDelta));
                 }
 
                 url = new URL(Constants.FUNCTIONS_PAGE);
@@ -127,12 +133,45 @@ public class ProgramsFunctionsController {
                     Type listType = new TypeToken<List<FunctionInfo>>() {}.getType();
                     List<FunctionInfo> functions = gson.fromJson(json.toString(), listType);
 
-                    Platform.runLater(() -> functionsData.setAll(functions));
+                    List<FunctionInfo> functionsDelta = getFunctionsDelta(functionsData, functions);
+                    Platform.runLater(() -> functionsData.addAll(functionsDelta));
                 }
 
 
             } catch (Exception e) {
             }
         }).start();
+    }
+
+    private List<ProgramInfo> getProgramsDelta(List<ProgramInfo> original, List<ProgramInfo> newPrograms) {
+        List<ProgramInfo> programsDelta = new ArrayList<>();
+        Set<String> programsSet = new HashSet<>();
+
+        for (ProgramInfo program : original) {
+            programsSet.add(program.getName());
+        }
+
+        for (ProgramInfo program : newPrograms) {
+            if (!programsSet.contains(program.getName())) {
+                programsDelta.add(program);
+            }
+        }
+        return programsDelta;
+    }
+
+    private List<FunctionInfo> getFunctionsDelta(List<FunctionInfo> original, List<FunctionInfo> newFunctions) {
+        List<FunctionInfo> functionsDelta = new ArrayList<>();
+        Set<String> functionsSet = new HashSet<>();
+
+        for (FunctionInfo function : original) {
+            functionsSet.add(function.getName());
+        }
+
+        for (FunctionInfo function : newFunctions) {
+            if (!functionsSet.contains(function.getName())) {
+                functionsDelta.add(function);
+            }
+        }
+        return functionsDelta;
     }
 }

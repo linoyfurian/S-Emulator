@@ -3,6 +3,7 @@ package client.component.dashboard.users;
 import client.component.dashboard.DashboardController;
 import client.utils.Constants;
 import com.google.gson.reflect.TypeToken;
+import dto.FunctionInfo;
 import dto.UserInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,8 +23,7 @@ import javafx.util.Duration;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class UsersController {
     private DashboardController mainController;
@@ -87,10 +87,27 @@ public class UsersController {
                     Type listType = new TypeToken<List<UserInfo>>() {}.getType();
                     List<UserInfo> users = gson.fromJson(json.toString(), listType);
 
-                    Platform.runLater(() -> usersData.setAll(users));
+                    List<UserInfo> usersDelta = getUsersDelta(usersData, users);
+                    Platform.runLater(() -> usersData.addAll(usersDelta));
                 }
             } catch (Exception e) {
             }
         }).start();
+    }
+
+    private List<UserInfo> getUsersDelta(List<UserInfo> original, List<UserInfo> newUsers) {
+        List<UserInfo> usersDelta = new ArrayList<>();
+        Set<String> usersSet = new HashSet<>();
+
+        for (UserInfo user : original) {
+            usersSet.add(user.getName());
+        }
+
+        for (UserInfo user : newUsers) {
+            if (!usersSet.contains(user.getName())) {
+                usersDelta.add(user);
+            }
+        }
+        return usersDelta;
     }
 }
