@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -27,6 +28,7 @@ import java.util.Scanner;
 public class UsersController {
     private DashboardController mainController;
 
+    @FXML private Button unselectUserBtn;
 
     @FXML private TableColumn<UserInfo, Number> availableUsersColCredits;
     @FXML private TableColumn<UserInfo, Number> availableUsersColFunctionsNumber;
