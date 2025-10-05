@@ -1,6 +1,7 @@
 package client.component.dashboard.programsFunctions;
 
 import client.component.dashboard.DashboardController;
+import client.component.execution.ExecutionController;
 import client.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,11 +14,19 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,6 +65,8 @@ public class ProgramsFunctionsController {
 
     @FXML
     public void initialize() {
+        this.executeProgramBtn.setDisable(true);
+
         functionsTblInstructionsCol.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getInstructionsNumber()));
         functionsTblMaxDegreeCol.setCellValueFactory(cellData ->
@@ -173,5 +184,26 @@ public class ProgramsFunctionsController {
             }
         }
         return functionsDelta;
+    }
+
+    @FXML
+    void onBtnExecuteProgramListener(ActionEvent event) throws IOException {
+        final String FXML_PATH = Constants.EXECUTION_FXML_RESOURCE_LOCATION;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH));
+        ScrollPane root = loader.load();
+
+        ExecutionController controller = loader.getController();
+        controller.setMainController(this.mainController);
+
+        Stage dialog = new Stage();
+        dialog.setTitle("Execution");
+
+        Scene scene = new Scene(root);
+        dialog.initOwner(this.programsTbl.getScene().getWindow());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setAlwaysOnTop(true);
+        dialog.setScene(scene);
+        dialog.showAndWait();
     }
 }

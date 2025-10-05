@@ -4,13 +4,10 @@ import com.google.gson.Gson;
 
 public class Constants {
 
-    // global constants
-    public final static String LINE_SEPARATOR = System.getProperty("line.separator");
-    public final static String CHAT_LINE_FORMATTING = "%tH:%tM:%tS | %.10s: %s%n";
-
     // fxml locations
     public final static String DASHBOARD_FXML_RESOURCE_LOCATION = "/client/component/dashboard/dashboard.fxml";
     public final static String LOGIN_PAGE_FXML_RESOURCE_LOCATION = "/client/component/login/login.fxml";
+    public final static String EXECUTION_FXML_RESOURCE_LOCATION = "/client/component/execution/execution.fxml";
 
     // Server resources locations
     public final static String BASE_DOMAIN = "localhost";

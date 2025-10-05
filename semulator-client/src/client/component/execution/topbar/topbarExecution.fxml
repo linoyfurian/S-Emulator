@@ -44,7 +44,7 @@
             <VBox prefWidth="100.0">
                <children>
                   <Label text="Collapse:" />
-                  <ComboBox fx:id="cmbCollapse" maxWidth="100.0" onAction="#btnCollapseListener" prefWidth="150.0" />
+                  <ComboBox fx:id="cmbCollapse" maxWidth="100.0" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox maxHeight="150.0">
@@ -60,13 +60,13 @@
                         <Insets left="3.0" />
                      </padding>
                   </Label>
-                  <ComboBox fx:id="cmbExpand" maxWidth="100.0" onAction="#btnExpandListener" prefWidth="150.0" />
+                  <ComboBox fx:id="cmbExpand" maxWidth="100.0" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox>
                <children>
                   <Label text="Highlight selection:" />
-                  <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="120.0" />
+                  <ComboBox fx:id="cmbHighlight" prefHeight="26.0" prefWidth="120.0" />
                </children>
             </VBox>
          </children>
