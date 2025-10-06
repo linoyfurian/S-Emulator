@@ -1,6 +1,5 @@
-package semulator.api.dto;
+package dto;
 
-import semulator.logic.Function.Function;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.label.FixedLabel;
 import semulator.logic.label.Label;
@@ -21,7 +20,6 @@ public class ProgramDto implements ProgramFunctionDto{
     private final int programDegree;
     private final int maxDegree;
     private final List<FunctionDto> functions;
-
 
     public ProgramDto(Program program, Map<String, Program> functions) {
         this.programName = program.getName();

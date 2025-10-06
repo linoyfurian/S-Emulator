@@ -46,7 +46,6 @@ public class LoginController {
             return;
         }
 
-        //noinspection ConstantConditions
         String finalUrl = HttpUrl
                 .parse(Constants.LOGIN_PAGE)
                 .newBuilder()

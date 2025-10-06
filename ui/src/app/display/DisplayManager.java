@@ -1,9 +1,9 @@
 package app.display;
 
-import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.InstructionDto;
-import semulator.api.dto.ParentInstructionDto;
-import semulator.api.dto.ProgramDto;
+import dto.ExecutionRunDto;
+import dto.InstructionDto;
+import dto.ParentInstructionDto;
+import dto.ProgramDto;
 
 import java.util.*;
 

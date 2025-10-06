@@ -1,6 +1,6 @@
 package semulator.logic.execution;
 
-import semulator.api.dto.ExecutionRunDto;
+import dto.ExecutionRunDto;
 import semulator.logic.instruction.ComplexInstruction;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.instruction.SimpleInstruction;

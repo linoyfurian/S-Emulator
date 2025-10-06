@@ -1,6 +1,7 @@
 package fx.app.util;
 
-import semulator.api.dto.*;
+import dto.ProgramFunctionDto;
+import dto.RunResultDto;
 
 import java.util.ArrayList;
 import java.util.List;

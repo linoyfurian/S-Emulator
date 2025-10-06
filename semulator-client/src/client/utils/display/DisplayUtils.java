@@ -1,4 +1,4 @@
-package fx.app.util;
+package client.utils.display;
 
 import dto.FunctionDto;
 import dto.InstructionDto;

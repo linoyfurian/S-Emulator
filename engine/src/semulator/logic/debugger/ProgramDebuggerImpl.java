@@ -1,6 +1,6 @@
 package semulator.logic.debugger;
 
-import semulator.api.dto.DebugContextDto;
+import dto.DebugContextDto;
 import semulator.logic.execution.ComplexExecuteResult;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ExecutionContextImpl;

@@ -1,5 +1,9 @@
 package fx.system;
 
+import dto.DebugContextDto;
+import dto.ExecutionRunDto;
+import dto.ProgramFunctionDto;
+import dto.RunResultDto;
 import fx.app.display.Theme;
 import fx.app.util.ProgramUtil;
 import fx.component.execution.DebuggerExecutionController;
@@ -20,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import semulator.api.LoadReport;
-import semulator.api.dto.*;
 import semulator.core.SEmulatorEngine;
 import semulator.core.SEmulatorEngineImpl;
 

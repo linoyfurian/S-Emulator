@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 import fx.system.SEmulatorSystemController;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import semulator.api.dto.ProgramFunctionDto;
+import dto.ProgramFunctionDto;
 import java.io.File;
 import java.util.List;
 

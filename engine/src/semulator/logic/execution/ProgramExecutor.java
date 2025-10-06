@@ -1,6 +1,6 @@
 package semulator.logic.execution;
 
-import semulator.api.dto.ExecutionRunDto;
+import dto.ExecutionRunDto;
 
 import java.util.Map;
 

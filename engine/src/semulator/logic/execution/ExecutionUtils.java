@@ -1,6 +1,6 @@
 package semulator.logic.execution;
 
-import semulator.api.dto.ExecutionRunDto;
+import dto.ExecutionRunDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.logic.Function.FunctionUtils;
 import semulator.logic.program.Program;

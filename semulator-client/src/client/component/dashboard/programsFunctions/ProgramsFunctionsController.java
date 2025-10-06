@@ -37,6 +37,7 @@ public class ProgramsFunctionsController {
     private DashboardController mainController;
 
     @FXML private Button executeProgramBtn;
+    @FXML private Button executeFunctionBtn;
 
     //Available Functions
     @FXML private TableView<FunctionInfo> functionsTbl;
@@ -105,6 +106,10 @@ public class ProgramsFunctionsController {
 
         programsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             executeProgramBtn.setDisable(newSelection == null);
+        });
+
+        functionsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            executeFunctionBtn.setDisable(newSelection == null);
         });
     }
 
@@ -198,6 +203,13 @@ public class ProgramsFunctionsController {
 
         Stage dialog = new Stage();
         dialog.setTitle("Execution");
+
+        String userName = this.mainController.getUserName();
+        controller.setUserName(userName);
+
+        ProgramInfo programInContext = this.programsTbl.getSelectionModel().getSelectedItem();
+        this.mainController.setExecutionController(controller);
+        this.mainController.initialExecutionScreen(programInContext.getName(), true);
 
         Scene scene = new Scene(root);
         dialog.initOwner(this.programsTbl.getScene().getWindow());

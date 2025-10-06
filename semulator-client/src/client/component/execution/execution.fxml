@@ -10,7 +10,7 @@
         <BorderPane maxHeight="350.0" styleClass="border-pane">
 
             <top>
-                <fx:include fx:id="topBar" source="topbar/topbarExecution.fxml" BorderPane.alignment="TOP_LEFT" />
+                <fx:include fx:id="topBarExecution" source="topbar/topbarExecution.fxml" BorderPane.alignment="TOP_LEFT" />
             </top>
 
             <right>
@@ -20,7 +20,7 @@
                 <SplitPane dividerPositions="0.4978298611111111" BorderPane.alignment="CENTER">
                     <items>
                         <VBox alignment="TOP_LEFT">
-                            <fx:include fx:id="instructionss" source="instructions/instructions.fxml" VBox.vgrow="ALWAYS" />
+                            <fx:include fx:id="instructions" source="instructions/instructions.fxml" VBox.vgrow="ALWAYS" />
                         </VBox>
                         <VBox alignment="TOP_LEFT">
                             <fx:include fx:id="debugger" source="debugger/debugger.fxml" VBox.vgrow="ALWAYS" />

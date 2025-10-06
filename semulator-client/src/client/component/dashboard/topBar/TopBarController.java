@@ -84,5 +84,7 @@ public class TopBarController {
         );
     }
 
-
+    public String getUserName() {
+        return this.userNameLbl.getText();
+    }
 }

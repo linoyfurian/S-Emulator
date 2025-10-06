@@ -43,6 +43,12 @@
             <TableColumn fx:id="functionsTblMaxDegreeCol" prefWidth="75.0" text="Max Degree" />
         </columns>
       </TableView>
-      <HBox />
+      <HBox>
+         <children>
+            <Button fx:id="executeFunctionBtn" disable="true" mnemonicParsing="false" text="Execute Function" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" />
+         </padding></HBox>
    </children>
 </VBox>

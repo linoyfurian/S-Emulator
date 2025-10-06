@@ -1,5 +1,8 @@
 package fx.component.instructions;
 
+import dto.InstructionDto;
+import dto.ParentInstructionDto;
+import dto.ProgramFunctionDto;
 import fx.app.display.Theme;
 import fx.app.util.DisplayUtils;
 import fx.system.SEmulatorSystemController;
@@ -14,7 +17,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import semulator.api.dto.*;
 
 import java.util.*;
 

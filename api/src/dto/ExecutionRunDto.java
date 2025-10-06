@@ -1,4 +1,4 @@
-package semulator.api.dto;
+package dto;
 
 import java.io.Serializable;
 import java.util.*;

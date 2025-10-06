@@ -25,7 +25,7 @@ public class LoadFileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
         ServletContext ctx = getServletContext();
-        SEmulatorEngineV3 engine = (SEmulatorEngineV3) ctx.getAttribute("engine");
+        SEmulatorEngineV3 engine = (SEmulatorEngineV3) ctx.getAttribute(Constants.ENGINE);
 
         try {
             Part filePart = req.getPart("file");

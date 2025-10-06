@@ -1,6 +1,6 @@
 package semulator.logic.debugger;
 
-import semulator.api.dto.DebugContextDto;
+import dto.DebugContextDto;
 
 import java.util.Map;
 

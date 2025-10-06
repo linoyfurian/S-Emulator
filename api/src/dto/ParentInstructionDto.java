@@ -1,4 +1,4 @@
-package semulator.api.dto;
+package dto;
 
 import semulator.logic.instruction.ComplexInstruction;
 import semulator.logic.instruction.Instruction;
@@ -13,6 +13,7 @@ public class ParentInstructionDto {
     private final char type;
     private final long number;
     private final String cycles;
+    private final String architecture;
 
     public ParentInstructionDto(Instruction instruction, Map<String, Program> functions) {
         this.label = instruction.getLabel().getLabelRepresentation();
@@ -32,6 +33,8 @@ public class ParentInstructionDto {
             this.cycles = "X+" + cyclesValue;
         else
             this.cycles = cyclesValue.toString();
+
+        this.architecture = instruction.getArchitecture();
     }
 
     public long getNumber() {
@@ -52,5 +55,9 @@ public class ParentInstructionDto {
 
     public String getCycles() {
         return cycles;
+    }
+
+    public String getArchitecture() {
+        return architecture;
     }
 }

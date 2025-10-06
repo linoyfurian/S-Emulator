@@ -1,4 +1,4 @@
-package semulator.api.dto;
+package dto;
 
 import semulator.logic.instruction.*;
 import semulator.logic.label.Label;
@@ -21,6 +21,7 @@ public class InstructionDto {
     private final List<String> allVariables;
     private final String mainVariable;
     private final boolean isJumpInstruction;
+    private final String architecture;
 
     public InstructionDto(Instruction instruction, Map<String, Program> functions) {
         this.label = instruction.getLabel().getLabelRepresentation();
@@ -78,6 +79,7 @@ public class InstructionDto {
             this.isJumpInstruction = false;
         }
 
+        this.architecture = instruction.getArchitecture();
     }
 
     public boolean isJumpInstruction() {
@@ -118,5 +120,9 @@ public class InstructionDto {
 
     public String getMainVariable() {
         return mainVariable;
+    }
+
+    public String getArchitecture() {
+        return architecture;
     }
 }

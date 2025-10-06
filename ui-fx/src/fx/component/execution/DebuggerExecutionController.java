@@ -24,9 +24,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import semulator.api.dto.DebugContextDto;
-import semulator.api.dto.ExecutionRunDto;
-import semulator.api.dto.ProgramFunctionDto;
+import dto.DebugContextDto;
+import dto.ExecutionRunDto;
+import dto.ProgramFunctionDto;
 
 import java.util.*;
 import java.util.function.UnaryOperator;

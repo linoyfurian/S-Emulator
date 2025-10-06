@@ -4,7 +4,7 @@ import dto.FunctionInfo;
 import dto.LoadReport;
 import dto.ProgramInfo;
 import jakarta.xml.bind.JAXBException;
-import semulator.api.dto.ProgramFunctionDto;
+import dto.ProgramFunctionDto;
 
 import java.io.InputStream;
 import java.util.List;

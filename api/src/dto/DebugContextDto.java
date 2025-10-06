@@ -1,4 +1,4 @@
-package semulator.api.dto;
+package dto;
 
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.program.Program;
