@@ -101,11 +101,6 @@ public class DashboardController {
                         programDetails = functionDto;
                     }
 
-                    if(programDetails != null) {
-                        System.out.println("not null");
-                    }
-                    else
-                        System.out.println("null");
                     Platform.runLater(() -> {
                         executionController.initialProgramDetails(programDetails);
                     });

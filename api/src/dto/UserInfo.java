@@ -48,4 +48,26 @@ public class UserInfo {
     public int getRunsNumber() {
         return runsNumber;
     }
+
+    public void setProgramsNumber(int programsNumber) {
+        this.programsNumber = programsNumber;
+    }
+
+    public void setFunctionsNumber(int functionsNumber) {
+        this.functionsNumber = functionsNumber;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
+    public void setUsedCredits(int usedCredits) {
+        this.usedCredits = usedCredits;
+    }
+
+    public void setRunsNumber(int runsNumber) {
+        this.runsNumber = runsNumber;
+    }
+
+
 }

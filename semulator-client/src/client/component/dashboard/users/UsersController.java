@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UsersController {
     private DashboardController mainController;
@@ -87,12 +88,43 @@ public class UsersController {
                     Type listType = new TypeToken<List<UserInfo>>() {}.getType();
                     List<UserInfo> users = gson.fromJson(json.toString(), listType);
 
-                    List<UserInfo> usersDelta = getUsersDelta(usersData, users);
-                    Platform.runLater(() -> usersData.addAll(usersDelta));
+                    Platform.runLater(() -> {
+//                        usersData.clear();
+//                        usersData.addAll(users);
+                        Set<String> usersSet = new HashSet<>();
+                        for (UserInfo user : usersData) {
+                            usersSet.add(user.getName());
+                        }
+
+                        for (UserInfo user : users) {
+                            if(!usersSet.contains(user.getName())) {
+                                usersData.add(user);
+                            }
+                            else{
+                                UserInfo currentUser = findCurrentUser(user.getName(), usersData);
+                                currentUser.setCredits(user.getCredits());
+                                currentUser.setFunctionsNumber(user.getFunctionsNumber());
+                                currentUser.setProgramsNumber(user.getProgramsNumber());
+                                currentUser.setRunsNumber(user.getRunsNumber());
+                                currentUser.setUsedCredits(user.getUsedCredits());
+                            }
+                        }
+
+                        availableUsersTbl.refresh();
+                    });
                 }
             } catch (Exception e) {
             }
         }).start();
+    }
+
+    private UserInfo findCurrentUser(String userName, List<UserInfo> usersData) {
+        for(UserInfo user : usersData) {
+            if(user.getName().equals(userName)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     private List<UserInfo> getUsersDelta(List<UserInfo> original, List<UserInfo> newUsers) {
