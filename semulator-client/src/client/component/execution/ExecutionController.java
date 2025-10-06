@@ -4,6 +4,7 @@ import client.component.dashboard.DashboardController;
 import client.component.execution.debugger.DebuggerController;
 import client.component.execution.instructions.InstructionsController;
 import client.component.execution.topbar.TopbarExecutionController;
+import client.utils.display.ProgramUtil;
 import dto.ProgramFunctionDto;
 import dto.RunResultDto;
 import javafx.fxml.FXML;
@@ -41,21 +42,12 @@ public class ExecutionController {
     public void initialProgramDetails(ProgramFunctionDto programDetails){
         instructionsController.displayProgram(programDetails);
 
-//        int programDegree = ProgramUtil.getDisplayedProgramDegree(program);
-//        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(program);
-//        topBarController.updateDegreeLabel(programDegree, maxDegree);
-//
-//        topBarController.refreshHighlightOptions(program);
-//
-//        debuggerController.setProgram(program);
-//        topBarController.setLoadFileText(path.toString());
-//
-//        List<String> programOrFunctionOptions = engine.getProgramOrFunctionNames();
-//        topBarController.refreshProgramOrFunctionOptions(programOrFunctionOptions);
-//
-//        instructionsController.resetBreakPointSelection();
-//
-//        List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
-//        historyController.updateHistoryRunTable(programInContextRunHistory);
+        int programDegree = ProgramUtil.getDisplayedProgramDegree(programDetails);
+        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(programDetails);
+        topBarExecutionController.updateDegreeLabel(programDegree, maxDegree);
+
+        topBarExecutionController.refreshHighlightOptions(programDetails);
+        debuggerController.setProgram(programDetails);
+        instructionsController.resetBreakPointSelection();
     }
 }

@@ -5,22 +5,24 @@ import client.utils.display.DisplayUtils;
 import dto.InstructionDto;
 import dto.ParentInstructionDto;
 import dto.ProgramFunctionDto;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
 
 public class InstructionsController {
     private ExecutionController mainController;
+
+
+    private final ToggleGroup breakPoints = new ToggleGroup(); // single selection
+    private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
+
+    private final BooleanProperty isRunning = new SimpleBooleanProperty(false);
+
 
     private ObservableList<InstructionDto> instructionData = FXCollections.observableArrayList();
     private ObservableList<ParentInstructionDto> instructionChainData = FXCollections.observableArrayList();
@@ -100,5 +102,9 @@ public class InstructionsController {
         basicInstructionsNumber.set(DisplayUtils.getNumberOfBasicInstructions(programDetails));
         syntheticInstructionsNumber.set(instructions.size() - basicInstructionsNumber.get());
 
+    }
+
+    public void resetBreakPointSelection(){
+        selectedRowIndex.set(-1);
     }
 }
