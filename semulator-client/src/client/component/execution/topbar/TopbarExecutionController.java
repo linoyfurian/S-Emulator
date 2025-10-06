@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -143,6 +144,13 @@ public class TopbarExecutionController {
         }
 
         cmbHighlight.getSelectionModel().clearSelection();
+    }
+
+    @FXML void onHighlightChangedListener(ActionEvent event) {
+        String highlightSelected = cmbHighlight.getSelectionModel().getSelectedItem();
+        if(mainController != null) {
+            mainController.onHighlightChangedListener(highlightSelected);
+        }
     }
 
 

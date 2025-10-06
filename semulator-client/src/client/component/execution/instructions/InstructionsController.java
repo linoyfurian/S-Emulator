@@ -5,18 +5,27 @@ import client.utils.display.DisplayUtils;
 import dto.InstructionDto;
 import dto.ParentInstructionDto;
 import dto.ProgramFunctionDto;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InstructionsController {
     private ExecutionController mainController;
 
+    private final ObservableSet<Long> instructionsToHighlight = FXCollections.observableSet();
 
     private final ToggleGroup breakPoints = new ToggleGroup(); // single selection
     private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
@@ -50,6 +59,10 @@ public class InstructionsController {
     private final IntegerProperty basicInstructionsNumber = new SimpleIntegerProperty(0);
     private final IntegerProperty syntheticInstructionsNumber = new SimpleIntegerProperty(0);
 
+    private static final PseudoClass PC_CURRENT = PseudoClass.getPseudoClass("current");
+    // current line in the debug execution (0-based, -1 = none)
+    private final IntegerProperty currentLine = new SimpleIntegerProperty(-1);
+    private static final PseudoClass PC_CHANGED = PseudoClass.getPseudoClass("changed");
 
     public void setMainController(ExecutionController mainController) {
         this.mainController = mainController;
@@ -90,6 +103,11 @@ public class InstructionsController {
 
         lblBasicCount.textProperty().bind(basicInstructionsNumber.asString());
         lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
+
+        initCodeTableHighlighting();
+        initInstructionsHighlighting();
+
+        initBreakpointColumn();
     }
 
     public void displayProgram(ProgramFunctionDto programDetails){
@@ -107,4 +125,180 @@ public class InstructionsController {
     public void resetBreakPointSelection(){
         selectedRowIndex.set(-1);
     }
+
+
+    public void highlightSelectionOnTable(String highlightSelected) {
+
+        List<InstructionDto> tableRows = tblInstructions.getItems();
+        Set<Long> instructionsNumbersToHighlight = new HashSet<>();
+
+        if (tableRows == null || tableRows.isEmpty()) {
+            return;
+        }
+
+        tblInstructions.applyCss();
+        tblInstructions.layout();
+
+       // clearAllRowHighlights();
+
+        boolean isInstructionToHighlight;
+        for (InstructionDto instruction : tableRows) {
+            isInstructionToHighlight = isInstructionContainsHighlightSelected(instruction, highlightSelected);
+            if (isInstructionToHighlight) {
+                instructionsNumbersToHighlight.add(instruction.getNumber());
+            }
+        }
+        tblInstructions.refresh();
+        tblInstructions.applyCss();
+        tblInstructions.layout();
+
+        markInstructionChanged(instructionsNumbersToHighlight);
+    }
+
+    private boolean isInstructionContainsHighlightSelected(InstructionDto instructionToCheck, String highlightSelected) {
+        boolean result = false;
+        List<String> allVariables = instructionToCheck.getAllVariables();
+        List<String> allLabels = instructionToCheck.getAllLabels();
+
+        for (String variable : allVariables) {
+            if(variable.equals(highlightSelected)) {
+                if(!(instructionToCheck.getCommand().startsWith("GOTO"))) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        for (String label : allLabels) {
+            if(label.equals(highlightSelected)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void markInstructionChanged(Collection<Long> instructionsToMark) {
+        Platform.runLater(() -> {
+            instructionsToHighlight.clear();
+            if (instructionsToMark != null)
+                instructionsToHighlight.addAll(instructionsToMark);
+            tblInstructions.refresh();
+        });
+
+    }
+
+    private void initCodeTableHighlighting() {
+        tblInstructions.setRowFactory(tv -> {
+            TableRow<InstructionDto> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                boolean highlight = row.getIndex() == currentLine.get();
+                row.pseudoClassStateChanged(PC_CURRENT, highlight);
+            };
+
+            currentLine.addListener((obs, oldV, newV) -> apply.run());
+            row.indexProperty().addListener((obs, oldV, newV) -> apply.run());
+            row.itemProperty().addListener((obs, oldV, newV) -> apply.run());
+
+            return row;
+        });
+    }
+    // highlight a new line during debug
+    public void highlightLine(int index) {
+        Platform.runLater(() -> {
+            currentLine.set(index);
+            if(index==-1)
+                tblInstructions.getSelectionModel().clearSelection();
+            else
+                tblInstructions.getSelectionModel().clearAndSelect(index);
+            tblInstructions.scrollTo(Math.max(index - 3, 0)); // keep line in view
+        });
+    }
+
+
+    private void initInstructionsHighlighting() {
+        tblInstructions.setRowFactory(tv -> {
+            TableRow<InstructionDto> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                InstructionDto item = row.getItem();
+                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
+                row.pseudoClassStateChanged(PC_CHANGED, highlight);
+            };
+
+            row.itemProperty().addListener((o, a, b) -> apply.run());
+            row.indexProperty().addListener((o, a, b) -> apply.run());
+            instructionsToHighlight.addListener((SetChangeListener<Long>) c -> apply.run());
+
+            return row;
+        });
+    }
+
+
+    private void initBreakpointColumn() {
+        colBreakPoint.setCellFactory(col -> new TableCell<InstructionDto, Void>() {
+            private final RadioButton rb = new RadioButton();
+
+            {
+                rb.setFocusTraversable(false);
+                rb.setToggleGroup(breakPoints);
+
+                rb.getStyleClass().add("breakpoint-radio-button");
+                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, ev -> {
+                    if (isRunning.get()) {
+                        ev.consume();
+                        return;
+                    }
+                    if (rb.isSelected()) {
+                        rb.setSelected(false);
+                        ev.consume();
+                    }
+                });
+
+                // When user clicks this radio, remember the current row index
+                rb.setOnAction(e -> {
+                    if (rb.isSelected()) {
+                        selectedRowIndex.set(getIndex());
+                    } else if (selectedRowIndex.get() == getIndex()) {
+                        selectedRowIndex.set(-1);
+                    }
+
+                    getTableView().getSelectionModel().clearSelection();
+                });
+
+                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                    if (rb.isSelected()) {
+                        rb.setSelected(false);
+                        event.consume();
+                    }
+                });
+
+                // When the "global" selectedRowIndex changes, refresh this cell's checked state
+                selectedRowIndex.addListener((obs, oldV, newV) -> {
+                    // Cells are virtualized; just reflect whether our index is selected
+                    rb.setSelected(getIndex() == newV.intValue());
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    rb.setToggleGroup(null); // detach when not used
+                } else {
+                    // re-attach for visible cell (virtualization-safe)
+                    if (rb.getToggleGroup() == null) {
+                        rb.setToggleGroup(breakPoints);
+                    }
+                    rb.setSelected(getIndex() == selectedRowIndex.get());
+                    setGraphic(rb);
+                    rb.disableProperty().bind(isRunning);
+                }
+            }
+        });
+    }
+
+
 }

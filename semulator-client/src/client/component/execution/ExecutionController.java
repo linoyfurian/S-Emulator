@@ -50,4 +50,8 @@ public class ExecutionController {
         debuggerController.setProgram(programDetails);
         instructionsController.resetBreakPointSelection();
     }
+
+    public void onHighlightChangedListener(String highlightSelected){
+        instructionsController.highlightSelectionOnTable(highlightSelected);
+    }
 }

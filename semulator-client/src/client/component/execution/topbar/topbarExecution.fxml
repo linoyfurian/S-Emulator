@@ -66,7 +66,7 @@
             <VBox>
                <children>
                   <Label text="Highlight selection:" />
-                  <ComboBox fx:id="cmbHighlight" prefHeight="26.0" prefWidth="120.0" />
+                  <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="120.0" />
                </children>
             </VBox>
          </children>
