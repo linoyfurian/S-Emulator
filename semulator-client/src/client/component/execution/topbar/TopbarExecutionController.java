@@ -23,6 +23,7 @@ public class TopbarExecutionController {
     private final StringProperty maxDegree = new SimpleStringProperty(this, "maxDegree", "max Degree");
     private final StringProperty currentFileName = new SimpleStringProperty(this, "currentFileName", "");
 
+    @FXML private Label programFunctionName;
     @FXML private Label availableCreditsLbl;
     @FXML private ComboBox<Integer> cmbCollapse;
     @FXML private ComboBox<Integer> cmbExpand;
@@ -198,5 +199,9 @@ public class TopbarExecutionController {
             mainController.btnExpandListener(collapseSelected);
         }
 
+    }
+
+    public void setProgramFunctionName(String programFunctionName) {
+        this.programFunctionName.setText(programFunctionName);
     }
 }

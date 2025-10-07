@@ -39,8 +39,14 @@
             <Insets left="5.0" />
          </padding>
       </HBox>
-      <HBox spacing="7.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+      <HBox spacing="7.0" GridPane.columnSpan="4" GridPane.rowIndex="1">
          <children>
+            <VBox alignment="TOP_CENTER" spacing="3.0">
+               <children>
+                  <Label text="Program/Function Name:" />
+                  <Label fx:id="programFunctionName" text="name" />
+               </children>
+            </VBox>
             <VBox prefWidth="100.0">
                <children>
                   <Label text="Collapse:" />

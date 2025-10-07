@@ -66,6 +66,8 @@ public class ExecutionController {
         topBarExecutionController.refreshHighlightOptions(programDetails);
         debuggerController.setProgram(programDetails);
         instructionsController.resetBreakPointSelection();
+
+        topBarExecutionController.setProgramFunctionName(this.programInContext);
     }
 
     public void onHighlightChangedListener(String highlightSelected){
