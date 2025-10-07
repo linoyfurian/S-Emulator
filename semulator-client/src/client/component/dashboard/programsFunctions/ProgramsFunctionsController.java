@@ -218,4 +218,34 @@ public class ProgramsFunctionsController {
         dialog.setScene(scene);
         dialog.showAndWait();
     }
+
+
+    @FXML
+    void onBtnExecuteFunctionListener(ActionEvent event) throws IOException{
+        final String FXML_PATH = Constants.EXECUTION_FXML_RESOURCE_LOCATION;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH));
+        ScrollPane root = loader.load();
+
+        ExecutionController controller = loader.getController();
+        controller.setMainController(this.mainController);
+
+        Stage dialog = new Stage();
+        dialog.setTitle("Execution");
+
+        String userName = this.mainController.getUserName();
+        controller.setUserName(userName);
+
+        FunctionInfo programInContext = this.functionsTbl.getSelectionModel().getSelectedItem();
+        this.mainController.setExecutionController(controller);
+        this.mainController.initialExecutionScreen(programInContext.getName(), false);
+
+        Scene scene = new Scene(root);
+        dialog.initOwner(this.programsTbl.getScene().getWindow());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setAlwaysOnTop(true);
+        dialog.setScene(scene);
+        dialog.showAndWait();
+    }
+
 }

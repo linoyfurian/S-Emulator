@@ -45,7 +45,7 @@
       </TableView>
       <HBox>
          <children>
-            <Button fx:id="executeFunctionBtn" disable="true" mnemonicParsing="false" text="Execute Function" />
+            <Button fx:id="executeFunctionBtn" disable="true" mnemonicParsing="false" onAction="#onBtnExecuteFunctionListener" text="Execute Function" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" />

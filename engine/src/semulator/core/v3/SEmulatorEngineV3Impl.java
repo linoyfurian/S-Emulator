@@ -43,9 +43,14 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             Program program = programs.get(name);
             return new ProgramDto(program, functions);
         } else {
-            Program function = functions.get(name);
-            return new FunctionDto(function, functions);
+            for(Program function : functions.values()) {
+                Function f = (Function) function;
+                if(f.getUserString().equals(name)) {
+                    return new FunctionDto(function, functions);
+                }
+            }
         }
+        return null;
     }
 
     @Override
