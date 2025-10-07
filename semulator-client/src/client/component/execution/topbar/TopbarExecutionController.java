@@ -183,4 +183,20 @@ public class TopbarExecutionController {
 
         refreshExpandAndCollapseOptions(newExpandValues, newCollapseValues);
     }
+
+    @FXML
+    public void btnCollapseListener(ActionEvent event) {
+
+        if(collapseOptions.isEmpty()){
+            return;
+        }
+
+        Integer collapseSelected = cmbCollapse.getSelectionModel().getSelectedItem();
+        if(collapseSelected == null)
+            return;
+        if (mainController != null) {
+            mainController.btnExpandListener(collapseSelected);
+        }
+
+    }
 }
