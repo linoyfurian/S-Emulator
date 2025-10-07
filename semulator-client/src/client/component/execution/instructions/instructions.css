@@ -75,3 +75,29 @@
 .table-view .table-cell {
     -fx-alignment: CENTER;
 }
+
+.summary-line {
+    -fx-background-color: #f6f6f9;
+    -fx-padding: 6 10;
+    -fx-border-color: #e5e5ee;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.summary-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 10 0 0;
+}
+
+.summary-subtitle {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+}
+
+.summary-value {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a5bd7;
+    -fx-padding: 0 15 0 3;
+}

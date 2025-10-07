@@ -30,4 +30,14 @@ public class DisplayUtils {
         }
         return functionToDisplay;
     }
+
+    public static int getNumberOfArchitectureX(List<InstructionDto> instructions, String x) {
+        int numberOfArchitectureX = 0;
+        for (InstructionDto instruction : instructions) {
+            if(instruction.getArchitecture().equals(x))
+                numberOfArchitectureX++;
+        }
+        return numberOfArchitectureX;
+    }
+
 }

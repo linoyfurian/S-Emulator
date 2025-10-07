@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
@@ -22,7 +23,7 @@
                 <Insets left="80.0" />
             </opaqueInsets>
         </Label>
-        <HBox maxHeight="30.0" minHeight="40.0" minWidth="200.0" prefHeight="40.0" prefWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
+        <HBox maxHeight="50.0" minHeight="40.0" minWidth="200.0" prefWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
             <children>
                 <Button mnemonicParsing="false" styleClass="execution-button" text="New run" />
                 <Button id="run-button" fx:id="runBtn" mnemonicParsing="false" text="Run" />
@@ -40,6 +41,12 @@
                 <Button fx:id="resumeBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Resume" />
                 <Button fx:id="stepOverBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Step over" />
                 <Button fx:id="stepBackBtn" disable="true" mnemonicParsing="false" styleClass="execution-button" text="Step Back" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Architecture:" />
+                  <ComboBox fx:id="architectureCbox" prefWidth="150.0" />
+               </children>
+            </VBox>
             </children>
             <padding>
                 <Insets left="3.0" />

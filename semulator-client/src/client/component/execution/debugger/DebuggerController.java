@@ -23,6 +23,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,38 +37,27 @@ public class DebuggerController {
 
     private final ObservableSet<String> changedVarNames = FXCollections.observableSet();
 
-    @FXML
-    private ScrollPane inputsScroll;
-    @FXML
-    private VBox inputsContainer;
+    @FXML private ComboBox<String> architectureCbox;
+
+    @FXML private ScrollPane inputsScroll;
+    @FXML private VBox inputsContainer;
 
     private ObservableList<VariableRow> variablesData = FXCollections.observableArrayList();
 
-    @FXML
-    private TableColumn<VariableRow, String> nameCol;
-    @FXML
-    private TableColumn<VariableRow, String> valueCol;
-    @FXML
-    private TableView<VariableRow> variablesTable;
+    @FXML private TableColumn<VariableRow, String> nameCol;
+    @FXML private TableColumn<VariableRow, String> valueCol;
+    @FXML private TableView<VariableRow> variablesTable;
 
-    @FXML
-    private Label cyclesLabel;
+    @FXML private Label cyclesLabel;
     private IntegerProperty cyclesProperty = new SimpleIntegerProperty(0);
 
-    @FXML
-    private Button runBtn;
-    @FXML
-    private RadioButton radioBtnDebug;
-    @FXML
-    private RadioButton radioBtnRegular;
-    @FXML
-    private Button resumeBtn;
-    @FXML
-    private Button stepOverBtn;
-    @FXML
-    private Button stopBtn;
-    @FXML
-    private Button stepBackBtn;
+    @FXML private Button runBtn;
+    @FXML private RadioButton radioBtnDebug;
+    @FXML private RadioButton radioBtnRegular;
+    @FXML private Button resumeBtn;
+    @FXML private Button stepOverBtn;
+    @FXML private Button stopBtn;
+    @FXML private Button stepBackBtn;
 
     private boolean isDebugMode = false;
     private boolean isStopDebugger = false;
@@ -86,6 +76,7 @@ public class DebuggerController {
         cyclesLabel.textProperty().bind(Bindings.format("%s", cyclesProperty));
 
         initVariablesHighlighting();
+        initArchitectureOptions();
     }
 
     public void setMainController(ExecutionController mainController) {
@@ -206,5 +197,15 @@ public class DebuggerController {
         alert.setHeaderText("Invalid input");
         alert.setContentText("Input '" + name + "' must be an integer. Got: " + value);
         alert.showAndWait();
+    }
+
+    private void initArchitectureOptions() {
+        List<String> options = new ArrayList<>();
+        options.add("I");
+        options.add("II");
+        options.add("III");
+        options.add("IV");
+
+        this.architectureCbox.setItems(FXCollections.observableList(options));
     }
 }

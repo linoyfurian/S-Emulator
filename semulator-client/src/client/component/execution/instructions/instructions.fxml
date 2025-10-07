@@ -27,6 +27,14 @@
                 <Label id="lblBasicCount" fx:id="lblBasicCount" styleClass="summary-value" text="0" />
                 <Label styleClass="summary-subtitle" text="Synthetic:" />
                 <Label id="lblSyntheticCount" fx:id="lblSyntheticCount" styleClass="summary-value" text="0" />
+            <Label styleClass="summary-subtitle" text="I:" />
+            <Label fx:id="lblArchitectureICount" styleClass="summary-value" text="0" />
+            <Label styleClass="summary-subtitle" text="II:" />
+            <Label fx:id="lblArchitectureIICount" styleClass="summary-value" text="0" />
+            <Label styleClass="summary-subtitle" text="III:" />
+            <Label fx:id="lblArchitectureIIICount" styleClass="summary-value" text="0" />
+            <Label styleClass="summary-subtitle" text="IV:" />
+            <Label fx:id="lblArchitectureIVCount" styleClass="summary-value" text="0" />
             </children>
             <padding>
                 <Insets left="5.0" top="5.0" />

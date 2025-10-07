@@ -55,9 +55,17 @@ public class InstructionsController {
 
     @FXML private Label lblBasicCount;
     @FXML private Label lblSyntheticCount;
+    @FXML private Label lblArchitectureICount;
+    @FXML private Label lblArchitectureIICount;
+    @FXML private Label lblArchitectureIIICount;
+    @FXML private Label lblArchitectureIVCount;
 
     private final IntegerProperty basicInstructionsNumber = new SimpleIntegerProperty(0);
     private final IntegerProperty syntheticInstructionsNumber = new SimpleIntegerProperty(0);
+    private final IntegerProperty architectureINumber = new SimpleIntegerProperty(0);
+    private final IntegerProperty architectureIINumber = new SimpleIntegerProperty(0);
+    private final IntegerProperty architectureIIINumber = new SimpleIntegerProperty(0);
+    private final IntegerProperty architectureIVNumber = new SimpleIntegerProperty(0);
 
     private static final PseudoClass PC_CURRENT = PseudoClass.getPseudoClass("current");
     // current line in the debug execution (0-based, -1 = none)
@@ -104,6 +112,12 @@ public class InstructionsController {
         lblBasicCount.textProperty().bind(basicInstructionsNumber.asString());
         lblSyntheticCount.textProperty().bind(syntheticInstructionsNumber.asString());
 
+        lblArchitectureICount.textProperty().bind(architectureINumber.asString());
+        lblArchitectureIICount.textProperty().bind(architectureIINumber.asString());
+        lblArchitectureIIICount.textProperty().bind(architectureIIINumber.asString());
+        lblArchitectureIVCount.textProperty().bind(architectureIVNumber.asString());
+
+
         initCodeTableHighlighting();
         initInstructionsHighlighting();
 
@@ -119,6 +133,11 @@ public class InstructionsController {
 
         basicInstructionsNumber.set(DisplayUtils.getNumberOfBasicInstructions(programDetails));
         syntheticInstructionsNumber.set(instructions.size() - basicInstructionsNumber.get());
+
+        architectureINumber.set(DisplayUtils.getNumberOfArchitectureX(instructions,"I"));
+        architectureIINumber.set(DisplayUtils.getNumberOfArchitectureX(instructions, "II"));
+        architectureIIINumber.set(DisplayUtils.getNumberOfArchitectureX(instructions, "III"));
+        architectureIVNumber.set(DisplayUtils.getNumberOfArchitectureX(instructions, "IV"));
 
     }
 
