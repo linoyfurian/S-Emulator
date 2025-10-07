@@ -119,6 +119,7 @@ public class ExecutionController {
                         topBarExecutionController.updateCurrentDegreeLabel(degreeToExpand);
                         debuggerController.setProgram(expandedProgramDetails);
                         debuggerController.updateRunBtnDisable();
+
                     });
                 } finally {
                     response.close();
@@ -128,6 +129,7 @@ public class ExecutionController {
     }
 
     public boolean checkIfRunIsValid(String selectedArchitecture){
+        this.instructionsController.highlightByArchitecture(selectedArchitecture);
         return this.instructionsController.checkIfRunIsValid(selectedArchitecture);
     }
 }

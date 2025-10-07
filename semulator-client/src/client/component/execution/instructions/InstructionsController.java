@@ -26,6 +26,9 @@ public class InstructionsController {
     private ExecutionController mainController;
 
     private final ObservableSet<Long> instructionsToHighlight = FXCollections.observableSet();
+    private final ObservableSet<Long> validInstructions = FXCollections.observableSet();
+    private final ObservableSet<Long> invalidInstructions = FXCollections.observableSet();
+
 
     private final ToggleGroup breakPoints = new ToggleGroup(); // single selection
     private final IntegerProperty selectedRowIndex = new SimpleIntegerProperty(-1); // -1 = none
@@ -71,6 +74,9 @@ public class InstructionsController {
     // current line in the debug execution (0-based, -1 = none)
     private final IntegerProperty currentLine = new SimpleIntegerProperty(-1);
     private static final PseudoClass PC_CHANGED = PseudoClass.getPseudoClass("changed");
+
+    private static final PseudoClass PC_VALID = PseudoClass.getPseudoClass("valid");
+    private static final PseudoClass PC_INVALID = PseudoClass.getPseudoClass("invalid");
 
     public void setMainController(ExecutionController mainController) {
         this.mainController = mainController;
@@ -119,7 +125,9 @@ public class InstructionsController {
 
 
         initCodeTableHighlighting();
-        initInstructionsHighlighting();
+       // initInstructionsHighlighting();
+
+        initInstructionsArchitectureHighlighting();
 
         initBreakpointColumn();
     }
@@ -236,23 +244,23 @@ public class InstructionsController {
     }
 
 
-    private void initInstructionsHighlighting() {
-        tblInstructions.setRowFactory(tv -> {
-            TableRow<InstructionDto> row = new TableRow<>();
-
-            Runnable apply = () -> {
-                InstructionDto item = row.getItem();
-                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
-                row.pseudoClassStateChanged(PC_CHANGED, highlight);
-            };
-
-            row.itemProperty().addListener((o, a, b) -> apply.run());
-            row.indexProperty().addListener((o, a, b) -> apply.run());
-            instructionsToHighlight.addListener((SetChangeListener<Long>) c -> apply.run());
-
-            return row;
-        });
-    }
+//    private void initInstructionsHighlighting() {
+//        tblInstructions.setRowFactory(tv -> {
+//            TableRow<InstructionDto> row = new TableRow<>();
+//
+//            Runnable apply = () -> {
+//                InstructionDto item = row.getItem();
+//                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
+//                row.pseudoClassStateChanged(PC_CHANGED, highlight);
+//            };
+//
+//            row.itemProperty().addListener((o, a, b) -> apply.run());
+//            row.indexProperty().addListener((o, a, b) -> apply.run());
+//            instructionsToHighlight.addListener((SetChangeListener<Long>) c -> apply.run());
+//
+//            return row;
+//        });
+//    }
 
 
     private void initBreakpointColumn() {
@@ -358,5 +366,68 @@ public class InstructionsController {
                 return false;
         }
             return false;
+    }
+
+    private int getArchitectureLevel(String architecture) {
+        return switch (architecture) {
+            case "I" -> 1;
+            case "II" -> 2;
+            case "III" -> 3;
+            case "IV" -> 4;
+            default -> 0;
+        };
+    }
+
+    public void highlightByArchitecture(String selectedArchitecture) {
+        int selectedLevel = getArchitectureLevel(selectedArchitecture);
+        String currentArchitecture;
+        int currentLevel;
+
+        this.validInstructions.clear();
+        this.invalidInstructions.clear();
+
+
+        for(InstructionDto instruction : instructionData){
+            currentArchitecture = instruction.getArchitecture();
+            currentLevel = getArchitectureLevel(currentArchitecture);
+            if(currentLevel <= selectedLevel){
+                this.validInstructions.add(instruction.getNumber());
+            }
+            else
+                this.invalidInstructions.add(instruction.getNumber());
+        }
+
+        tblInstructions.refresh();
+
+    }
+
+    private void initInstructionsArchitectureHighlighting() {
+        tblInstructions.setRowFactory(tv -> {
+            TableRow<InstructionDto> row = new TableRow<>();
+
+            Runnable apply = () -> {
+                InstructionDto item = row.getItem();
+                boolean isValid = item != null && validInstructions.contains(item.getNumber());
+                boolean isInvalid = item != null && invalidInstructions.contains(item.getNumber());
+                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
+
+                if (highlight) {
+                    row.pseudoClassStateChanged(PC_CHANGED, true);
+                    row.pseudoClassStateChanged(PC_VALID, false);
+                    row.pseudoClassStateChanged(PC_INVALID, false);
+                } else {
+                    row.pseudoClassStateChanged(PC_CHANGED, false);
+                    row.pseudoClassStateChanged(PC_VALID, isValid);
+                    row.pseudoClassStateChanged(PC_INVALID, isInvalid);
+                }
+            };
+
+            row.itemProperty().addListener((o, a, b) -> apply.run());
+            row.indexProperty().addListener((o, a, b) -> apply.run());
+            validInstructions.addListener((SetChangeListener<Long>) c -> apply.run());
+
+            return row;
+        });
+
     }
 }

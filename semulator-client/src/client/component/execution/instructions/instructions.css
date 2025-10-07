@@ -68,6 +68,18 @@
     -fx-background-radius: 0;
 }
 
+.table-row-cell:valid {
+    -fx-background-color: rgba(50, 145, 88, 0.8);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.table-row-cell:invalid {
+    -fx-background-color: rgba(228, 21, 45, 0.8);
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
 .breakpoint-radio-button {
     -fx-mark-color: #a80606;
 }
