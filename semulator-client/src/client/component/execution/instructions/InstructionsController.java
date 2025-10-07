@@ -300,5 +300,22 @@ public class InstructionsController {
         });
     }
 
+    private void showParentChain(InstructionDto selected) {
+        instructionChainData.clear();
+        if (selected == null) {
+            return; // nothing selected
+        }
+        List<ParentInstructionDto> parents = selected.getParents();
+        if (parents == null || parents.isEmpty()) {
+            return;
+        }
+        instructionChainData.addAll(parents);
+    }
+
+    @FXML void onInstructionSelectedListener(MouseEvent event) {
+        InstructionDto sel = tblInstructions.getSelectionModel().getSelectedItem();
+        showParentChain(sel);
+    }
+
 
 }
