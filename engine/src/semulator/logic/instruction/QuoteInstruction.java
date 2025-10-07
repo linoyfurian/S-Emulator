@@ -13,6 +13,7 @@ import semulator.logic.program.ProgramImpl;
 import semulator.logic.variable.Variable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QuoteInstruction extends AbstractInstruction implements ComplexInstruction {
     private final String functionName;
@@ -89,16 +90,15 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
 
 
     @Override
-    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program) {
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Map<String, Program> functions) {
         List<Instruction> nextInstructions = new ArrayList<>();
-        ProgramImpl programImpl = (ProgramImpl) program;
 
-        List<Program> functions = programImpl.getFunctions();
+        List<Program> allFunctions = functions.values().stream().collect(Collectors.toList());
 
         Function functionToRun = null;
         Instruction newInstruction;
 
-        functionToRun = ExpansionUtils.findFunctionInProgram(functions, functionName);
+        functionToRun = ExpansionUtils.findFunctionInProgram(allFunctions, functionName);
 
         //add first instruction
         if(this.getLabel()!=FixedLabel.EMPTY) {

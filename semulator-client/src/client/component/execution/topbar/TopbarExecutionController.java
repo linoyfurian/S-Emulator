@@ -154,4 +154,33 @@ public class TopbarExecutionController {
     }
 
 
+    @FXML
+    void btnExpandListener(ActionEvent event) {
+        if(expandOptions.isEmpty()){
+            return;
+        }
+
+        Integer expandSelected = cmbExpand.getSelectionModel().getSelectedItem();
+        if(expandSelected == null)
+            return;
+        cmbExpand.setDisable(true);
+        try {
+            if (mainController != null) {
+                mainController.btnExpandListener(expandSelected);
+            }
+        } finally {
+            cmbExpand.setDisable(false);
+
+        }
+    }
+
+    public void updateCurrentDegreeLabel(int programDegree){
+        setCurrentDegree(programDegree);
+        int maxDegree = getMaxDegree();
+
+        List<Integer> newExpandValues = ProgramUtil.generateNewExpandOptions(programDegree, maxDegree);
+        List<Integer> newCollapseValues = ProgramUtil.generateNewCollapseOptions(programDegree, maxDegree);
+
+        refreshExpandAndCollapseOptions(newExpandValues, newCollapseValues);
+    }
 }

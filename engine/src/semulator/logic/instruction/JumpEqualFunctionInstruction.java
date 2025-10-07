@@ -97,7 +97,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
 
 
     @Override
-    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program) {
+    public List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Map<String, Program> functions) {
         List<Instruction> nextInstructions = new ArrayList<>();
         Instruction newInstruction;
         int availableZnumber;

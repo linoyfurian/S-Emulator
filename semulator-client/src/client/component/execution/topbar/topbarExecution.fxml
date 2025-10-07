@@ -60,7 +60,7 @@
                         <Insets left="3.0" />
                      </padding>
                   </Label>
-                  <ComboBox fx:id="cmbExpand" maxWidth="100.0" prefWidth="150.0" />
+                  <ComboBox fx:id="cmbExpand" maxWidth="100.0" onAction="#btnExpandListener" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox>

@@ -6,6 +6,7 @@ import semulator.logic.variable.Variable;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public interface Program {
@@ -20,4 +21,5 @@ public interface Program {
     int getDegree();
     int findMaxDepth();
     String getUsername();
+    Program expand(int desiredDegreeOfExpand, Map<String, Program> functions);
 }

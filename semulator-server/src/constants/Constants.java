@@ -5,4 +5,5 @@ public class Constants {
     public static final String PROGRAM_NAME = "program_name";
     public static final String ENGINE = "engine";
     public static final String IS_PROGRAM = "is_program";
+    public static final String DEGREE_OF_EXPAND = "degree_of_expand";
 }

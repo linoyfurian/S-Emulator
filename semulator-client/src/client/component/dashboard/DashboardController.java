@@ -63,8 +63,6 @@ public class DashboardController {
 
     public void initialExecutionScreen(String programName, boolean isProgram) {
         this.isProgram = isProgram;
-
-        ProgramFunctionDto result = null;
         String finalUrl = HttpUrl
                 .parse(Constants.DISPLAY_SERVLET)
                 .newBuilder()
@@ -102,7 +100,7 @@ public class DashboardController {
                     }
 
                     Platform.runLater(() -> {
-                        executionController.initialProgramDetails(programDetails);
+                        executionController.initialProgramDetails(programDetails, isProgram);
                     });
                 } finally {
                     response.close();

@@ -124,4 +124,30 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         }
         return result;
     }
+
+    @Override
+    public ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand){
+        ProgramFunctionDto programFunctionDto;
+        Program expandedProgram;
+
+        if(programName == null){
+            return  null;
+        }
+
+        Program programInContext;
+
+        if(isProgramBool)
+            programInContext = programs.get(programName);
+        else
+            programInContext = functions.get(programName);
+
+        expandedProgram = programInContext.expand(degreeOfExpand, functions);
+
+        if(expandedProgram instanceof ProgramImpl)
+            programFunctionDto = new ProgramDto(expandedProgram, functions);
+        else
+            programFunctionDto = new FunctionDto(expandedProgram, functions);
+
+        return programFunctionDto;
+    }
 }

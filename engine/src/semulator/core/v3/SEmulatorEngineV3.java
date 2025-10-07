@@ -14,5 +14,6 @@ public interface SEmulatorEngineV3 {
     LoadReport loadProgramDetails(InputStream in, String username) throws JAXBException;
     List<ProgramInfo> getPrograms();
     List<FunctionInfo> getFunctions();
+    ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand);
 
 }

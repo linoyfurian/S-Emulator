@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface ComplexInstruction {
     ComplexExecuteResult execute(ExecutionContext context, Program program);
-    List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Program program);
+    List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Map<String, Program> functions);
     String getInstructionDescription(Map<String, Program> functions);
     boolean isComposite();
     void updateDegreeOfExpansion(Program program);

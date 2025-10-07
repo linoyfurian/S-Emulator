@@ -173,7 +173,7 @@ public class ProgramImpl implements Program, Serializable {
                 else{
                     if(instruction instanceof ComplexInstruction complexInstruction) {
                         Map<String,String>  oldAndNew = new HashMap<>();
-                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, this);
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, null);
 
                         for (Instruction nextInstruction : nextInstructions) {
                             nextExpandedProgram.addInstruction(nextInstruction);
@@ -230,5 +230,66 @@ public class ProgramImpl implements Program, Serializable {
     @Override
     public String getUsername(){
         return this.ownerName;
+    }
+
+    @Override
+    public Program expand(int desiredDegreeOfExpand, Map<String, Program> functions){
+        Program expandedProgram = this;
+        if (desiredDegreeOfExpand == 0)
+            return expandedProgram;
+
+        long instructionNumber;
+        Program nextExpandedProgram;
+        Program programToExpand = expandedProgram;
+        int programDegree =  desiredDegreeOfExpand;
+
+        while(desiredDegreeOfExpand>0){
+            nextExpandedProgram = new ProgramImpl(programToExpand.getName(), programDegree, this.ownerName); //new program
+            Set<Integer> zUsedNumbers, usedLabelsNumbers;
+
+            zUsedNumbers = ExpansionUtils.getSetOfUsedZNumbers(programToExpand.getVariables());
+            usedLabelsNumbers = ExpansionUtils.getSetOfUsedLabels(programToExpand.getLabels());
+
+            instructionNumber = 1;
+
+            for(Instruction instruction : programToExpand.getInstructions()) {
+                if (instruction instanceof UnexpandableInstruction unexpandableInstruction) {
+                    Instruction newInstruction = unexpandableInstruction.cloneInstructionWithNewNumber(instructionNumber);
+                    nextExpandedProgram.addInstruction(newInstruction);
+                    instructionNumber++;
+                } else if (instruction instanceof ExpandableInstruction expandableInstruction) {
+                    List<Instruction> nextInstructions = expandableInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber);
+
+                    for (Instruction nextInstruction : nextInstructions) {
+                        nextExpandedProgram.addInstruction(nextInstruction);
+                    }
+                    instructionNumber = instructionNumber + nextInstructions.size();
+                }
+                else{
+                    if(instruction instanceof ComplexInstruction complexInstruction) {
+                        Map<String,String>  oldAndNew = new HashMap<>();
+                        List<Instruction> nextInstructions = complexInstruction.expand(zUsedNumbers, usedLabelsNumbers, instructionNumber, oldAndNew, functions);
+
+                        for (Instruction nextInstruction : nextInstructions) {
+                            nextExpandedProgram.addInstruction(nextInstruction);
+                        }
+                        instructionNumber = instructionNumber + nextInstructions.size();
+                    }
+                }
+            }
+            programToExpand = nextExpandedProgram;
+            desiredDegreeOfExpand--;
+        }
+
+        expandedProgram = programToExpand;
+
+        if(expandedProgram instanceof ProgramImpl expandedProgramImpl){
+            List<Program> parentFunctions = this.getFunctions();
+            for (Program function : parentFunctions) {
+                expandedProgramImpl.addFunction(function);
+            }
+        }
+
+        return expandedProgram;
     }
 }
