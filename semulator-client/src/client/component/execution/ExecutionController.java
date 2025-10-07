@@ -28,6 +28,7 @@ public class ExecutionController {
     private String programInContext;
     private boolean isProgram;
 
+
     @FXML private TopbarExecutionController topBarExecutionController;
     @FXML private InstructionsController instructionsController;
     @FXML private DebuggerController debuggerController;
@@ -116,15 +117,17 @@ public class ExecutionController {
                         instructionsController.displayProgram(expandedProgramDetails);
                         topBarExecutionController.refreshHighlightOptions(expandedProgramDetails);
                         topBarExecutionController.updateCurrentDegreeLabel(degreeToExpand);
-//                        javafx.application.Platform.runLater(() -> {
-//                            topBarExecutionController.updateCurrentDegreeLabel(degreeToExpand);
-//                        });
                         debuggerController.setProgram(expandedProgramDetails);
+                        debuggerController.updateRunBtnDisable();
                     });
                 } finally {
                     response.close();
                 }
             }
         });
+    }
+
+    public boolean checkIfRunIsValid(String selectedArchitecture){
+        return this.instructionsController.checkIfRunIsValid(selectedArchitecture);
     }
 }

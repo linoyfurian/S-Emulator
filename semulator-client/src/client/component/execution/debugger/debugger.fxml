@@ -44,7 +44,7 @@
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label text="Architecture:" />
-                  <ComboBox fx:id="architectureCbox" prefWidth="150.0" />
+                  <ComboBox fx:id="architectureCbox" onAction="#onArchitectureSelectedListener" prefWidth="150.0" />
                </children>
             </VBox>
             </children>

@@ -336,5 +336,27 @@ public class InstructionsController {
         showParentChain(sel);
     }
 
-
+    public boolean checkIfRunIsValid(String selectedArchitecture){
+        if(selectedArchitecture.equals("IV"))
+            return true;
+        if(selectedArchitecture.equals("III")){
+            if(architectureIVNumber.get()==0)
+                return true;
+            else
+                return false;
+        }
+        if(selectedArchitecture.equals("II")){
+            if(architectureIVNumber.get()==0 &&architectureIIINumber.get()==0)
+                return true;
+            else
+                return false;
+        }
+        if(selectedArchitecture.equals("I")){
+            if(architectureIVNumber.get()==0 && architectureIIINumber.get()==0 && architectureIINumber.get()==0)
+                return true;
+            else
+                return false;
+        }
+            return false;
+    }
 }

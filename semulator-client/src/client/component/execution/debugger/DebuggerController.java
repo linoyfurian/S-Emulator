@@ -4,6 +4,7 @@ import client.component.execution.ExecutionController;
 import client.utils.display.VariableRow;
 import dto.ProgramFunctionDto;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -77,6 +79,7 @@ public class DebuggerController {
 
         initVariablesHighlighting();
         initArchitectureOptions();
+
     }
 
     public void setMainController(ExecutionController mainController) {
@@ -113,11 +116,12 @@ public class DebuggerController {
         buildInputsUI(programInContextDetails);
         variablesData.clear();
         stepBackBtn.setDisable(true);
-        runBtn.setDisable(false);
+        runBtn.setDisable(true);
         stopBtn.setDisable(true);
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
         radioBtnRegular.setDisable(false);
+
     }
 
     /**
@@ -207,5 +211,19 @@ public class DebuggerController {
         options.add("IV");
 
         this.architectureCbox.setItems(FXCollections.observableList(options));
+    }
+
+
+    @FXML
+    void onArchitectureSelectedListener(ActionEvent event) {
+        updateRunBtnDisable();
+    }
+
+    public void updateRunBtnDisable() {
+        String selectedArchitecture = architectureCbox.getSelectionModel().getSelectedItem();
+        if(selectedArchitecture==null)
+            return;
+        boolean isRunValid = this.mainController.checkIfRunIsValid(selectedArchitecture);
+        this.runBtn.setDisable(!isRunValid);
     }
 }
