@@ -208,4 +208,8 @@ public class TopbarExecutionController {
     public void setProgramFunctionName(String programFunctionName) {
         this.programFunctionName.setText(programFunctionName);
     }
+
+    public int getCredits(){
+        return Integer.parseInt(this.availableCreditsLbl.getText());
+    }
 }

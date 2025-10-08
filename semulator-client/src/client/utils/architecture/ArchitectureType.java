@@ -1,6 +1,6 @@
 package client.utils.architecture;
 
-public enum ArchtectureType {
+public enum ArchitectureType {
     I("I", 5),
     II("II",100),
     III("III", 500),
@@ -9,7 +9,7 @@ public enum ArchtectureType {
     private final String type;
     private final int runCost;
 
-    ArchtectureType(String type, int runCost) {
+    ArchitectureType(String type, int runCost) {
         this.type = type;
         this.runCost = runCost;
     }

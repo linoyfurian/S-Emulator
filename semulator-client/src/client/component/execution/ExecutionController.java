@@ -5,6 +5,7 @@ import client.component.execution.debugger.DebuggerController;
 import client.component.execution.instructions.InstructionsController;
 import client.component.execution.topbar.TopbarExecutionController;
 import client.utils.Constants;
+import client.utils.architecture.ArchitectureType;
 import client.utils.display.ProgramUtil;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ public class ExecutionController {
     private DashboardController mainController;
     private String programInContext;
     private boolean isProgram;
-
+    private double averageCredits;
 
     @FXML private TopbarExecutionController topBarExecutionController;
     @FXML private InstructionsController instructionsController;
@@ -50,6 +51,10 @@ public class ExecutionController {
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
         this.topBarExecutionController.bindCredits();
+    }
+
+    public void setAverageCredits(double averageCredits) {
+        this.averageCredits = averageCredits;
     }
 
     public void setUserName(String userName) {
@@ -131,9 +136,22 @@ public class ExecutionController {
     }
 
     public boolean checkIfRunIsValid(String selectedArchitecture){
+        boolean result;
         this.instructionsController.highlightByArchitecture(selectedArchitecture);
-        return this.instructionsController.checkIfRunIsValid(selectedArchitecture);
+        double currentCredits = this.topBarExecutionController.getCredits();
+        result = this.instructionsController.checkIfRunIsValid(selectedArchitecture) && isEnoughCreditsAccordingToAverage(currentCredits, selectedArchitecture);
+        return result;
     }
 
     public IntegerProperty creditsProperty() { return this.mainController.creditsProperty(); }
+
+    private boolean isEnoughCreditsAccordingToAverage(double credits, String selectedArchitecture) {
+        ArchitectureType architecture = ProgramUtil.getArchitecture(selectedArchitecture);
+        double predictedCredits = 0;
+        predictedCredits = architecture.getRunCost() + averageCredits;
+        if (predictedCredits <= credits)
+            return true;
+        else
+            return false;
+    }
 }

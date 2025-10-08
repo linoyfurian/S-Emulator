@@ -2,6 +2,7 @@ package client.component.execution.instructions;
 
 import client.component.execution.ExecutionController;
 import client.utils.display.DisplayUtils;
+import client.utils.display.ProgramUtil;
 import dto.InstructionDto;
 import dto.ParentInstructionDto;
 import dto.ProgramFunctionDto;
@@ -368,18 +369,8 @@ public class InstructionsController {
             return false;
     }
 
-    private int getArchitectureLevel(String architecture) {
-        return switch (architecture) {
-            case "I" -> 1;
-            case "II" -> 2;
-            case "III" -> 3;
-            case "IV" -> 4;
-            default -> 0;
-        };
-    }
-
     public void highlightByArchitecture(String selectedArchitecture) {
-        int selectedLevel = getArchitectureLevel(selectedArchitecture);
+        int selectedLevel = ProgramUtil.getArchitectureLevel(selectedArchitecture);
         String currentArchitecture;
         int currentLevel;
 
@@ -389,7 +380,7 @@ public class InstructionsController {
 
         for(InstructionDto instruction : instructionData){
             currentArchitecture = instruction.getArchitecture();
-            currentLevel = getArchitectureLevel(currentArchitecture);
+            currentLevel = ProgramUtil.getArchitectureLevel(currentArchitecture);
             if(currentLevel <= selectedLevel){
                 this.validInstructions.add(instruction.getNumber());
             }

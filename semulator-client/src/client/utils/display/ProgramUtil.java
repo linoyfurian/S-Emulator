@@ -1,5 +1,6 @@
 package client.utils.display;
 
+import client.utils.architecture.ArchitectureType;
 import dto.ProgramFunctionDto;
 import dto.RunResultDto;
 
@@ -67,6 +68,26 @@ public class ProgramUtil {
             }
         }
         return changedVariables;
+    }
+
+    public static int getArchitectureLevel(String architecture) {
+        return switch (architecture) {
+            case "I" -> 1;
+            case "II" -> 2;
+            case "III" -> 3;
+            case "IV" -> 4;
+            default -> 0;
+        };
+    }
+
+    public static ArchitectureType getArchitecture(String architecture) {
+        return switch (architecture) {
+            case "I" -> ArchitectureType.I;
+            case "II" -> ArchitectureType.II;
+            case "III" -> ArchitectureType.III;
+            case "IV" -> ArchitectureType.IV;
+            default -> null;
+        };
     }
 
 

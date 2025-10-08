@@ -211,6 +211,8 @@ public class ProgramsFunctionsController {
         this.mainController.setExecutionController(controller);
         this.mainController.initialExecutionScreen(programInContext.getName(), true);
 
+        controller.setAverageCredits(programInContext.getAverageCredits());
+
         Scene scene = new Scene(root);
         dialog.initOwner(this.programsTbl.getScene().getWindow());
         dialog.initModality(Modality.APPLICATION_MODAL);
