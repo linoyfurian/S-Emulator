@@ -13,6 +13,7 @@ import dto.ProgramDto;
 import dto.ProgramFunctionDto;
 import dto.RunResultDto;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,6 +49,7 @@ public class ExecutionController {
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
+        this.topBarExecutionController.bindCredits();
     }
 
     public void setUserName(String userName) {
@@ -132,4 +134,6 @@ public class ExecutionController {
         this.instructionsController.highlightByArchitecture(selectedArchitecture);
         return this.instructionsController.checkIfRunIsValid(selectedArchitecture);
     }
+
+    public IntegerProperty creditsProperty() { return this.mainController.creditsProperty(); }
 }

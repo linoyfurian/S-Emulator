@@ -53,6 +53,10 @@ public class TopbarExecutionController {
         this.mainController = mainController;
     }
 
+    public void bindCredits() {
+        availableCreditsLbl.textProperty().bind(mainController.creditsProperty().asString());
+    }
+
     public void setUserName(String userName) {
         this.userNameLbl.setText(userName);
     }
