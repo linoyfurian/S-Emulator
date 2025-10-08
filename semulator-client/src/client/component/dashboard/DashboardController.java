@@ -13,6 +13,10 @@ import dto.FunctionInfo;
 import dto.ProgramDto;
 import dto.ProgramFunctionDto;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,6 +40,13 @@ public class DashboardController {
     @FXML private UsersController usersController;
     @FXML private ProgramsFunctionsController programsFunctionsController;
 
+    private final IntegerProperty credits = new SimpleIntegerProperty(0);
+
+    public IntegerProperty creditsProperty() { return credits; }
+    public int getCredits() { return credits.get(); }
+    public void setCredits(int value) { Platform.runLater(() -> credits.set(value)); }
+    public void addCredits(int delta) { Platform.runLater(() -> credits.set(credits.get() + delta)); }
+
     @FXML
     public void initialize() {
         if (topBarController != null) {
@@ -47,6 +58,8 @@ public class DashboardController {
         if (programsFunctionsController != null) {
             programsFunctionsController.setMainController(this);
         }
+
+
     }
 
     public void setExecutionController(ExecutionController executionController) {

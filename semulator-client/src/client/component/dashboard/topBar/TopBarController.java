@@ -11,6 +11,8 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import okhttp3.Call;
@@ -19,6 +21,7 @@ import okhttp3.Response;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.UnaryOperator;
 
 import static client.utils.Constants.LOAD_FILE_PAGE;
 
@@ -27,11 +30,25 @@ public class TopBarController {
 
 
     @FXML private Label userNameLbl;
-
+    @FXML private TextField chargeCreditsTextF;
+    @FXML private Label availableCreditsLbl;
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
+        availableCreditsLbl.textProperty().bind(mainController.creditsProperty().asString());
+        chargeCreditsTextF.setTextFormatter(integerFormatter());
     }
+
+    /** Allow only positive decimal numbers */
+    private TextFormatter<String> integerFormatter() {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) return change;
+            return null;
+        };
+        return new TextFormatter<>(filter);
+    }
+
 
     public void setUserName(String userName) {
         userNameLbl.setText(userName);
@@ -86,5 +103,13 @@ public class TopBarController {
 
     public String getUserName() {
         return this.userNameLbl.getText();
+    }
+
+    @FXML void onChargeCreditsBtnListener(ActionEvent event) {
+        String chargeCredits = chargeCreditsTextF.getText();
+        if(chargeCredits!=null && !chargeCredits.equals("")) {
+            int chargeCreditsNumber = Integer.parseInt(chargeCredits);
+            this.mainController.addCredits(chargeCreditsNumber);
+        }
     }
 }
