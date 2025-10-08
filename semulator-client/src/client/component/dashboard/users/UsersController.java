@@ -43,12 +43,12 @@ public class UsersController {
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
+        availableUsersColCredits.setCellValueFactory(cellData ->
+                mainController.creditsProperty());
     }
 
     @FXML
     public void initialize() {
-        availableUsersColCredits.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getCredits()));
         availableUsersColFunctionsNumber.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getFunctionsNumber()));
         availableUsersColProgramsNumber.setCellValueFactory(cellData ->
@@ -102,11 +102,8 @@ public class UsersController {
                             }
                             else{
                                 UserInfo currentUser = findCurrentUser(user.getName(), usersData);
-                                currentUser.setCredits(user.getCredits());
                                 currentUser.setFunctionsNumber(user.getFunctionsNumber());
                                 currentUser.setProgramsNumber(user.getProgramsNumber());
-                                currentUser.setRunsNumber(user.getRunsNumber());
-                                currentUser.setUsedCredits(user.getUsedCredits());
                             }
                         }
 
