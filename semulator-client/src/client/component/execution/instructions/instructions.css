@@ -51,31 +51,32 @@
 }
 
 .table-row-cell:selected {
-    -fx-background-color: rgba(110, 227, 161, 0.8);
+    -fx-background-color: rgba(64, 157, 234, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 /* active instruction line highlighted in reddish */
 .table-row-cell:current {
-    -fx-background-color: rgba(255, 100, 100, 0.8);
+    -fx-background-color: rgba(90, 66, 244, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+    -fx-text-fill: white;
 }
 
 .table-row-cell:changed {
-    -fx-background-color: rgba(138, 94, 172, 0.8);
+    -fx-background-color: rgba(206, 149, 250, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 
 .table-row-cell:valid {
-    -fx-background-color: rgba(50, 145, 88, 0.8);
+    -fx-background-color: rgba(116, 244, 164, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
 
 .table-row-cell:invalid {
-    -fx-background-color: rgba(228, 21, 45, 0.8);
+    -fx-background-color: rgba(239, 59, 80, 0.8);
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }

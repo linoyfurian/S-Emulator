@@ -4,6 +4,7 @@ import client.component.execution.ExecutionController;
 import client.utils.Constants;
 import client.utils.display.VariableRow;
 import com.google.gson.Gson;
+import dto.DebugContextDto;
 import dto.ExecutionRunDto;
 import dto.ProgramFunctionDto;
 import dto.RunProgramRequest;
@@ -245,15 +246,15 @@ public class DebuggerController {
 
     @FXML
     void onRunBtnListener(ActionEvent event) {
-//        isDebugMode = radioBtnDebug.isSelected();
-//        mainController.cleanDebugContext();
+        isDebugMode = radioBtnDebug.isSelected();
+        mainController.cleanDebugContext();
 
         Map<String, Long> originalInputs = new HashMap<>();
 
         if (mainController != null) {
             if(inputFields.isEmpty()) {
                 long [] inputs = new long[0];
-                mainController.onRegularRunBtnListener(originalInputs, inputs);
+                mainController.onRunBtnListener(isDebugMode, originalInputs, inputs);
             }
 
             int maxIndex = 0;
@@ -291,7 +292,7 @@ public class DebuggerController {
                 inputs[i - 1] = inputsValues.getOrDefault(i, 0L);
             }
 
-            mainController.onRegularRunBtnListener(originalInputs, inputs);
+            mainController.onRunBtnListener(isDebugMode, originalInputs, inputs);
         }
     }
 
@@ -316,6 +317,39 @@ public class DebuggerController {
             for(TextField tf : inputFields.values()){
                 tf.setDisable(false);
             }
+        }
+    }
+
+    public void initialStartOfDebugging(){
+        runBtn.setDisable(true);
+        stopBtn.setDisable(false);
+        resumeBtn.setDisable(false);
+        stepOverBtn.setDisable(false);
+        radioBtnRegular.setDisable(true);
+        stepBackBtn.setDisable(true);
+    }
+
+    public void updateDebugResult(DebugContextDto debugContext) {
+        Map<String, Long> currVariablesValues = debugContext.getCurrentVariablesValues();
+
+        variablesData.clear();
+
+        for (Map.Entry<String, Long> entry : currVariablesValues.entrySet()) {
+            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+            variablesData.add(row);
+        }
+
+        cyclesProperty.set(debugContext.getCycles());
+
+        long nextInstructionNumber = debugContext.getNextInstructionNumber();
+        if (nextInstructionNumber == 0) { //finish debug
+            runBtn.setDisable(false);
+            stopBtn.setDisable(true);
+            resumeBtn.setDisable(true);
+            stepBackBtn.setDisable(true);
+            stepOverBtn.setDisable(true);
+            radioBtnRegular.setDisable(false);
+            cyclesProperty.set(debugContext.getCycles());
         }
     }
 }

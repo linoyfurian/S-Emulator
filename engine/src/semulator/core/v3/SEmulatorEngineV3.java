@@ -14,5 +14,5 @@ public interface SEmulatorEngineV3 {
     List<FunctionInfo> getFunctions();
     ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand);
     ExecutionRunDto runProgram(String username, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input);
-
+    DebugContextDto initialStartOfDebugger(String username, String programName, boolean isProgram, int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long ... inputs);
 }

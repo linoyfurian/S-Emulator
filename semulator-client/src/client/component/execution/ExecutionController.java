@@ -27,6 +27,8 @@ public class ExecutionController {
     private boolean isProgram;
     private double averageCredits;
 
+    private DebugContextDto debugContext = null;
+
     @FXML private TopbarExecutionController topBarExecutionController;
     @FXML private InstructionsController instructionsController;
     @FXML private DebuggerController debuggerController;
@@ -151,56 +153,134 @@ public class ExecutionController {
             return false;
     }
 
-    public void onRegularRunBtnListener(Map<String, Long> originalInputs, long[] inputs) {
+    public void onRunBtnListener(boolean isDebugMode, Map<String, Long> originalInputs, long[] inputs) {
         int degreeOfExpand = this.topBarExecutionController.getCurrentDegree();
-
         Gson gson = new Gson();
-        RunProgramRequest runRequest = new RunProgramRequest(programInContext, isProgram, degreeOfExpand, originalInputs, inputs);
+        if (!isDebugMode) {
+            RunProgramRequest runRequest = new RunProgramRequest(programInContext, isProgram, degreeOfExpand, originalInputs, inputs);
 
-        // Convert to JSON
-        String json = gson.toJson(runRequest);
+            // Convert to JSON
+            String json = gson.toJson(runRequest);
 
-        RequestBody body = RequestBody.create(
-                json, MediaType.get("application/json; charset=utf-8")
-        );
+            RequestBody body = RequestBody.create(
+                    json, MediaType.get("application/json; charset=utf-8")
+            );
 
-        String finalUrl = HttpUrl
-                .parse(Constants.REGULAR_RUN_SERVLET)
-                .newBuilder()
-                .build()
-                .toString();
+            String finalUrl = HttpUrl
+                    .parse(Constants.REGULAR_RUN_SERVLET)
+                    .newBuilder()
+                    .build()
+                    .toString();
 
-        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    if (!response.isSuccessful() || response.body() == null) {
-                        return;
-                    }
-
-                    String json = response.body().string();
-
-                    Gson gson = new Gson();
-                    ExecutionRunDto runResult  = gson.fromJson(json, ExecutionRunDto.class);
-
-                    javafx.application.Platform.runLater(() -> {
-                        if(runResult!=null){
-                            debuggerController.updateRunResult(runResult);
-                            //todo update history
-                        }
-                        debuggerController.disableChangeOfInput(false);
-                    });
-                } finally {
-                response.close();
                 }
-            }
-        });
 
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    try {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            return;
+                        }
+
+                        String json = response.body().string();
+
+                        Gson gson = new Gson();
+                        ExecutionRunDto runResult  = gson.fromJson(json, ExecutionRunDto.class);
+
+                        javafx.application.Platform.runLater(() -> {
+                            if(runResult!=null){
+                                debuggerController.updateRunResult(runResult);
+                                //todo update history
+                            }
+                            debuggerController.disableChangeOfInput(false);
+                        });
+                    } finally {
+                        response.close();
+                    }
+                }
+            });
+        }
+        else {
+            instructionsController.setIsRunning(true);
+//            int breakPointRowIndex = 0;
+//            breakPointRowIndex = instructionsController.getBreakPointRowIndex();
+
+            debuggerController.initialStartOfDebugging();
+            DebugContextDto initialDebugContext;
+
+            //todo call servlet for initial
+//            initialDebugContext = engine.initialStartOfDebugger(degreeOfRun, this.debugContext, originalInputs, inputs);
+//            this.debugContext = initialDebugContext;
+
+//            if (breakPointRowIndex != 0) {
+//                DebugContextDto debugDetails;
+//                debugDetails = engine.breakPointRun(breakPointRowIndex, degreeOfRun, originalInputs, inputs);
+//                this.debugContext = debugDetails;
+//            }
+
+            DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfExpand, this.debugContext, originalInputs, inputs);
+
+            // Convert to JSON
+            String json = gson.toJson(debugRequest);
+
+            RequestBody body = RequestBody.create(
+                    json, MediaType.get("application/json; charset=utf-8")
+            );
+
+            String finalUrl = HttpUrl
+                    .parse(Constants.DEBUG_RUN_SERVLET)
+                    .newBuilder()
+                    .addQueryParameter("is_initial_debug", "true")
+                    .build()
+                    .toString();
+
+            HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    try {
+                        if (!response.isSuccessful() || response.body() == null) {
+                            return;
+                        }
+
+                        String json = response.body().string();
+
+                        Gson gson = new Gson();
+                        DebugContextDto debugResult  = gson.fromJson(json, DebugContextDto.class);
+
+                        debugContext = debugResult;
+                        javafx.application.Platform.runLater(() -> {
+                            long currInstructionToHighlight = 1;
+                            currInstructionToHighlight = debugContext.getNextInstructionNumber();
+                            instructionsController.highlightLine((int) (currInstructionToHighlight - 1));
+                            debuggerController.updateDebugResult(debugContext);
+
+                            if (currInstructionToHighlight == 0) {
+                                instructionsController.setIsRunning(false);
+                                //todo history
+
+                                debuggerController.disableChangeOfInput(false);
+                            }
+                        });
+                    } finally {
+                        response.close();
+                    }
+                }
+            });
+
+        }
+
+    }
+
+    public void cleanDebugContext(){
+        debugContext = null;
     }
 
 }

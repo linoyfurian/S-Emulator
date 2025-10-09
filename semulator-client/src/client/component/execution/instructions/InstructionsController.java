@@ -234,35 +234,9 @@ public class InstructionsController {
     }
     // highlight a new line during debug
     public void highlightLine(int index) {
-        Platform.runLater(() -> {
-            currentLine.set(index);
-            if(index==-1)
-                tblInstructions.getSelectionModel().clearSelection();
-            else
-                tblInstructions.getSelectionModel().clearAndSelect(index);
-            tblInstructions.scrollTo(Math.max(index - 3, 0)); // keep line in view
-        });
+        currentLine.set(index);
+        initInstructionsArchitectureHighlighting();
     }
-
-
-//    private void initInstructionsHighlighting() {
-//        tblInstructions.setRowFactory(tv -> {
-//            TableRow<InstructionDto> row = new TableRow<>();
-//
-//            Runnable apply = () -> {
-//                InstructionDto item = row.getItem();
-//                boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
-//                row.pseudoClassStateChanged(PC_CHANGED, highlight);
-//            };
-//
-//            row.itemProperty().addListener((o, a, b) -> apply.run());
-//            row.indexProperty().addListener((o, a, b) -> apply.run());
-//            instructionsToHighlight.addListener((SetChangeListener<Long>) c -> apply.run());
-//
-//            return row;
-//        });
-//    }
-
 
     private void initBreakpointColumn() {
         colBreakPoint.setCellFactory(col -> new TableCell<InstructionDto, Void>() {
@@ -399,15 +373,24 @@ public class InstructionsController {
             Runnable apply = () -> {
                 InstructionDto item = row.getItem();
                 boolean isValid = item != null && validInstructions.contains(item.getNumber());
+                boolean debugHighlight = item != null && row.getIndex() == currentLine.get();
                 boolean isInvalid = item != null && invalidInstructions.contains(item.getNumber());
                 boolean highlight = item != null && instructionsToHighlight.contains(item.getNumber());
 
-                if (highlight) {
+                if(debugHighlight){
+                    row.pseudoClassStateChanged(PC_CURRENT, true);
+                    row.pseudoClassStateChanged(PC_CHANGED, false);
+                    row.pseudoClassStateChanged(PC_VALID, false);
+                    row.pseudoClassStateChanged(PC_INVALID, false);
+                }
+                else if (highlight) {
                     row.pseudoClassStateChanged(PC_CHANGED, true);
+                    row.pseudoClassStateChanged(PC_CURRENT, false);
                     row.pseudoClassStateChanged(PC_VALID, false);
                     row.pseudoClassStateChanged(PC_INVALID, false);
                 } else {
                     row.pseudoClassStateChanged(PC_CHANGED, false);
+                    row.pseudoClassStateChanged(PC_CURRENT, false);
                     row.pseudoClassStateChanged(PC_VALID, isValid);
                     row.pseudoClassStateChanged(PC_INVALID, isInvalid);
                 }
@@ -420,5 +403,9 @@ public class InstructionsController {
             return row;
         });
 
+    }
+
+    public void setIsRunning(boolean isRunning) {
+        this.isRunning.set(isRunning);
     }
 }

@@ -20,13 +20,15 @@ import java.util.Map;
 public class ProgramDebuggerImpl implements ProgramDebugger {
     private final Program programToDebug;
     private final ExecutionContext context;
-    private final Program mainProgram;
+    private final Map<String, Program> functions;
     private int cycles;
+    private final String userName;
 
-    public ProgramDebuggerImpl(Program programToDebug, Program mainProgram, Map<String, Long> originalInputs, long ... input) {
+    public ProgramDebuggerImpl(String userName, Program programToDebug, Map<String, Program> functions, Map<String, Long> originalInputs, long ... input) {
         this.programToDebug = programToDebug;
-        this.mainProgram = mainProgram;
+        this.functions = functions;
         this.context = new ExecutionContextImpl();
+        this.userName = userName;
 
         //add input variables
         for (int i=0; i<input.length; i++) {
@@ -51,12 +53,13 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         this.cycles = 0;
     }
 
-    public ProgramDebuggerImpl(Program programToDebug, DebugContextDto debugContext, Program mainProgram) {
+    public ProgramDebuggerImpl(String userName, Program programToDebug, DebugContextDto debugContext, Map<String, Program> functions) {
         this.programToDebug = programToDebug;
-        this.mainProgram = mainProgram;
+        this.functions = functions;
         Map<String,Long> variablesValues = debugContext.getCurrentVariablesValues();
         this.context = new ExecutionContextImpl(variablesValues);
         this.cycles = debugContext.getCycles();
+        this.userName = userName;
     }
 
     @Override
@@ -77,8 +80,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 nextLabel = simpleInstruction.execute(this.context);
             else {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
-                //TODO : functions not null
-                executeResult = complexInstruction.execute(this.context, null);
+                executeResult = complexInstruction.execute(this.context, functions);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }
@@ -110,7 +112,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
+        DebugContextDto result = new DebugContextDto(userName, programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
 
@@ -129,8 +131,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
             nextLabel = simpleInstruction.execute(this.context);
         else {
             ComplexInstruction complexInstruction = (ComplexInstruction) instructionToExecute;
-            //TODO functions not null
-            executeResult = complexInstruction.execute(this.context, null);
+            executeResult = complexInstruction.execute(this.context, functions);
             nextLabel = executeResult.getNextLabel();
             cycles = cycles + executeResult.getRunCycles();
         }
@@ -160,7 +161,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        DebugContextDto result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
+        DebugContextDto result = new DebugContextDto(userName, programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
 
@@ -171,7 +172,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
         int nextInstructionNumber = 1;
         int prevCycles = this.cycles; //todo delete
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
-        result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, null, originalInputs, prevCycles);
+        result = new DebugContextDto(userName, programToDebug, this.context, instructionToExecuteNumber, nextInstructionNumber, cycles, previousVariablesValues, null, originalInputs, prevCycles);
         return result;
     }
 
@@ -193,8 +194,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 nextLabel = simpleInstruction.execute(this.context);
             else {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
-                //TODO functions not null
-                executeResult = complexInstruction.execute(this.context, null);
+                executeResult = complexInstruction.execute(this.context, functions);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }
@@ -224,7 +224,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
             instructionToExecuteNumber = (int) nextInstructionNumber;
         }
 
-        result = new DebugContextDto(programToDebug, this.context, instructionToExecuteNumber, instructionToExecuteNumber, cycles, previousVariablesValues, debugDetails, originalInputs, 0);
+        result = new DebugContextDto(userName, programToDebug, this.context, instructionToExecuteNumber, instructionToExecuteNumber, cycles, previousVariablesValues, debugDetails, originalInputs, 0);
         return result;
     }
 }

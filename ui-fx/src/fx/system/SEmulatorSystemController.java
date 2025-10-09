@@ -46,7 +46,7 @@ public class SEmulatorSystemController {
 
     private Theme currTheme = Theme.Default;
     private String currentProgramName;
-    DebugContextDto debugContext = null;
+    private DebugContextDto debugContext = null;
 
     @FXML
     public void initialize() {

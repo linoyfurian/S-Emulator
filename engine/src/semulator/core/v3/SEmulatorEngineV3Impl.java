@@ -7,6 +7,8 @@ import jakarta.xml.bind.Unmarshaller;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
+import semulator.logic.debugger.ProgramDebugger;
+import semulator.logic.debugger.ProgramDebuggerImpl;
 import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
@@ -154,8 +156,6 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
     @Override
     public ExecutionRunDto runProgram(String username, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
-        System.out.println("in runProgram");
-
         Program programToRun;
 
         if(programName == null){
@@ -167,17 +167,38 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         else
             programInContext = functions.get(programName);
 
-        System.out.println(programInContext.getName());
         programToRun = programInContext.expand(desiredDegreeOfExpand, functions);
 
-
-        System.out.println(programToRun.getName());
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
         ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
 
         //TODO HISTORY
 
-        System.out.println(runResult.getResult());
         return runResult;
     }
+
+    @Override
+    public DebugContextDto initialStartOfDebugger(String username, String programName, boolean isProgram, int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long... inputs) {
+        DebugContextDto result;
+        Program programToRun;
+
+        if(programName == null){
+            return  null;
+        }
+        Program programInContext;
+        if(isProgram)
+            programInContext = programs.get(programName);
+        else
+            programInContext = functions.get(programName);
+
+        programToRun = programInContext.expand(degreeOfRun, functions);
+
+
+        ProgramDebugger debugger;
+        debugger = new ProgramDebuggerImpl(username, programToRun, functions, originalInputs, inputs);
+        result = debugger.initialDebugger(originalInputs);
+
+        return  result;
+    }
+
 }

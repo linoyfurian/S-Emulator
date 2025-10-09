@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DebugContextDto {
+    private final String userName;
     private final long previousInstructionNumber;
     private final long nextInstructionNumber;
     private final LinkedHashMap<String, Long> currentVariablesValues;
@@ -19,7 +20,7 @@ public class DebugContextDto {
     private final DebugContextDto prevDebugContext;
     private final Map<String, Long> originalInputs;
 
-    public DebugContextDto(Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
+    public DebugContextDto(String userName, Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
         this.previousInstructionNumber = previousInstructionNumber;
         this.nextInstructionNumber = nextInstructionNumber;
         this.currentVariablesValues = sortVarsForDisplay(context.getAllValues());
@@ -28,6 +29,7 @@ public class DebugContextDto {
         this.prevDebugContext = prevDebugContext;
         this.originalInputs = originalInputs;
         this.PrevCycles = PrevCycles;
+        this.userName = userName;
     }
 
     public LinkedHashMap<String, Long> getCurrentVariablesValues() {
