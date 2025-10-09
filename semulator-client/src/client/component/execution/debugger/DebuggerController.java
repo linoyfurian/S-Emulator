@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +61,9 @@ public class DebuggerController {
     @FXML private Button stepOverBtn;
     @FXML private Button stopBtn;
     @FXML private Button stepBackBtn;
+
+
+    @FXML private Button backToDashboardBtn;
 
     private boolean isDebugMode = false;
     private boolean isStopDebugger = false;
@@ -225,5 +229,12 @@ public class DebuggerController {
             return;
         boolean isRunValid = this.mainController.checkIfRunIsValid(selectedArchitecture);
         this.runBtn.setDisable(!isRunValid);
+    }
+
+
+    @FXML
+    void onBackToDashboardBtnListener(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

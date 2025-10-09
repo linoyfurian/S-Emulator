@@ -96,6 +96,14 @@
                                 <VBox fx:id="inputsContainer" prefHeight="250.0" prefWidth="250.0" spacing="8" />
                             </content>
                         </ScrollPane>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Button fx:id="backToDashboardBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onBackToDashboardBtnListener" text="Back to dashboard" />
+                     </children>
+                     <padding>
+                        <Insets bottom="7.0" right="7.0" top="7.0" />
+                     </padding>
+                  </HBox>
                     </children>
                     <padding>
                         <Insets left="3.0" />
