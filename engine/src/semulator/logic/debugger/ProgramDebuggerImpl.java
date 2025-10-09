@@ -77,7 +77,8 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 nextLabel = simpleInstruction.execute(this.context);
             else {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
-                executeResult = complexInstruction.execute(this.context, mainProgram);
+                //TODO : functions not null
+                executeResult = complexInstruction.execute(this.context, null);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }
@@ -128,7 +129,8 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
             nextLabel = simpleInstruction.execute(this.context);
         else {
             ComplexInstruction complexInstruction = (ComplexInstruction) instructionToExecute;
-            executeResult = complexInstruction.execute(this.context, mainProgram);
+            //TODO functions not null
+            executeResult = complexInstruction.execute(this.context, null);
             nextLabel = executeResult.getNextLabel();
             cycles = cycles + executeResult.getRunCycles();
         }
@@ -191,7 +193,8 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 nextLabel = simpleInstruction.execute(this.context);
             else {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
-                executeResult = complexInstruction.execute(this.context, mainProgram);
+                //TODO functions not null
+                executeResult = complexInstruction.execute(this.context, null);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }

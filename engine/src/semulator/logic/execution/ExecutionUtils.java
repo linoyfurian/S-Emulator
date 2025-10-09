@@ -7,12 +7,13 @@ import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 
 import java.util.List;
+import java.util.Map;
 
 public class ExecutionUtils {
     private ExecutionUtils() {}
 
 
-    public static ArgumentResult findInputValue(Program program, String argument, ExecutionContext context) {
+    public static ArgumentResult findInputValue(Map<String, Program> functions, String argument, ExecutionContext context) {
         long result = 0L;
         int cycles = 0;
 
@@ -26,21 +27,20 @@ public class ExecutionUtils {
             String funcArgs = FunctionUtils.getFunctionarguments(argument);
 
             // Find the function in the program
-            ProgramImpl programImpl = (ProgramImpl) program;
-            Program targetFunction = FunctionUtils.findFunction(funcName, programImpl.getFunctions());
+            Program targetFunction = functions.get(funcName);
 
             if(targetFunction != null) {
                 // Split and evaluate each argument
                 List<String> innerArgs = FunctionUtils.splitFunctionArguments(funcArgs);
                 long[] inputs = new long[innerArgs.size()];
                 for(int i = 0; i < innerArgs.size(); i++) {
-                    ArgumentResult currArgumentResult = findInputValue(program, innerArgs.get(i), context);
+                    ArgumentResult currArgumentResult = findInputValue(functions, innerArgs.get(i), context);
                     inputs[i] = currArgumentResult.getArgumentValue();
                     cycles += currArgumentResult.getCycles();
                 }
 
                 // Run the function
-                ProgramExecutor executor = new ProgramExecutorImpl(targetFunction, program);
+                ProgramExecutor executor = new ProgramExecutorImpl(targetFunction, functions);
 
                 ExecutionRunDto runDetails = executor.run(0, 0, null, inputs);
                 if(runDetails != null) {

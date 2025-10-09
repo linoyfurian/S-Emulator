@@ -9,21 +9,17 @@ import client.utils.architecture.ArchitectureType;
 import client.utils.display.ProgramUtil;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
-import dto.FunctionDto;
-import dto.ProgramDto;
-import dto.ProgramFunctionDto;
-import dto.RunResultDto;
+import dto.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class ExecutionController {
     private DashboardController mainController;
@@ -154,4 +150,57 @@ public class ExecutionController {
         else
             return false;
     }
+
+    public void onRegularRunBtnListener(Map<String, Long> originalInputs, long[] inputs) {
+        int degreeOfExpand = this.topBarExecutionController.getCurrentDegree();
+
+        Gson gson = new Gson();
+        RunProgramRequest runRequest = new RunProgramRequest(programInContext, isProgram, degreeOfExpand, originalInputs, inputs);
+
+        // Convert to JSON
+        String json = gson.toJson(runRequest);
+
+        RequestBody body = RequestBody.create(
+                json, MediaType.get("application/json; charset=utf-8")
+        );
+
+        String finalUrl = HttpUrl
+                .parse(Constants.REGULAR_RUN_SERVLET)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+
+                    Gson gson = new Gson();
+                    ExecutionRunDto runResult  = gson.fromJson(json, ExecutionRunDto.class);
+
+                    javafx.application.Platform.runLater(() -> {
+                        if(runResult!=null){
+                            debuggerController.updateRunResult(runResult);
+                            //todo update history
+                        }
+                        debuggerController.disableChangeOfInput(false);
+                    });
+                } finally {
+                response.close();
+                }
+            }
+        });
+
+    }
+
 }

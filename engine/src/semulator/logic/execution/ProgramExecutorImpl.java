@@ -17,11 +17,11 @@ import java.util.Map;
 public class ProgramExecutorImpl implements ProgramExecutor {
 
     private final Program programToRun;
-    private final Program mainProgram;
+    private Map<String, Program> functions;
 
-    public ProgramExecutorImpl(Program programToRun, Program mainProgram) {
+    public ProgramExecutorImpl(Program programToRun, Map<String, Program> functions) {
         this.programToRun = programToRun;
-        this.mainProgram = mainProgram;
+        this.functions = functions;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
             }
             else{
                 ComplexInstruction complexInstruction = (ComplexInstruction) currentInstruction;
-                executeResult = complexInstruction.execute(context, mainProgram);
+                executeResult = complexInstruction.execute(context, functions);
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }

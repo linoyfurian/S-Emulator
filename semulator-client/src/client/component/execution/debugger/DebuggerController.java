@@ -1,8 +1,12 @@
 package client.component.execution.debugger;
 
 import client.component.execution.ExecutionController;
+import client.utils.Constants;
 import client.utils.display.VariableRow;
+import com.google.gson.Gson;
+import dto.ExecutionRunDto;
 import dto.ProgramFunctionDto;
+import dto.RunProgramRequest;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
@@ -25,6 +29,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import okhttp3.HttpUrl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -236,5 +241,81 @@ public class DebuggerController {
     void onBackToDashboardBtnListener(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    void onRunBtnListener(ActionEvent event) {
+//        isDebugMode = radioBtnDebug.isSelected();
+//        mainController.cleanDebugContext();
+
+        Map<String, Long> originalInputs = new HashMap<>();
+
+        if (mainController != null) {
+            if(inputFields.isEmpty()) {
+                long [] inputs = new long[0];
+                mainController.onRegularRunBtnListener(originalInputs, inputs);
+            }
+
+            int maxIndex = 0;
+            int index;
+            String strValue;
+            Long value = 0L;
+            Map<Integer, Long> inputsValues = new HashMap<>();
+            for (Map.Entry<String, TextField> input : inputFields.entrySet()) {
+                index = Integer.parseInt(input.getKey().substring(1));
+                strValue = input.getValue().getText();
+                if (!strValue.isEmpty()||strValue!=null) {
+                    try{
+                        value = Long.parseLong(strValue.trim());
+                    }
+                    catch(NumberFormatException ex){
+                        value = 0L;
+                        input.getValue().setText("0");
+                    }
+                }
+                else {
+                    value = 0L;
+                    input.getValue().setText("0");
+                }
+                inputsValues.put(index, value);
+                originalInputs.put(input.getKey(), value);
+                if (index > maxIndex)
+                    maxIndex = index;
+            }
+
+            if (maxIndex == 0)
+                return;
+
+            long[] inputs = new long[maxIndex];
+            for (int i = 1; i <= maxIndex; i++) {
+                inputs[i - 1] = inputsValues.getOrDefault(i, 0L);
+            }
+
+            mainController.onRegularRunBtnListener(originalInputs, inputs);
+        }
+    }
+
+    public void updateRunResult(ExecutionRunDto runResult){
+        Map<String, Long> variablesValues = runResult.getVariables();
+        variablesData.clear();
+
+        for (Map.Entry<String, Long> entry : variablesValues.entrySet()) {
+            VariableRow row = new VariableRow(entry.getKey(), entry.getValue());
+            variablesData.add(row);
+        }
+        cyclesProperty.set(runResult.getCycles());
+    }
+
+    public void disableChangeOfInput(boolean disable){
+        if(disable){
+            for(TextField tf : inputFields.values()){
+                tf.setDisable(true);
+            }
+        }
+        else{
+            for(TextField tf : inputFields.values()){
+                tf.setDisable(false);
+            }
+        }
     }
 }

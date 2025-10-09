@@ -1,13 +1,11 @@
 package semulator.core.v3;
 
-import dto.FunctionInfo;
-import dto.LoadReport;
-import dto.ProgramInfo;
+import dto.*;
 import jakarta.xml.bind.JAXBException;
-import dto.ProgramFunctionDto;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public interface SEmulatorEngineV3 {
     ProgramFunctionDto displayProgram(String name, boolean isProgram);
@@ -15,5 +13,6 @@ public interface SEmulatorEngineV3 {
     List<ProgramInfo> getPrograms();
     List<FunctionInfo> getFunctions();
     ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand);
+    ExecutionRunDto runProgram(String username, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input);
 
 }

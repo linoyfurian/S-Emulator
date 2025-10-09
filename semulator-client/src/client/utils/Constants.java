@@ -22,7 +22,7 @@ public class Constants {
     public final static String FUNCTIONS_PAGE = FULL_SERVER_PATH + "/functions";
     public final static String DISPLAY_SERVLET = FULL_SERVER_PATH + "/display-program";
     public final static String EXPAND_SERVLET = FULL_SERVER_PATH + "/expand";
-
+    public final static String REGULAR_RUN_SERVLET = FULL_SERVER_PATH + "/regular-run";
 
     // GSON instance
     public final static Gson GSON_INSTANCE = new Gson();

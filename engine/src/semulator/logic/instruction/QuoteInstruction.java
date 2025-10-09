@@ -32,14 +32,13 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     }
 
     @Override
-    public ComplexExecuteResult execute(ExecutionContext context, Program program) {
+    public ComplexExecuteResult execute(ExecutionContext context, Map<String, Program> functions) {
         int runCycles = 0;
-        ProgramImpl programImpl = (ProgramImpl) program;
-        List<Program> functions = programImpl.getFunctions();
+
         Function functionToRun = null;
         long assignedValue = 0L;
 
-        for (Program function : functions) {
+        for (Program function : functions.values()) {
             if(function instanceof Function f) {
                 if(functionName.equals(f.getName())) {
                     functionToRun = f;
@@ -49,13 +48,13 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         }
 
         if(functionToRun != null) {
-            ProgramExecutor programExecutor = new ProgramExecutorImpl(functionToRun, program);
+            ProgramExecutor programExecutor = new ProgramExecutorImpl(functionToRun, functions);
             List<String> arguments = FunctionUtils.splitFunctionArguments(functionArguments);
 
             long [] inputs = new long[arguments.size()];
             ArgumentResult currArgument;
             for(int i = 0; i < arguments.size(); i++) {
-                currArgument = ExecutionUtils.findInputValue(program,arguments.get(i), context);
+                currArgument = ExecutionUtils.findInputValue(functions,arguments.get(i), context);
                 inputs[i] = currArgument.getArgumentValue();
                 runCycles = runCycles + currArgument.getCycles();
             }

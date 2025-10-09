@@ -1,18 +1,14 @@
 package semulator.core.v3;
 
-import dto.FunctionInfo;
-import dto.LoadReport;
-import dto.ProgramInfo;
+import dto.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import dto.FunctionDto;
-import dto.ProgramDto;
-import dto.ProgramFunctionDto;
-import dto.RunResultDto;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
+import semulator.logic.execution.ProgramExecutor;
+import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
 
@@ -154,5 +150,34 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             programFunctionDto = new FunctionDto(expandedProgram, functions);
 
         return programFunctionDto;
+    }
+
+    @Override
+    public ExecutionRunDto runProgram(String username, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
+        System.out.println("in runProgram");
+
+        Program programToRun;
+
+        if(programName == null){
+            return  null;
+        }
+        Program programInContext;
+        if(isProgramBool)
+            programInContext = programs.get(programName);
+        else
+            programInContext = functions.get(programName);
+
+        System.out.println(programInContext.getName());
+        programToRun = programInContext.expand(desiredDegreeOfExpand, functions);
+
+
+        System.out.println(programToRun.getName());
+        ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
+        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
+
+        //TODO HISTORY
+
+        System.out.println(runResult.getResult());
+        return runResult;
     }
 }
