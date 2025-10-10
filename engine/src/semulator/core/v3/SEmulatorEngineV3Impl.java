@@ -23,8 +23,7 @@ import java.util.Map;
 public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     private Map<String, Program> programs = new HashMap<>();
     private Map<String, Program> functions = new HashMap<>();
-    private Map<String, List<RunResultDto>> runsHistory = new HashMap<>(); //todo change string - username
-    //private List<ExecutionRunDto> programRuns = new ArrayList<>();
+    private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
 
     private static final JAXBContext JAXB_CTX;
     static {
@@ -228,4 +227,27 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         return result;
     }
 
+    @Override
+    public void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture){
+        String userName = debugContext.getUserName();
+        if(!this.runsHistory.containsKey(userName)){
+            this.runsHistory.put(userName, new ArrayList<>());
+        }
+
+        List<RunResultDto> results = this.runsHistory.get(userName);
+        Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
+        long resultY = variablesValues.get("y");
+        String programOrFunction = "Program";
+        if(!isProgram)
+            programOrFunction = "Function";
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, programName);
+        results.add(currentRunResult);
+    }
+
+    @Override
+    public List<RunResultDto> getUserRunHistory(String user){
+        if(this.runsHistory.get(user)==null)
+            return new ArrayList<>();
+        return this.runsHistory.get(user);
+    }
 }

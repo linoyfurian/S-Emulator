@@ -92,4 +92,8 @@ public class DebugContextDto {
         if (c == 'z') return 2;
         return 3;
     }
+
+    public String getUserName() {
+        return userName;
+    }
 }

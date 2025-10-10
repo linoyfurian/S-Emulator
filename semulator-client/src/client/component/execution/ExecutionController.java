@@ -282,7 +282,6 @@ public class ExecutionController {
 
     public void btnStepOverListener(){
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
-
         DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
 
         Gson gson = new Gson();
@@ -328,11 +327,10 @@ public class ExecutionController {
                         if(currInstructionToHighlight == 0){
                             instructionsController.setIsRunning(false);
                             topBarExecutionController.endDebugMode();
-                            //todo: add current run to history (call servlet)
-//                            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
-//                            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
-//                            historyController.updateHistoryRunTable(programInContextRunHistory);
 
+                            String architecture = debuggerController.getArchitecture();
+                            int degreeOfRun = topBarExecutionController.getCurrentDegree();
+                            addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
                             debuggerController.disableChangeOfInput(false);
                         }
                         else
@@ -345,6 +343,42 @@ public class ExecutionController {
             }
         });
 
+    }
+
+    public void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String architecture){
+        HistoryRequestDto historyRequest = new HistoryRequestDto(debugContext,degreeOfRun,this.isProgram, this.programInContext,architecture);
+        Gson gson = new Gson();
+        // Convert to JSON
+        String json = gson.toJson(historyRequest);
+
+        RequestBody body = RequestBody.create(
+                json, MediaType.get("application/json; charset=utf-8")
+        );
+
+        String finalUrl = HttpUrl
+                .parse(Constants.HISTORY_RUN_SERVLET)
+                .newBuilder()
+                .build()
+                .toString();
+
+        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+                    mainController.updateHistory();
+                }
+                catch (Exception e) {
+                }
+            }
+        });
     }
 
 }

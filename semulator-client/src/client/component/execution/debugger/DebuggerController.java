@@ -385,5 +385,11 @@ public class DebuggerController {
 
     }
 
+    public String getArchitecture() {
+        String architecture;
+        architecture = this.architectureCbox.getValue();
+        return architecture;
+    }
+
 
 }

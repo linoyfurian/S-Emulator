@@ -4,11 +4,13 @@ import client.component.dashboard.DashboardController;
 import client.utils.Constants;
 import com.google.gson.reflect.TypeToken;
 import dto.FunctionInfo;
+import dto.RunResultDto;
 import dto.UserInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,7 +41,18 @@ public class UsersController {
     @FXML private TableColumn<UserInfo, Number> availableUsersColUsedCredit;
     @FXML private TableView<UserInfo> availableUsersTbl;
 
+    @FXML private TableColumn<RunResultDto, String> historyArchitectureCol;
+    @FXML private TableColumn<RunResultDto, Integer> historyCyclesCol;
+    @FXML private TableColumn<RunResultDto, Integer> historyDegreeCol;
+    @FXML private TableColumn<RunResultDto, String> historyIsProgramCol;
+    @FXML private TableColumn<RunResultDto, String> historyNameCol;
+    @FXML private TableColumn<RunResultDto, Long> historyResultCol;
+    @FXML private TableColumn<RunResultDto, Integer> historyRunNumberCol;
+    @FXML private TableView<RunResultDto> historyTbl;
+
+
     private ObservableList<UserInfo> usersData = FXCollections.observableArrayList();
+    private ObservableList<RunResultDto> historyRunData = FXCollections.observableArrayList();
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
@@ -68,6 +81,24 @@ public class UsersController {
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        historyCyclesCol.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getCycles()).asObject());
+        historyRunNumberCol.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getRunNumber()).asObject());
+        historyDegreeCol.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getDegreeOfRun()).asObject());
+        historyResultCol.setCellValueFactory(cellData ->
+                new SimpleLongProperty(cellData.getValue().getResultY()).asObject());
+        historyArchitectureCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getArchitecture()));
+        historyIsProgramCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getProgramOrFunction()));
+        historyNameCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
+
+        historyTbl.setItems(historyRunData);
+
     }
 
     private void refreshUsers() {
@@ -138,5 +169,19 @@ public class UsersController {
             }
         }
         return usersDelta;
+    }
+
+    public UserInfo getSelectedUser(){
+        return this.availableUsersTbl.getSelectionModel().getSelectedItem();
+    }
+
+    public void updateHistory(List<RunResultDto> currentRunHistoryToDisplay){
+        this.historyRunData.clear();
+        if(currentRunHistoryToDisplay == null){
+            System.out.println("&&&&&&&&&&");
+            return;
+        }
+        this.historyRunData.addAll(currentRunHistoryToDisplay);
+        this.historyTbl.refresh();
     }
 }

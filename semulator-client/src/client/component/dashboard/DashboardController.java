@@ -8,10 +8,7 @@ import client.utils.Constants;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dto.FunctionDto;
-import dto.FunctionInfo;
-import dto.ProgramDto;
-import dto.ProgramFunctionDto;
+import dto.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -41,6 +38,8 @@ public class DashboardController {
     @FXML private ProgramsFunctionsController programsFunctionsController;
 
     private final IntegerProperty credits = new SimpleIntegerProperty(0);
+
+    private List<RunResultDto> currentHistory;
 
     public IntegerProperty creditsProperty() { return credits; }
     public int getCredits() { return credits.get(); }
@@ -114,6 +113,47 @@ public class DashboardController {
 
                     Platform.runLater(() -> {
                         executionController.initialProgramDetails(programDetails, isProgram);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
+
+    public void updateHistory() {
+        UserInfo selectedUser = usersController.getSelectedUser();
+        String username;
+        if (selectedUser == null)
+            username = this.topBarController.getUserName();
+        else
+            username = selectedUser.getName();
+
+        String finalUrl = HttpUrl
+                .parse(Constants.HISTORY_RUN_SERVLET)
+                .newBuilder()
+                .addQueryParameter("username", username)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+                    Gson gson = new Gson();
+                    currentHistory = gson.fromJson(json, new TypeToken<List<RunResultDto>>() {}.getType());
+
+                    Platform.runLater(() -> {
+                        usersController.updateHistory(currentHistory);
                     });
                 } finally {
                     response.close();

@@ -38,15 +38,15 @@
             <Insets left="5.0" />
          </padding>
       </Label>
-      <TableView prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="historyTbl" prefHeight="200.0" prefWidth="200.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Run Number" />
-          <TableColumn prefWidth="109.0" text="Program\Function" />
-            <TableColumn prefWidth="108.0" text="Name" />
-            <TableColumn prefWidth="109.0" text="Architecture type" />
-            <TableColumn prefWidth="51.0" text="Degree" />
-            <TableColumn prefWidth="45.0" text="y" />
-            <TableColumn prefWidth="72.0" text="Cycles" />
+          <TableColumn fx:id="historyRunNumberCol" prefWidth="75.0" text="Run Number" />
+          <TableColumn fx:id="historyIsProgramCol" prefWidth="109.0" text="Program\Function" />
+            <TableColumn fx:id="historyNameCol" prefWidth="108.0" text="Name" />
+            <TableColumn fx:id="historyArchitectureCol" prefWidth="109.0" text="Architecture type" />
+            <TableColumn fx:id="historyDegreeCol" prefWidth="51.0" text="Degree" />
+            <TableColumn fx:id="historyResultCol" prefWidth="45.0" text="y" />
+            <TableColumn fx:id="historyCyclesCol" prefWidth="72.0" text="Cycles" />
         </columns>
       </TableView>
    </children>
