@@ -45,7 +45,7 @@ public class DebugRunServlet extends HttpServlet {
             result = engine.initialStartOfDebugger(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs, inputs);
         }
         else{
-            result = null;
+            result = engine.debug(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
         }
 
         resp.setContentType("application/json");

@@ -10,7 +10,6 @@ import client.utils.display.ProgramUtil;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import dto.*;
-import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -119,6 +118,7 @@ public class ExecutionController {
                         expandedProgramDetails = functionDto;
                     }
                     javafx.application.Platform.runLater(() -> {
+                        instructionsController.clearAllHighlightedInstructions();
                         instructionsController.displayProgram(expandedProgramDetails);
                         topBarExecutionController.refreshHighlightOptions(expandedProgramDetails);
                         topBarExecutionController.updateCurrentDegreeLabel(degreeToExpand);
@@ -204,16 +204,12 @@ public class ExecutionController {
             });
         }
         else {
+            topBarExecutionController.initialDebugMode();
             instructionsController.setIsRunning(true);
 //            int breakPointRowIndex = 0;
 //            breakPointRowIndex = instructionsController.getBreakPointRowIndex();
 
             debuggerController.initialStartOfDebugging();
-            DebugContextDto initialDebugContext;
-
-            //todo call servlet for initial
-//            initialDebugContext = engine.initialStartOfDebugger(degreeOfRun, this.debugContext, originalInputs, inputs);
-//            this.debugContext = initialDebugContext;
 
 //            if (breakPointRowIndex != 0) {
 //                DebugContextDto debugDetails;
@@ -281,6 +277,74 @@ public class ExecutionController {
 
     public void cleanDebugContext(){
         debugContext = null;
+    }
+
+
+    public void btnStepOverListener(){
+        int degreeOfRun = topBarExecutionController.getCurrentDegree();
+
+        DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
+
+        Gson gson = new Gson();
+        // Convert to JSON
+        String json = gson.toJson(debugRequest);
+
+        RequestBody body = RequestBody.create(
+                json, MediaType.get("application/json; charset=utf-8")
+        );
+
+        String finalUrl = HttpUrl
+                .parse(Constants.DEBUG_RUN_SERVLET)
+                .newBuilder()
+                .addQueryParameter("is_initial_debug", "false")
+                .build()
+                .toString();
+
+        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+
+                    Gson gson = new Gson();
+                    DebugContextDto debugResult  = gson.fromJson(json, DebugContextDto.class);
+
+                    debugContext = debugResult;
+                    javafx.application.Platform.runLater(() -> {
+                        long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
+                        String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
+                        debuggerController.updateVariableHighlight(variableToHighLight);
+
+                        long currInstructionToHighlight = debugContext.getNextInstructionNumber();
+                        if(currInstructionToHighlight == 0){
+                            instructionsController.setIsRunning(false);
+                            topBarExecutionController.endDebugMode();
+                            //todo: add current run to history (call servlet)
+//                            engine.addCurrentRunToHistory(this.debugContext, degreeOfRun);
+//                            List<RunResultDto> programInContextRunHistory = engine.getProgramInContextRunHistory();
+//                            historyController.updateHistoryRunTable(programInContextRunHistory);
+
+                            debuggerController.disableChangeOfInput(false);
+                        }
+                        else
+                            instructionsController.highlightLine((int)currInstructionToHighlight - 1);
+                        debuggerController.updateDebugResult(debugContext);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+
     }
 
 }

@@ -16,7 +16,6 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -236,6 +235,7 @@ public class InstructionsController {
     public void highlightLine(int index) {
         currentLine.set(index);
         initInstructionsArchitectureHighlighting();
+        tblInstructions.scrollTo(Math.max(index - 3, 0));
     }
 
     private void initBreakpointColumn() {
@@ -407,5 +407,18 @@ public class InstructionsController {
 
     public void setIsRunning(boolean isRunning) {
         this.isRunning.set(isRunning);
+    }
+
+    public String getInstructionsMainVariable(long currInstructionNumber){
+        List<InstructionDto> instructions = this.tblInstructions.getItems();
+        InstructionDto currInstruction = instructions.get((int)currInstructionNumber-1);
+        if(currInstruction.isJumpInstruction())
+            return "";
+        return currInstruction.getMainVariable();
+    }
+
+    public void clearAllHighlightedInstructions(){
+        currentLine.set(-1);
+        tblInstructions.scrollTo(Math.max(0, 0));
     }
 }

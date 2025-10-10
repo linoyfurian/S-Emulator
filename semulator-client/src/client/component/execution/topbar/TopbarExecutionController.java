@@ -212,4 +212,14 @@ public class TopbarExecutionController {
     public int getCredits(){
         return Integer.parseInt(this.availableCreditsLbl.getText());
     }
+
+    public void initialDebugMode(){
+        this.cmbExpand.setDisable(true);
+        this.cmbCollapse.setDisable(true);
+    }
+
+    public void endDebugMode(){
+        this.cmbExpand.setDisable(false);
+        this.cmbCollapse.setDisable(false);
+    }
 }

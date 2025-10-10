@@ -8,6 +8,7 @@ import dto.DebugContextDto;
 import dto.ExecutionRunDto;
 import dto.ProgramFunctionDto;
 import dto.RunProgramRequest;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
@@ -32,10 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import okhttp3.HttpUrl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class DebuggerController {
@@ -352,4 +350,40 @@ public class DebuggerController {
             cyclesProperty.set(debugContext.getCycles());
         }
     }
+
+
+    @FXML
+    void onStepOverBtnListener(ActionEvent event) {
+        stepBackBtn.setDisable(false);
+        mainController.btnStepOverListener();
+    }
+
+    public void updateVariableHighlight(String variablesToHighLight){
+        List<String> vars = new ArrayList<>();
+        vars.add(variablesToHighLight);
+        markVariablesChanged(vars);
+    }
+
+
+    public void markVariablesChanged(Collection<String> names) {
+        Platform.runLater(() -> {
+            changedVarNames.clear();
+            if (names != null)
+                changedVarNames.addAll(names);
+
+            variablesTable.refresh();
+
+            if (names != null && !names.isEmpty()) {
+                String first = names.iterator().next();
+                int idx = -1;
+                for (int i = 0; i < variablesTable.getItems().size(); i++) {
+                    if (first.equals(variablesTable.getItems().get(i).getName())) { idx = i; break; }
+                }
+                if (idx >= 0) variablesTable.scrollTo(Math.max(idx - 2, 0));
+            }
+        });
+
+    }
+
+
 }
