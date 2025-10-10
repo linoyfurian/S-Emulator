@@ -44,7 +44,13 @@ public class DashboardController {
     public IntegerProperty creditsProperty() { return credits; }
     public int getCredits() { return credits.get(); }
     public void setCredits(int value) { Platform.runLater(() -> credits.set(value)); }
-    public void addCredits(int delta) { Platform.runLater(() -> credits.set(credits.get() + delta)); }
+    public void addCredits(int delta) {
+        Platform.runLater(() -> {
+            credits.set(credits.get() + delta);
+            String username = topBarController.getUserName();
+            usersController.updateCredits(username, credits.get());
+        });
+    }
 
     @FXML
     public void initialize() {

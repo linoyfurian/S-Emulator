@@ -2,7 +2,9 @@ package client.component.dashboard.users;
 
 import client.component.dashboard.DashboardController;
 import client.utils.Constants;
+import client.utils.http.HttpClientUtil;
 import com.google.gson.reflect.TypeToken;
+import dto.DebugContextDto;
 import dto.FunctionInfo;
 import dto.RunResultDto;
 import dto.UserInfo;
@@ -21,7 +23,10 @@ import javafx.scene.control.TableView;
 
 import com.google.gson.Gson;
 import javafx.util.Duration;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,8 +61,6 @@ public class UsersController {
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
-        availableUsersColCredits.setCellValueFactory(cellData ->
-                mainController.creditsProperty());
     }
 
     @FXML
@@ -72,6 +75,8 @@ public class UsersController {
                 new SimpleStringProperty(cellData.getValue().getName()));
         availableUsersColUsedCredit.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getUsedCredits()));
+        availableUsersColCredits.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getCredits()));
 
         availableUsersTbl.setItems(usersData);
 
@@ -135,6 +140,8 @@ public class UsersController {
                                 UserInfo currentUser = findCurrentUser(user.getName(), usersData);
                                 currentUser.setFunctionsNumber(user.getFunctionsNumber());
                                 currentUser.setProgramsNumber(user.getProgramsNumber());
+                                currentUser.setUsedCredits(user.getUsedCredits());
+                                currentUser.setCredits(user.getCredits());
                             }
                         }
 
@@ -177,11 +184,39 @@ public class UsersController {
 
     public void updateHistory(List<RunResultDto> currentRunHistoryToDisplay){
         this.historyRunData.clear();
-        if(currentRunHistoryToDisplay == null){
-            System.out.println("&&&&&&&&&&");
-            return;
-        }
         this.historyRunData.addAll(currentRunHistoryToDisplay);
         this.historyTbl.refresh();
     }
+
+    public void updateCredits(String username, int credits){
+        String finalUrl = HttpUrl
+                .parse(Constants.CREDITS_SERVLET)
+                .newBuilder()
+                .addQueryParameter("operation", "new")
+                .addQueryParameter("credits",String.valueOf(credits))
+                .build()
+                .toString();
+
+        RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
+
+        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
+
+
 }

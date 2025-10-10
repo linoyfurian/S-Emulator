@@ -25,5 +25,6 @@ public class Constants {
     public final static String REGULAR_RUN_SERVLET = FULL_SERVER_PATH + "/regular-run";
     public final static String DEBUG_RUN_SERVLET = FULL_SERVER_PATH + "/debug-run";
     public final static String HISTORY_RUN_SERVLET = FULL_SERVER_PATH + "/history";
+    public final static String CREDITS_SERVLET = FULL_SERVER_PATH + "/credits";
 }
 
