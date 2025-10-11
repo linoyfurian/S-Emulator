@@ -31,8 +31,6 @@ public class RegularRunServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BufferedReader reader = req.getReader();
-        Gson gson = new Gson();
-
         // Parse request body
         RunProgramRequest requestObj = gson.fromJson(reader, RunProgramRequest.class);
 
@@ -44,10 +42,16 @@ public class RegularRunServlet extends HttpServlet {
         String architecture = requestObj.getArchitecture();
 
         String username = SessionUtils.getUsername(req);
+
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 
         ExecutionRunDto result = engine.runProgram(username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
 
+        if (result == null) {
+            System.out.println("Program run failed");
+            return;
+        }
+        System.out.println(result.getResult());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(result));

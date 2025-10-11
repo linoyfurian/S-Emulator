@@ -15,10 +15,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -161,6 +158,35 @@ public class DashboardController {
                     Platform.runLater(() -> {
                         usersController.updateHistory(currentHistory);
                     });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
+
+    public void updateRunsNumber(){
+        String finalUrl = HttpUrl
+                .parse(Constants.USERS_PAGE)
+                .newBuilder()
+                .build()
+                .toString();
+
+        RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
+
+
+
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
                 } finally {
                     response.close();
                 }

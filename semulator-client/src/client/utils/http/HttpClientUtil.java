@@ -65,7 +65,7 @@ public class HttpClientUtil {
         call.enqueue(callback);
     }
 
-    public static void postFileAsync(String url, RequestBody requestBody, Callback callback) {
+    public static void postAsync(String url, RequestBody requestBody, Callback callback) {
 
         Request request = new Request.Builder()
                 .url(url)

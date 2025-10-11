@@ -69,5 +69,9 @@ public class UserInfo {
         this.runsNumber = runsNumber;
     }
 
+    public void updateRunsNumber(){
+        this.runsNumber++;
+    }
+
 
 }

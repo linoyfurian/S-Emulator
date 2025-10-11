@@ -142,6 +142,7 @@ public class UsersController {
                                 currentUser.setProgramsNumber(user.getProgramsNumber());
                                 currentUser.setUsedCredits(user.getUsedCredits());
                                 currentUser.setCredits(user.getCredits());
+                                currentUser.setRunsNumber(user.getRunsNumber());
                             }
                         }
 
@@ -199,7 +200,7 @@ public class UsersController {
 
         RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
 
-        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 

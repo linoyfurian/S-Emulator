@@ -175,8 +175,13 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         if(!isProgramBool){
             programOrFunction = "Function";
         }
+
+        if(!this.runsHistory.containsKey(username)){
+            this.runsHistory.put(username, new ArrayList<>());
+        }
+
         List<RunResultDto> results = this.runsHistory.get(username);
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(),programOrFunction, architecture, programName);
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, programName);
         results.add(currentRunResult);
 
         return runResult;

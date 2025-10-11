@@ -173,7 +173,7 @@ public class ExecutionController {
                     .build()
                     .toString();
 
-            HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            HttpClientUtil.postAsync(finalUrl, body, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
@@ -195,6 +195,7 @@ public class ExecutionController {
                             if(runResult!=null){
                                 debuggerController.updateRunResult(runResult);
                                 mainController.updateHistory();
+                                mainController.updateRunsNumber();
                             }
                             debuggerController.disableChangeOfInput(false);
                         });
@@ -234,7 +235,7 @@ public class ExecutionController {
                     .build()
                     .toString();
 
-            HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+            HttpClientUtil.postAsync(finalUrl, body, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
@@ -298,7 +299,7 @@ public class ExecutionController {
                 .build()
                 .toString();
 
-        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
@@ -330,6 +331,7 @@ public class ExecutionController {
                             String architecture = debuggerController.getArchitecture();
                             int degreeOfRun = topBarExecutionController.getCurrentDegree();
                             addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
+                            mainController.updateRunsNumber();
                             debuggerController.disableChangeOfInput(false);
                         }
                         else
@@ -360,7 +362,7 @@ public class ExecutionController {
                 .build()
                 .toString();
 
-        HttpClientUtil.postFileAsync(finalUrl, body, new Callback() {
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
