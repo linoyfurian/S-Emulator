@@ -16,12 +16,14 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import com.google.gson.Gson;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +105,13 @@ public class UsersController {
                 new SimpleStringProperty(cellData.getValue().getName()));
 
         historyTbl.setItems(historyRunData);
+
+        Timeline historyTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(2), event -> mainController.onUserSelectedListener(getSelectedUser()))
+        );
+
+        historyTimeline.setCycleCount(Timeline.INDEFINITE);
+        historyTimeline.play();
 
     }
 
@@ -217,6 +226,18 @@ public class UsersController {
                 }
             }
         });
+    }
+
+    @FXML
+    void onUnselectedUserBtnListener(ActionEvent event) {
+        this.availableUsersTbl.getSelectionModel().clearSelection();
+        mainController.onUserSelectedListener(null);
+    }
+
+    @FXML
+    void onUserSelectedListener(MouseEvent event) {
+        UserInfo userSelected = getSelectedUser();
+        mainController.onUserSelectedListener(userSelected);
     }
 
 

@@ -15,7 +15,7 @@
             <Insets left="5.0" top="5.0" />
          </padding>
       </Label>
-      <TableView fx:id="availableUsersTbl" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="availableUsersTbl" onMouseClicked="#onUserSelectedListener" prefHeight="200.0" prefWidth="200.0">
         <columns>
           <TableColumn fx:id="availableUsersColName" prefWidth="75.0" text="Name" />
           <TableColumn fx:id="availableUsersColProgramsNumber" prefWidth="118.0" text="Programs Number" />
@@ -27,7 +27,7 @@
       </TableView>
       <HBox>
          <children>
-            <Button fx:id="unselectUserBtn" mnemonicParsing="false" text="Unselect User" visible="false" />
+            <Button fx:id="unselectUserBtn" mnemonicParsing="false" onAction="#onUnselectedUserBtnListener" text="Unselect User" />
          </children>
          <padding>
             <Insets left="5.0" />

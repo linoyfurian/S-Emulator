@@ -193,5 +193,45 @@ public class DashboardController {
             }
         });
     }
+
+    public void onUserSelectedListener(UserInfo username){
+
+        String user;
+        if(username==null)
+            user = getUserName();
+        else
+            user = username.getName();
+        String finalUrl = HttpUrl
+                .parse(Constants.HISTORY_RUN_SERVLET)
+                .newBuilder()
+                .addQueryParameter("username", user)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+                    Gson gson = new Gson();
+                    currentHistory = gson.fromJson(json, new TypeToken<List<RunResultDto>>() {}.getType());
+
+                    Platform.runLater(() -> {
+                        usersController.updateHistory(currentHistory);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
 }
 
