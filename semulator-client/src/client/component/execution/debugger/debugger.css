@@ -1,0 +1,44 @@
+#debugger-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.sub-title-panel {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+}
+
+#cycles-value {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2a5bd7;
+    -fx-padding: 0 15 0 3;
+}
+
+.panel-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.input-variable {
+    -fx-font-weight: bold;
+    -fx-text-fill: #193d5c;
+}
+
+#run-button {
+    -fx-background-color: #56e15c;
+    -fx-text-fill: white;
+}
+
+.execution-button {
+    -fx-background-color: #8b8c8b;
+    -fx-text-fill: white;
+}
+
+/* flash row when variable changed */
+.table-row-cell:changed {
+    -fx-background-color: rgba(255, 230, 150, 0.9);
+}
+
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+}
