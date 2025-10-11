@@ -261,4 +261,33 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             return new ArrayList<>();
         return this.runsHistory.get(user);
     }
+
+    @Override
+    public DebugContextDto resume (String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
+        Program programToRun;
+
+        if(programName == null){
+            return  null;
+        }
+        Program programInContext;
+        if(isProgram)
+            programInContext = programs.get(programName);
+        else
+            programInContext = functions.get(programName);
+
+        programToRun = programInContext.expand(degreeOfExpand, functions);
+
+        ProgramDebugger debugger;
+        debugger = new ProgramDebuggerImpl(username, programToRun, debugContext, functions);
+
+
+        long instructionToExecuteNumber = 1;
+
+        if(debugContext!=null)
+            instructionToExecuteNumber = debugContext.getNextInstructionNumber();
+
+        DebugContextDto result;
+        result = debugger.resume(instructionToExecuteNumber, debugContext, originalInputs);
+        return result;
+    }
 }

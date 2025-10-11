@@ -391,5 +391,21 @@ public class DebuggerController {
         return architecture;
     }
 
+    @FXML
+    void onStopBtnListener(ActionEvent event) {
+        runBtn.setDisable(false);
+        stopBtn.setDisable(true);
+        resumeBtn.setDisable(true);
+        stepOverBtn.setDisable(true);
+        stepBackBtn.setDisable(true);
+        radioBtnRegular.setDisable(false);
+        mainController.btnStopListener();
+    }
+
+    @FXML
+    void onResumeBtnListener(ActionEvent event) {
+        mainController.onBtnResumeListener();
+    }
+
 
 }

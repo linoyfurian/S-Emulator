@@ -18,4 +18,6 @@ public interface SEmulatorEngineV3 {
     DebugContextDto debug (String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
     void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture);
     List<RunResultDto> getUserRunHistory(String user);
+    DebugContextDto resume (String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
+
 }

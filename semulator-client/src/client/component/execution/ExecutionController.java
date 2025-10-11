@@ -382,4 +382,81 @@ public class ExecutionController {
         });
     }
 
+    public void btnStopListener(){
+        int degreeOfRun = topBarExecutionController.getCurrentDegree();
+
+        addCurrentRunToHistory(debugContext,degreeOfRun, debuggerController.getArchitecture());
+
+        instructionsController.setIsRunning(false);
+        instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
+        debuggerController.disableChangeOfInput(false);
+    }
+
+    public void onBtnResumeListener(){
+        instructionsController.setIsRunning(false);
+        int degreeOfRun = topBarExecutionController.getCurrentDegree();
+
+        DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
+
+        Gson gson = new Gson();
+        // Convert to JSON
+        String json = gson.toJson(debugRequest);
+
+        RequestBody body = RequestBody.create(
+                json, MediaType.get("application/json; charset=utf-8")
+        );
+
+        String finalUrl = HttpUrl
+                .parse(Constants.DEBUG_RUN_SERVLET)
+                .newBuilder()
+                .addQueryParameter("operation", "resume")
+                .build()
+                .toString();
+
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+
+                    Gson gson = new Gson();
+                    DebugContextDto debugResult  = gson.fromJson(json, DebugContextDto.class);
+
+                    debugContext = debugResult;
+                    javafx.application.Platform.runLater(() -> {
+                        long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
+                        String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
+                        debuggerController.updateVariableHighlight(variableToHighLight);
+
+                        long currInstructionToHighlight = debugContext.getNextInstructionNumber();
+                        if(currInstructionToHighlight == 0){
+                            instructionsController.setIsRunning(false);
+                            topBarExecutionController.endDebugMode();
+
+                            String architecture = debuggerController.getArchitecture();
+                            int degreeOfRun = topBarExecutionController.getCurrentDegree();
+                            addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
+                            mainController.updateRunsNumber();
+                            debuggerController.disableChangeOfInput(false);
+                        }
+                        else
+                            instructionsController.highlightLine((int)currInstructionToHighlight - 1);
+                        debuggerController.updateDebugResult(debugContext);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
 }

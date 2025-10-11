@@ -41,12 +41,16 @@ public class DebugRunServlet extends HttpServlet {
 
         String isInitialDebug = req.getParameter("is_initial_debug");
         DebugContextDto result;
-        if(isInitialDebug.equals("true")) {
-            result = engine.initialStartOfDebugger(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs, inputs);
+        if(isInitialDebug!=null){
+            if(isInitialDebug.equals("true")) {
+                result = engine.initialStartOfDebugger(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs, inputs);
+            }
+            else{
+                result = engine.debug(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
+            }
         }
-        else{
-            result = engine.debug(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
-        }
+        else
+            result = engine.resume(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
