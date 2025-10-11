@@ -25,7 +25,7 @@
         </Label>
         <HBox maxHeight="50.0" minHeight="40.0" minWidth="200.0" prefWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
             <children>
-                <Button mnemonicParsing="false" styleClass="execution-button" text="New run" />
+                <Button mnemonicParsing="false" onAction="#onNewRunBtnListener" styleClass="execution-button" text="New run" />
                 <Button id="run-button" fx:id="runBtn" mnemonicParsing="false" onAction="#onRunBtnListener" text="Run" />
                 <VBox prefHeight="200.0" prefWidth="70.0" spacing="3.0">
                     <children>

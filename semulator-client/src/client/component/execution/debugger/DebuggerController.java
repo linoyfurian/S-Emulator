@@ -407,5 +407,52 @@ public class DebuggerController {
         mainController.onBtnResumeListener();
     }
 
+    @FXML
+    void onNewRunBtnListener(ActionEvent event) {
+        initialOfNewRun();
+        mainController.btnNewRunListener();
+    }
+
+
+    public void initialOfNewRun(){
+        variablesData.clear();
+        if (cyclesLabel != null) {
+            cyclesProperty.set(0);
+        }
+
+        TextField firstField = null;
+
+        for (Node rowNode : inputsContainer.getChildren()) {
+            if (rowNode instanceof HBox row) {
+                for (Node child : row.getChildren()) {
+                    if (child instanceof TextField tf) {
+                        tf.clear();
+                        if (firstField == null) {
+                            firstField = tf;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (inputsScroll != null) {
+            inputsScroll.setVvalue(0.0);
+        }
+
+        if (firstField != null) {
+            firstField.requestFocus();
+        }
+
+        inputFields.values().forEach(TextField::clear);
+
+        runBtn.setDisable(false);
+        stopBtn.setDisable(true);
+        resumeBtn.setDisable(true);
+        stepOverBtn.setDisable(true);
+        radioBtnRegular.setDisable(false);
+
+        mainController.cleanDebugContext();
+    }
+
 
 }

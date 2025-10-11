@@ -459,4 +459,13 @@ public class ExecutionController {
             }
         });
     }
+
+    public void btnNewRunListener(){
+        instructionsController.setIsRunning(false);
+        instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
+        instructionsController.resetBreakPointSelection();
+
+        debuggerController.disableChangeOfInput(false);
+    }
 }
