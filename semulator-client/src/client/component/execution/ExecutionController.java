@@ -157,7 +157,8 @@ public class ExecutionController {
         int degreeOfExpand = this.topBarExecutionController.getCurrentDegree();
         Gson gson = new Gson();
         if (!isDebugMode) {
-            RunProgramRequest runRequest = new RunProgramRequest(programInContext, isProgram, degreeOfExpand, originalInputs, inputs);
+            String architecture = this.debuggerController.getArchitecture();
+            RunProgramRequest runRequest = new RunProgramRequest(programInContext, architecture, isProgram, degreeOfExpand, originalInputs, inputs);
 
             // Convert to JSON
             String json = gson.toJson(runRequest);
@@ -193,7 +194,7 @@ public class ExecutionController {
                         javafx.application.Platform.runLater(() -> {
                             if(runResult!=null){
                                 debuggerController.updateRunResult(runResult);
-                                //todo update history
+                                mainController.updateHistory();
                             }
                             debuggerController.disableChangeOfInput(false);
                         });
@@ -260,8 +261,6 @@ public class ExecutionController {
 
                             if (currInstructionToHighlight == 0) {
                                 instructionsController.setIsRunning(false);
-                                //todo history
-
                                 debuggerController.disableChangeOfInput(false);
                             }
                         });

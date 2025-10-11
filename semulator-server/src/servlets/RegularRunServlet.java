@@ -41,11 +41,12 @@ public class RegularRunServlet extends HttpServlet {
         int degreeOfExpand = requestObj.getDegreeOfExpand();
         long[] inputs = requestObj.getInputs();
         Map<String, Long> originalInputs = requestObj.getOriginalInputs();
+        String architecture = requestObj.getArchitecture();
 
         String username = SessionUtils.getUsername(req);
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 
-        ExecutionRunDto result = engine.runProgram(username, degreeOfExpand, programName, isProgram, originalInputs, inputs);
+        ExecutionRunDto result = engine.runProgram(username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

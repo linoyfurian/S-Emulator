@@ -154,7 +154,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public ExecutionRunDto runProgram(String username, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
+    public ExecutionRunDto runProgram(String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
 
         if(programName == null){
@@ -171,7 +171,13 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
         ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
 
-        //TODO HISTORY
+        String programOrFunction = "Program";
+        if(!isProgramBool){
+            programOrFunction = "Function";
+        }
+        List<RunResultDto> results = this.runsHistory.get(username);
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(),programOrFunction, architecture, programName);
+        results.add(currentRunResult);
 
         return runResult;
     }

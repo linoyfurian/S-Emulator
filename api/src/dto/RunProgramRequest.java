@@ -8,13 +8,15 @@ public class RunProgramRequest {
     private final int degreeOfExpand;
     private final long[] inputs;
     private final Map<String, Long> originalInputs;
+    private final String architecture;
 
-    public RunProgramRequest(String programName, boolean isProgram, int degreeOfExpand,Map<String, Long> originalInputs, long[] inputs) {
+    public RunProgramRequest(String programName, String architecture, boolean isProgram, int degreeOfExpand,Map<String, Long> originalInputs, long[] inputs) {
         this.programName = programName;
         this.isProgram = isProgram;
         this.degreeOfExpand = degreeOfExpand;
         this.originalInputs = originalInputs;
         this.inputs = inputs;
+        this.architecture = architecture;
     }
 
     public String getProgramName() {
@@ -31,6 +33,10 @@ public class RunProgramRequest {
     }
     public Map<String, Long> getOriginalInputs() {
         return originalInputs;
+    }
+
+    public String getArchitecture() {
+        return architecture;
     }
 
 }

@@ -53,7 +53,7 @@ public class HistoryServlet extends HttpServlet {
 
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 
-        engine.addCurrentRunToHistory(debugContext,degreeOfRun,programName,isProgram,architecture);
+        engine.addCurrentRunToHistory(debugContext, degreeOfRun,programName,isProgram,architecture);
         resp.setCharacterEncoding("UTF-8");
     }
 }
