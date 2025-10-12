@@ -64,7 +64,7 @@ public class JumpEqualFunctionInstruction extends AbstractInstruction implements
                 runCycles = runCycles + currArgument.getCycles();
             }
 
-            ExecutionRunDto runDetails = programExecutor.run(0, 0, null, inputs);
+            ExecutionRunDto runDetails = programExecutor.run(-1, 0, 0, null, inputs);
 
             if(runDetails!=null) {
                 functionResult = runDetails.getResult();

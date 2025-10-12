@@ -158,7 +158,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public ExecutionRunDto runProgram(String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
+    public ExecutionRunDto runProgram(int credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
 
         if(programName == null){
@@ -173,7 +173,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         programToRun = programInContext.expand(desiredDegreeOfExpand, functions);
 
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
-        ExecutionRunDto runResult = programExecutor.run(desiredDegreeOfExpand, 1, originalInputs, input);
+        ExecutionRunDto runResult = programExecutor.run(credits, desiredDegreeOfExpand, 1, originalInputs, input);
 
         String programOrFunction = "Program";
         if(!isProgramBool){

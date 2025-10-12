@@ -25,7 +25,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
     }
 
     @Override
-    public ExecutionRunDto run(int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
+    public ExecutionRunDto run(int credits, int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
         int cycles = 0;
         ComplexExecuteResult executeResult;
         ExecutionContext context = new ExecutionContextImpl();
@@ -63,9 +63,13 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         Instruction currentInstruction = instructions.get(pc); //first instruction
 
 
-
+        int CreditsCost = 0;
         Label nextLabel;
         do {
+            long y = context.getVariableValue(Variable.RESULT);
+            Map<String, Long> variablesValues = context.getAllValues();
+            int lastCycles = cycles;
+
             if(currentInstruction instanceof SimpleInstruction simpleInstruction) {
                 nextLabel = simpleInstruction.execute(context);
             }
@@ -75,8 +79,13 @@ public class ProgramExecutorImpl implements ProgramExecutor {
                 nextLabel = executeResult.getNextLabel();
                 cycles = cycles + executeResult.getRunCycles();
             }
-
             cycles = cycles + currentInstruction.cycles();
+
+            if(credits<cycles && credits!=-1){
+                //NOT ENOUGH CREDITS
+                return new ExecutionRunDto(false, runNumber, degreeOfExpansion, y, lastCycles, variablesValues, originalInputs);
+            }
+
 
             if (nextLabel == FixedLabel.EMPTY) {//next instruction
                 pc++;
@@ -98,7 +107,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
         long y = context.getVariableValue(Variable.RESULT);
         Map<String, Long> variablesValues = context.getAllValues();
 
-        ExecutionRunDto result = new ExecutionRunDto(runNumber, degreeOfExpansion, y, cycles, variablesValues, originalInputs);
+        ExecutionRunDto result = new ExecutionRunDto(true, runNumber, degreeOfExpansion, y, cycles, variablesValues, originalInputs);
         return result;
     }
 }

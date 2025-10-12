@@ -10,6 +10,7 @@ import dto.ProgramInfo;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -83,7 +84,7 @@ public class ProgramsFunctionsController {
 
 
         programsTblAverageCol.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getAverageCredits()));
+                new SimpleDoubleProperty(cellData.getValue().getAverageCredits()));
         programsTblInstructionsCol.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getInstructionsNumber()));
         programsTblMaxDegreeCol.setCellValueFactory(cellData ->

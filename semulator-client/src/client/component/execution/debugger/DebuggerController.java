@@ -129,7 +129,6 @@ public class DebuggerController {
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
         radioBtnRegular.setDisable(false);
-
     }
 
     /**
@@ -234,7 +233,6 @@ public class DebuggerController {
         boolean isRunValid = this.mainController.checkIfRunIsValid(selectedArchitecture);
         this.runBtn.setDisable(!isRunValid);
     }
-
 
     @FXML
     void onBackToDashboardBtnListener(ActionEvent event) {

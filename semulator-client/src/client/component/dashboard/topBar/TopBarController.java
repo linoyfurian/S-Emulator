@@ -32,6 +32,7 @@ public class TopBarController {
     @FXML private Label userNameLbl;
     @FXML private TextField chargeCreditsTextF;
     @FXML private Label availableCreditsLbl;
+    @FXML private TextField fileTextField;
 
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
@@ -89,6 +90,7 @@ public class TopBarController {
                         javafx.application.Platform.runLater(() -> {
                             if (report != null && report.isSuccess()) {
                                 progress.setStatus("Loaded successfully.");
+                                fileTextField.setText(selectedFile.getAbsolutePath());
                                 progress.close();
                             } else {
                                 String msg = (report != null ? report.getMessage() : "Invalid server response");

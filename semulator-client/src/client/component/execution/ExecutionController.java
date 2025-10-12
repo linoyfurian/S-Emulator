@@ -10,9 +10,14 @@ import client.utils.display.ProgramUtil;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import dto.*;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +32,8 @@ public class ExecutionController {
     private double averageCredits;
 
     private DebugContextDto debugContext = null;
+
+    @FXML private ScrollPane systemScrollPane;
 
     @FXML private TopbarExecutionController topBarExecutionController;
     @FXML private InstructionsController instructionsController;
@@ -156,9 +163,14 @@ public class ExecutionController {
     public void onRunBtnListener(boolean isDebugMode, Map<String, Long> originalInputs, long[] inputs) {
         int degreeOfExpand = this.topBarExecutionController.getCurrentDegree();
         Gson gson = new Gson();
+        String architecture = this.debuggerController.getArchitecture();
+        int currentCredits = this.topBarExecutionController.getCredits();
+        int newCredits = currentCredits - ProgramUtil.getCost(architecture);
+
+        this.mainController.setCredits(newCredits);
+
         if (!isDebugMode) {
-            String architecture = this.debuggerController.getArchitecture();
-            RunProgramRequest runRequest = new RunProgramRequest(programInContext, architecture, isProgram, degreeOfExpand, originalInputs, inputs);
+            RunProgramRequest runRequest = new RunProgramRequest(newCredits, programInContext, architecture, isProgram, degreeOfExpand, originalInputs, inputs);
 
             // Convert to JSON
             String json = gson.toJson(runRequest);
@@ -196,8 +208,21 @@ public class ExecutionController {
                                 debuggerController.updateRunResult(runResult);
                                 mainController.updateHistory();
                                 mainController.updateRunsNumber();
+                                if(!runResult.isRunSuccess()){
+                                    //NOT ENOUGH CREDITS
+                                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                                    alert.setTitle("Insufficient Credits");
+                                    alert.setHeaderText("Execution stopped");
+                                    alert.setContentText("You don’t have enough credits to complete this execution, so it was stopped.");
+
+                                    Stage stage = (Stage) systemScrollPane.getScene().getWindow();
+                                    alert.initOwner(stage);
+                                    alert.initModality(Modality.WINDOW_MODAL);
+                                    alert.showAndWait();
+                                }
                             }
                             debuggerController.disableChangeOfInput(false);
+                            debuggerController.updateRunBtnDisable();
                         });
                     } finally {
                         response.close();
@@ -333,6 +358,7 @@ public class ExecutionController {
                             addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
                             mainController.updateRunsNumber();
                             debuggerController.disableChangeOfInput(false);
+                            debuggerController.updateRunBtnDisable();
                         }
                         else
                             instructionsController.highlightLine((int)currInstructionToHighlight - 1);
@@ -391,6 +417,7 @@ public class ExecutionController {
         instructionsController.highlightLine(-1);
         debuggerController.updateVariableHighlight("");
         debuggerController.disableChangeOfInput(false);
+        debuggerController.updateRunBtnDisable();
     }
 
     public void onBtnResumeListener(){
@@ -452,6 +479,7 @@ public class ExecutionController {
                         else
                             instructionsController.highlightLine((int)currInstructionToHighlight - 1);
                         debuggerController.updateDebugResult(debugContext);
+                        debuggerController.updateRunBtnDisable();
                     });
                 } finally {
                     response.close();
@@ -467,5 +495,6 @@ public class ExecutionController {
         instructionsController.resetBreakPointSelection();
 
         debuggerController.disableChangeOfInput(false);
+        debuggerController.updateRunBtnDisable();
     }
 }

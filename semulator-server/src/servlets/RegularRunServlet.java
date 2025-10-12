@@ -40,12 +40,13 @@ public class RegularRunServlet extends HttpServlet {
         long[] inputs = requestObj.getInputs();
         Map<String, Long> originalInputs = requestObj.getOriginalInputs();
         String architecture = requestObj.getArchitecture();
+        int credits = requestObj.getCredits();
 
         String username = SessionUtils.getUsername(req);
 
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 
-        ExecutionRunDto result = engine.runProgram(username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
+        ExecutionRunDto result = engine.runProgram(credits, username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
 
         if (result == null) {
             System.out.println("Program run failed");

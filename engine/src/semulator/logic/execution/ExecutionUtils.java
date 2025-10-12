@@ -42,7 +42,7 @@ public class ExecutionUtils {
                 // Run the function
                 ProgramExecutor executor = new ProgramExecutorImpl(targetFunction, functions);
 
-                ExecutionRunDto runDetails = executor.run(0, 0, null, inputs);
+                ExecutionRunDto runDetails = executor.run(-1, 0, 0, null, inputs);
                 if(runDetails != null) {
                     result = runDetails.getResult();
                     cycles = cycles + runDetails.getCycles();

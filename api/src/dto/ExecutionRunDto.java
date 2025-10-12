@@ -11,14 +11,16 @@ public class ExecutionRunDto implements Serializable {
     private final Map<String, Long> inputs;
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
+    private final boolean isRunSuccess;
 
-    public ExecutionRunDto(long runNumber, int expansionDegree, long result, int cycles, Map<String, Long> variables,  Map<String, Long> inputs) {
+    public ExecutionRunDto(boolean isRunSuccess, long runNumber, int expansionDegree, long result, int cycles, Map<String, Long> variables,  Map<String, Long> inputs) {
         this.runNumber = runNumber;
         this.expansionDegree = expansionDegree;
         this.result = result;
         this.inputs = inputs;
         this.cycles = cycles;
         this.variables = sortVarsForDisplay(variables);
+        this.isRunSuccess = isRunSuccess;
     }
 
     private static LinkedHashMap<String, Long> sortVarsForDisplay(Map<String, Long> vars) {
@@ -72,5 +74,9 @@ public class ExecutionRunDto implements Serializable {
 
     public  Map<String, Long> getInputs() {
         return inputs;
+    }
+
+    public boolean isRunSuccess() {
+        return isRunSuccess;
     }
 }

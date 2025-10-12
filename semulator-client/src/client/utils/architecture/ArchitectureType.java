@@ -21,4 +21,5 @@ public enum ArchitectureType {
     public int getRunCost() {
         return runCost;
     }
+
 }

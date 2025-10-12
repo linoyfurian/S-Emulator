@@ -90,6 +90,18 @@ public class ProgramUtil {
         };
     }
 
-
+    public static int getCost(String architecture) {
+        if(architecture.equals(ArchitectureType.I.getType())){
+            return ArchitectureType.I.getRunCost();
+        }
+        else if(architecture.equals(ArchitectureType.II.getType())){
+            return ArchitectureType.II.getRunCost();
+        }
+        else if(architecture.equals(ArchitectureType.III.getType())){
+            return ArchitectureType.III.getRunCost();
+        }
+        else
+            return ArchitectureType.IV.getRunCost();
+    }
 }
 
