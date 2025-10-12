@@ -5,10 +5,10 @@ public class ProgramInfo {
    private final String userName;
    private final int instructionsNumber;
    private final int maxDegree;
-   private final int averageCredits;
+   private final double averageCredits;
    private final int runsNumber;
 
-   public ProgramInfo(String name, String userName, int instructionsNumber, int maxDegree, int averageCredits, int runsNumber) {
+   public ProgramInfo(String name, String userName, int instructionsNumber, int maxDegree, double averageCredits, int runsNumber) {
        this.name = name;
        this.userName = userName;
        this.instructionsNumber = instructionsNumber;
@@ -33,7 +33,7 @@ public class ProgramInfo {
        return maxDegree;
    }
 
-   public int getAverageCredits() {
+   public double getAverageCredits() {
        return averageCredits;
    }
 

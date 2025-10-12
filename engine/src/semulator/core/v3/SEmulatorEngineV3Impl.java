@@ -13,6 +13,7 @@ import semulator.logic.execution.ProgramExecutor;
 import semulator.logic.execution.ProgramExecutorImpl;
 import semulator.logic.program.Program;
 import semulator.logic.program.ProgramImpl;
+import semulator.logic.program.ProgramStatistics;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     private Map<String, Program> programs = new HashMap<>();
     private Map<String, Program> functions = new HashMap<>();
     private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
+    private Map<String, ProgramStatistics>  programStatistics = new HashMap<>();
 
     private static final JAXBContext JAXB_CTX;
     static {
@@ -95,7 +97,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
                 this.functions.put(fn.getName(), fn);
             }
 
-            this.runsHistory.clear();
+            programStatistics.put(mappedProgram.getName(),new ProgramStatistics(0,0));
 
             return new LoadReport(true, "Program loaded successfully",1, funcs.size());
 
@@ -108,8 +110,10 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     public List<ProgramInfo> getPrograms(){
         List<ProgramInfo> result = new ArrayList<>();
         ProgramInfo newProgram;
+        ProgramStatistics programStatistic;
         for(Program program : programs.values()){
-            newProgram = new ProgramInfo(program.getName(),program.getUsername(),program.getInstructions().size(),program.calculateMaxDegree(),0,0);
+            programStatistic = programStatistics.get(program.getName());
+            newProgram = new ProgramInfo(program.getName(),program.getUsername(),program.getInstructions().size(),program.calculateMaxDegree(),programStatistic.getCreditsAverage(),programStatistic.getRunsNumber());
             result.add(newProgram);
         }
         return result;
