@@ -128,12 +128,34 @@ public class ProgramsFunctionsController {
                         json.append(scanner.nextLine());
                     }
 
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
-                    List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
+//                    Gson gson = new Gson();
+//                    Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
+//                    List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
+//
 
-                    List<ProgramInfo> programsDelta = getProgramsDelta(programsData, programs);
-                    Platform.runLater(() -> programsData.addAll(programsDelta));
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
+                        List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
+
+                        Set<String> programsSet = new HashSet<>();
+                        for (ProgramInfo programInfo : programsData) {
+                            programsSet.add(programInfo.getName());
+                        }
+
+                        for (ProgramInfo program : programs) {
+                            if (!programsSet.contains(program.getName())) {
+                                programsData.add(program);
+                            } else {
+                                System.out.println("Program " + program.getName() + " already exists");
+                                ProgramInfo currentProgram = findCurrentProgram(program.getName(), programsData);
+                                Platform.runLater(() -> {
+                                    currentProgram.setAverageCredits(program.getAverageCredits());
+                                    System.out.println(program.getAverageCredits());
+                                    currentProgram.setRunsNumber(program.getRunsNumber());
+                                });
+                            }
+                            programsTbl.refresh();
+                        }
                 }
 
                 url = new URL(Constants.FUNCTIONS_PAGE);
@@ -158,6 +180,16 @@ public class ProgramsFunctionsController {
             } catch (Exception e) {
             }
         }).start();
+    }
+
+
+    private ProgramInfo findCurrentProgram(String programName, List<ProgramInfo> programsData) {
+        for (ProgramInfo program : programsData) {
+            if (program.getName().equals(programName)) {
+                return program;
+            }
+        }
+        return null;
     }
 
     private List<ProgramInfo> getProgramsDelta(List<ProgramInfo> original, List<ProgramInfo> newPrograms) {

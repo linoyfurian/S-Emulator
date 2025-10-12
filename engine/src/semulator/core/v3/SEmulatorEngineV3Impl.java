@@ -188,6 +188,9 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, programName);
         results.add(currentRunResult);
 
+        ProgramStatistics programStatistic =  programStatistics.get(programName);
+        programStatistic.updateCreditsAverage(currentRunResult.getCycles());
+
         return runResult;
     }
 

@@ -5,8 +5,8 @@ public class ProgramInfo {
    private final String userName;
    private final int instructionsNumber;
    private final int maxDegree;
-   private final double averageCredits;
-   private final int runsNumber;
+   private double averageCredits;
+   private int runsNumber;
 
    public ProgramInfo(String name, String userName, int instructionsNumber, int maxDegree, double averageCredits, int runsNumber) {
        this.name = name;
@@ -39,5 +39,13 @@ public class ProgramInfo {
 
    public int getRunsNumber() {
        return runsNumber;
+   }
+
+   public void setAverageCredits(double averageCredits) {
+       this.averageCredits = averageCredits;
+   }
+
+   public void setRunsNumber(int runsNumber) {
+       this.runsNumber = runsNumber;
    }
 }
