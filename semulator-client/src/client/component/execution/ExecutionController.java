@@ -208,6 +208,10 @@ public class ExecutionController {
                                 debuggerController.updateRunResult(runResult);
                                 mainController.updateHistory();
                                 mainController.updateRunsNumber();
+                                int currentCredits = topBarExecutionController.getCredits();
+                                int newCredits = currentCredits - runResult.getCycles();
+                                mainController.setCredits(newCredits);
+
                                 if(!runResult.isRunSuccess()){
                                     //NOT ENOUGH CREDITS
                                     Alert alert = new Alert(Alert.AlertType.ERROR);
