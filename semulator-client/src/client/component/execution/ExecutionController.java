@@ -188,7 +188,6 @@ public class ExecutionController {
             HttpClientUtil.postAsync(finalUrl, body, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
                 }
 
                 @Override
@@ -197,7 +196,6 @@ public class ExecutionController {
                         if (!response.isSuccessful() || response.body() == null) {
                             return;
                         }
-
                         String json = response.body().string();
 
                         Gson gson = new Gson();

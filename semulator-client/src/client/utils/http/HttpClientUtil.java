@@ -66,7 +66,6 @@ public class HttpClientUtil {
     }
 
     public static void postAsync(String url, RequestBody requestBody, Callback callback) {
-
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)

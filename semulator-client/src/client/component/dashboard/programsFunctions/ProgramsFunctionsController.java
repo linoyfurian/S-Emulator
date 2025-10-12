@@ -146,11 +146,9 @@ public class ProgramsFunctionsController {
                             if (!programsSet.contains(program.getName())) {
                                 programsData.add(program);
                             } else {
-                                System.out.println("Program " + program.getName() + " already exists");
                                 ProgramInfo currentProgram = findCurrentProgram(program.getName(), programsData);
                                 Platform.runLater(() -> {
                                     currentProgram.setAverageCredits(program.getAverageCredits());
-                                    System.out.println(program.getAverageCredits());
                                     currentProgram.setRunsNumber(program.getRunsNumber());
                                 });
                             }
