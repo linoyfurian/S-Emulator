@@ -246,7 +246,7 @@ public class ExecutionController {
 //                this.debugContext = debugDetails;
 //            }
 
-            DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfExpand, this.debugContext, originalInputs, inputs);
+            DebugProgramRequest debugRequest = new DebugProgramRequest(newCredits, programInContext, isProgram, degreeOfExpand, this.debugContext, originalInputs, inputs);
 
             // Convert to JSON
             String json = gson.toJson(debugRequest);
@@ -309,7 +309,8 @@ public class ExecutionController {
 
     public void btnStepOverListener(){
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
-        DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
+        int currentCredits = this.topBarExecutionController.getCredits();
+        DebugProgramRequest debugRequest = new DebugProgramRequest(currentCredits, programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
 
         Gson gson = new Gson();
         // Convert to JSON
@@ -343,18 +344,35 @@ public class ExecutionController {
 
                     Gson gson = new Gson();
                     DebugContextDto debugResult  = gson.fromJson(json, DebugContextDto.class);
-
                     debugContext = debugResult;
+                    boolean isEnoughCredits = debugContext.isSuccess();
                     javafx.application.Platform.runLater(() -> {
                         long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
                         String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
                         debuggerController.updateVariableHighlight(variableToHighLight);
 
+                        if(!isEnoughCredits){
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Insufficient Credits");
+                            alert.setHeaderText("Debug stopped");
+                            alert.setContentText("You don’t have enough credits to complete this execution, so it was stopped.");
+
+                            Stage stage = (Stage) systemScrollPane.getScene().getWindow();
+                            alert.initOwner(stage);
+                            alert.initModality(Modality.WINDOW_MODAL);
+                            alert.showAndWait();
+                        }
+                        else{
+                            int currentCredits = topBarExecutionController.getCredits();
+                            int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
+                            mainController.setCredits(newCredits);
+                        }
+
                         long currInstructionToHighlight = debugContext.getNextInstructionNumber();
-                        if(currInstructionToHighlight == 0){
+                        if(currInstructionToHighlight == 0 || (!isEnoughCredits)){
+                            debuggerController.finishDebug();
                             instructionsController.setIsRunning(false);
                             topBarExecutionController.endDebugMode();
-
                             String architecture = debuggerController.getArchitecture();
                             int degreeOfRun = topBarExecutionController.getCurrentDegree();
                             addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
@@ -425,8 +443,9 @@ public class ExecutionController {
     public void onBtnResumeListener(){
         instructionsController.setIsRunning(false);
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
+        int credits = topBarExecutionController.getCredits();
 
-        DebugProgramRequest debugRequest = new DebugProgramRequest(programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
+        DebugProgramRequest debugRequest = new DebugProgramRequest(credits, programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
 
         Gson gson = new Gson();
         // Convert to JSON

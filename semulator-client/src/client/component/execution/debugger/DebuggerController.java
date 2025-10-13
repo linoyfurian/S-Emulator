@@ -391,13 +391,17 @@ public class DebuggerController {
 
     @FXML
     void onStopBtnListener(ActionEvent event) {
+        finishDebug();
+        mainController.btnStopListener();
+    }
+
+    public void finishDebug(){
         runBtn.setDisable(false);
         stopBtn.setDisable(true);
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
         stepBackBtn.setDisable(true);
         radioBtnRegular.setDisable(false);
-        mainController.btnStopListener();
     }
 
     @FXML

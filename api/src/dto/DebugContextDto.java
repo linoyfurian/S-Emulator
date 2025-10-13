@@ -19,8 +19,10 @@ public class DebugContextDto {
     private final int PrevCycles;
     private final DebugContextDto prevDebugContext;
     private final Map<String, Long> originalInputs;
+    private final int currentInstructionsCycles;
+    private final boolean isSuccess;
 
-    public DebugContextDto(String userName, Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
+    public DebugContextDto(boolean isSuccess, int currentInstructionsCycles, String userName, Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
         this.previousInstructionNumber = previousInstructionNumber;
         this.nextInstructionNumber = nextInstructionNumber;
         this.currentVariablesValues = sortVarsForDisplay(context.getAllValues());
@@ -30,8 +32,23 @@ public class DebugContextDto {
         this.originalInputs = originalInputs;
         this.PrevCycles = PrevCycles;
         this.userName = userName;
+        this.currentInstructionsCycles = currentInstructionsCycles;
+        this.isSuccess = isSuccess;
     }
 
+    public DebugContextDto (boolean isSuccess, DebugContextDto debugContextDto) {
+        this.isSuccess = isSuccess;
+        this.userName = debugContextDto.getUserName();
+        this.previousInstructionNumber = debugContextDto.getPreviousInstructionNumber();
+        this.nextInstructionNumber = debugContextDto.getNextInstructionNumber();
+        this.currentVariablesValues = debugContextDto.getCurrentVariablesValues();
+        this.previousVariablesValues = debugContextDto.getPreviousVariablesValues();
+        this.cycles = debugContextDto.getCycles();
+        this.PrevCycles = debugContextDto.getPrevCycles();
+        this.originalInputs = debugContextDto.getOriginalInputs();
+        this.currentInstructionsCycles = debugContextDto.getCurrentInstructionsCycles();
+        this.prevDebugContext = debugContextDto.getPrevDebugContext();
+    }
     public LinkedHashMap<String, Long> getCurrentVariablesValues() {
         return currentVariablesValues;
     }
@@ -95,5 +112,13 @@ public class DebugContextDto {
 
     public String getUserName() {
         return userName;
+    }
+
+    public int getCurrentInstructionsCycles() {
+        return currentInstructionsCycles;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
     }
 }

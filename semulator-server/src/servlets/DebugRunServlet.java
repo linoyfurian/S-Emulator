@@ -46,7 +46,9 @@ public class DebugRunServlet extends HttpServlet {
                 result = engine.initialStartOfDebugger(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs, inputs);
             }
             else{
-                result = engine.debug(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
+                int credits = requestObj.getCredits();
+                System.out.println(credits);
+                result = engine.debug(credits, username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
             }
         }
         else
