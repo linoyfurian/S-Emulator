@@ -35,7 +35,7 @@ public class DebugRunServlet extends HttpServlet {
         long[] inputs = requestObj.getInputs();
         Map<String, Long> originalInputs = requestObj.getOriginalInputs();
         DebugContextDto debugContext = requestObj.getDebugContext();
-
+        int credits = requestObj.getCredits();
         String username = SessionUtils.getUsername(req);
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 
@@ -46,13 +46,11 @@ public class DebugRunServlet extends HttpServlet {
                 result = engine.initialStartOfDebugger(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs, inputs);
             }
             else{
-                int credits = requestObj.getCredits();
-                System.out.println(credits);
                 result = engine.debug(credits, username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
             }
         }
         else
-            result = engine.resume(username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
+            result = engine.resume(credits, username, programName, isProgram, degreeOfExpand, debugContext, originalInputs);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

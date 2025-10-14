@@ -272,7 +272,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public DebugContextDto resume (String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
+    public DebugContextDto resume (int credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
         Program programToRun;
 
         if(programName == null){
@@ -296,7 +296,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             instructionToExecuteNumber = debugContext.getNextInstructionNumber();
 
         DebugContextDto result;
-        result = debugger.resume(instructionToExecuteNumber, debugContext, originalInputs);
+        result = debugger.resume(credits, instructionToExecuteNumber, debugContext, originalInputs);
         return result;
     }
 }

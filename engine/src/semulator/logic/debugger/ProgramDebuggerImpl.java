@@ -1,6 +1,7 @@
 package semulator.logic.debugger;
 
 import dto.DebugContextDto;
+import dto.ExecutionRunDto;
 import semulator.logic.execution.ComplexExecuteResult;
 import semulator.logic.execution.ExecutionContext;
 import semulator.logic.execution.ExecutionContextImpl;
@@ -63,17 +64,20 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     }
 
     @Override
-    public DebugContextDto resume (long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
+    public DebugContextDto resume (int credits, long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
         ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
 
         Label nextLabel;
         int cycles = this.cycles;
         int prevCycles = this.cycles;
+        int creditsCost = 0;
+        int currentCycles=0;
         Map<String,Long> previousVariablesValues = this.context.getAllValues();
 
         int currInstructionNumber = (int)(instructionToExecuteNumber);
         while (currInstructionNumber != 0 && currInstructionNumber <= instructions.size()) {
+            previousVariablesValues = this.context.getAllValues();
             Instruction instruction = instructions.get(currInstructionNumber-1);
 
             if(instruction instanceof SimpleInstruction simpleInstruction)
@@ -82,9 +86,17 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
                 ComplexInstruction complexInstruction = (ComplexInstruction) instruction;
                 executeResult = complexInstruction.execute(this.context, functions);
                 nextLabel = executeResult.getNextLabel();
+                creditsCost = creditsCost + executeResult.getRunCycles();
                 cycles = cycles + executeResult.getRunCycles();
             }
 
+            creditsCost = creditsCost + instruction.cycles();
+
+            if(credits<creditsCost){
+                //NOT ENOUGH CREDITS
+                return new DebugContextDto(false, currentCycles, userName, programToDebug, previousVariablesValues, currInstructionNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
+            }
+            currentCycles = creditsCost;
             cycles = cycles + instruction.cycles();
 
             long nextInstructionNumber, nextInstructionIndex = 0;
@@ -112,8 +124,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
 
         Map<String,Long> currentVariablesValues = this.context.getAllValues();
 
-        //todo change cycles true
-        DebugContextDto result = new DebugContextDto(true, 0, userName, programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
+        DebugContextDto result = new DebugContextDto(true, currentCycles, userName, programToDebug, this.context, instructionToExecuteNumber, 0, cycles, previousVariablesValues, debugDetails, originalInputs, prevCycles);
         return result;
     }
 

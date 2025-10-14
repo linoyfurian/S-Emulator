@@ -480,12 +480,31 @@ public class ExecutionController {
                     DebugContextDto debugResult  = gson.fromJson(json, DebugContextDto.class);
 
                     debugContext = debugResult;
+
+                    boolean isEnoughCredits = debugContext.isSuccess();
                     javafx.application.Platform.runLater(() -> {
+                        if(!isEnoughCredits){
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Insufficient Credits");
+                            alert.setHeaderText("Resume stopped");
+                            alert.setContentText("You don’t have enough credits to complete this execution, so it was stopped.");
+
+                            Stage stage = (Stage) systemScrollPane.getScene().getWindow();
+                            alert.initOwner(stage);
+                            alert.initModality(Modality.WINDOW_MODAL);
+                            alert.showAndWait();
+                        }
+
+                        int currentCredits = topBarExecutionController.getCredits();
+                        int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
+                        mainController.setCredits(newCredits);
+
                         long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
                         String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
                         debuggerController.updateVariableHighlight(variableToHighLight);
 
                         long currInstructionToHighlight = debugContext.getNextInstructionNumber();
+                     //   instructionsController.highlightLine((int)prevInstructionNumber - 1);
                         if(currInstructionToHighlight == 0){
                             instructionsController.setIsRunning(false);
                             topBarExecutionController.endDebugMode();
