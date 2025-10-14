@@ -347,10 +347,6 @@ public class ExecutionController {
                     debugContext = debugResult;
                     boolean isEnoughCredits = debugContext.isSuccess();
                     javafx.application.Platform.runLater(() -> {
-                        long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
-                        String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
-                        debuggerController.updateVariableHighlight(variableToHighLight);
-
                         if(!isEnoughCredits){
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Insufficient Credits");
@@ -363,6 +359,9 @@ public class ExecutionController {
                             alert.showAndWait();
                         }
                         else{
+                            long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
+                            String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
+                            debuggerController.updateVariableHighlight(variableToHighLight);
                             int currentCredits = topBarExecutionController.getCredits();
                             int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
                             mainController.setCredits(newCredits);
