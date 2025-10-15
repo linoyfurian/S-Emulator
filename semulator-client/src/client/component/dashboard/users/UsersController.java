@@ -2,6 +2,8 @@ package client.component.dashboard.users;
 
 import client.component.dashboard.DashboardController;
 import client.utils.Constants;
+import client.utils.display.ProgramUtil;
+import client.utils.display.VariableRow;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.reflect.TypeToken;
 import dto.DebugContextDto;
@@ -24,6 +26,7 @@ import javafx.scene.control.TableView;
 
 import com.google.gson.Gson;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +63,12 @@ public class UsersController {
     @FXML private TableColumn<RunResultDto, Integer> historyRunNumberCol;
     @FXML private TableView<RunResultDto> historyTbl;
 
+    @FXML private TableColumn<VariableRow, String> variableNameCol;
+    @FXML private TableColumn<VariableRow, Long> variableValueCol;
+    @FXML private TableView<VariableRow> variablesStatusTable;
+    @FXML private VBox showStatusVariablesVbox;
 
+    private ObservableList<VariableRow> variablesData = FXCollections.observableArrayList();
     private ObservableList<UserInfo> usersData = FXCollections.observableArrayList();
     private ObservableList<RunResultDto> historyRunData = FXCollections.observableArrayList();
 
@@ -108,6 +116,12 @@ public class UsersController {
                 new SimpleStringProperty(cellData.getValue().getName()));
 
         historyTbl.setItems(historyRunData);
+
+        variableNameCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
+        variableValueCol.setCellValueFactory(cellData ->
+                new SimpleLongProperty(cellData.getValue().getValue()).asObject());
+        variablesStatusTable.setItems(variablesData);
 
         Timeline historyTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(2), event -> mainController.onUserSelectedListener(getSelectedUser()))
@@ -283,6 +297,18 @@ public class UsersController {
     void onSelectedHistoryRunListener(MouseEvent event) {
         this.showStatusBtn.setVisible(true);
         this.reRunBtn.setVisible(true);
+    }
+
+    @FXML
+    void onShowStatusBtnListener(ActionEvent event) {
+        this.showStatusVariablesVbox.setVisible(true);
+        RunResultDto selectedRun = historyTbl.getSelectionModel().getSelectedItem();
+        if(selectedRun != null){
+            List<VariableRow> variables = ProgramUtil.generateVariablesRowList(selectedRun);
+
+            this.variablesData.clear();
+            this.variablesData.addAll(variables);
+        }
     }
 
 }
