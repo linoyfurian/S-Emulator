@@ -239,6 +239,4 @@ public class UsersController {
         UserInfo userSelected = getSelectedUser();
         mainController.onUserSelectedListener(userSelected);
     }
-
-
 }

@@ -166,7 +166,7 @@ public class ExecutionController {
         String architecture = this.debuggerController.getArchitecture();
         int currentCredits = this.topBarExecutionController.getCredits();
         int newCredits = currentCredits - ProgramUtil.getCost(architecture);
-
+        updateUsedCredits(ProgramUtil.getCost(architecture));
         this.mainController.setCredits(newCredits);
 
         if (!isDebugMode) {
@@ -209,7 +209,7 @@ public class ExecutionController {
                                 int currentCredits = topBarExecutionController.getCredits();
                                 int newCredits = currentCredits - runResult.getCycles();
                                 mainController.setCredits(newCredits);
-
+                                updateUsedCredits(runResult.getCycles());
                                 if(!runResult.isRunSuccess()){
                                     //NOT ENOUGH CREDITS
                                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -365,6 +365,7 @@ public class ExecutionController {
                             int currentCredits = topBarExecutionController.getCredits();
                             int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
                             mainController.setCredits(newCredits);
+                            updateUsedCredits(debugContext.getCurrentInstructionsCycles());
                         }
 
                         long currInstructionToHighlight = debugContext.getNextInstructionNumber();
@@ -498,6 +499,7 @@ public class ExecutionController {
                         int currentCredits = topBarExecutionController.getCredits();
                         int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
                         mainController.setCredits(newCredits);
+                        updateUsedCredits(debugContext.getCurrentInstructionsCycles());
 
                         long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
                         String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
@@ -536,4 +538,36 @@ public class ExecutionController {
         debuggerController.disableChangeOfInput(false);
         debuggerController.updateRunBtnDisable();
     }
+
+
+    public void updateUsedCredits(int credits){
+        String finalUrl = HttpUrl
+                .parse(Constants.CREDITS_SERVLET)
+                .newBuilder()
+                .addQueryParameter("operation", "used")
+                .addQueryParameter("credits",String.valueOf(credits))
+                .build()
+                .toString();
+
+        RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
+
+        HttpClientUtil.postAsync(finalUrl, body, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+                } finally {
+                    response.close();
+                }
+            }
+        });
+    }
+
 }

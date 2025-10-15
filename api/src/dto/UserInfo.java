@@ -61,6 +61,9 @@ public class UserInfo {
         this.credits = credits;
     }
 
+    public void updateUsedCredits(int usedCredits) {
+        this.usedCredits += usedCredits;
+    }
     public void setUsedCredits(int usedCredits) {
         this.usedCredits = usedCredits;
     }
