@@ -570,4 +570,32 @@ public class ExecutionController {
         });
     }
 
+    public void initialReRun(RunResultDto selectedRun){
+
+        System.out.println("initialReRun");
+        instructionsController.setIsRunning(false);
+        instructionsController.resetBreakPointSelection();
+
+        int currentDegree = topBarExecutionController.getCurrentDegree();
+        int degreeOfRun = selectedRun.getDegreeOfRun();
+        System.out.println(degreeOfRun);
+        updateSystemToTheDesiredDegree(currentDegree, degreeOfRun);
+        debuggerController.initialOfNewRun();
+        Map<String,Long> inputs = selectedRun.getInputs();
+        System.out.println("inputs: " + inputs);
+        debuggerController.applyRelevantInputs(inputs);
+
+        instructionsController.highlightLine(-1);
+        debuggerController.updateVariableHighlight("");
+
+        debuggerController.disableChangeOfInput(false);
+    }
+
+    private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
+        if(degreeOfRun==currentDegree){
+            return;
+        }
+        else
+            btnExpandListener(degreeOfRun);
+    }
 }

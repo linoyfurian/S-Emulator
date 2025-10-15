@@ -33,9 +33,7 @@ public class CreditsServlet extends HttpServlet {
         if (operaion.equals("new"))
             user.setCredits(credits);
         else {
-            System.out.println("used");
             user.updateUsedCredits(credits);
-            System.out.println(user.getUsedCredits());
         }
     }
 }

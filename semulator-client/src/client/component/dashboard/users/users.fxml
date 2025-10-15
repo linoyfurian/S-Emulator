@@ -38,7 +38,7 @@
             <Insets left="5.0" />
          </padding>
       </Label>
-      <TableView fx:id="historyTbl" prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="historyTbl" onMouseClicked="#onSelectedHistoryRunListener" prefHeight="200.0" prefWidth="200.0">
         <columns>
           <TableColumn fx:id="historyRunNumberCol" prefWidth="75.0" text="Run Number" />
           <TableColumn fx:id="historyIsProgramCol" prefWidth="109.0" text="Program\Function" />
@@ -49,5 +49,18 @@
             <TableColumn fx:id="historyCyclesCol" prefWidth="72.0" text="Cycles" />
         </columns>
       </TableView>
+      <HBox spacing="3.0">
+         <children>
+            <Button fx:id="showStatusBtn" mnemonicParsing="false" text="Show status" visible="false">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="reRunBtn" mnemonicParsing="false" onAction="#onReRunBtnListener" text="Re-Run" visible="false" />
+         </children>
+         <padding>
+            <Insets bottom="3.0" left="5.0" />
+         </padding>
+      </HBox>
    </children>
 </VBox>

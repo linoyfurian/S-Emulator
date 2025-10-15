@@ -15,6 +15,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +27,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class DashboardController {
@@ -29,10 +35,14 @@ public class DashboardController {
     private String programInContext;
     private boolean isProgram;
     private ExecutionController executionController;
+    private boolean isNewUser;
+    private String selectedUser = null;
 
     @FXML private TopBarController topBarController;
     @FXML private UsersController usersController;
     @FXML private ProgramsFunctionsController programsFunctionsController;
+
+    @FXML private ScrollPane systemScrollPane;
 
     private final IntegerProperty credits = new SimpleIntegerProperty(0);
 
@@ -76,10 +86,15 @@ public class DashboardController {
 
     public void initializeUser(String username) {
         this.topBarController.setUserName(username);
+        this.selectedUser = username;
     }
 
     public String getUserName() {
         return this.topBarController.getUserName();
+    }
+
+    public void setSelectedUser(String selectedUser) {
+        this.selectedUser = selectedUser;
     }
 
     public void initialExecutionScreen(String programName, boolean isProgram) {
@@ -133,10 +148,24 @@ public class DashboardController {
     public void updateHistory() {
         UserInfo selectedUser = usersController.getSelectedUser();
         String username;
-        if (selectedUser == null)
+
+        if (selectedUser == null) {
             username = this.topBarController.getUserName();
-        else
+            if(this.selectedUser == null)
+                isNewUser = false;
+            else if(this.selectedUser.equals(username))
+                isNewUser = false;
+            else
+                isNewUser = true;
+        }
+        else {
             username = selectedUser.getName();
+            if(username.equals(this.topBarController.getUserName())) {
+                isNewUser = false;
+            }
+            else
+                isNewUser = true;
+        }
 
         String finalUrl = HttpUrl
                 .parse(Constants.HISTORY_RUN_SERVLET)
@@ -162,7 +191,7 @@ public class DashboardController {
                     currentHistory = gson.fromJson(json, new TypeToken<List<RunResultDto>>() {}.getType());
 
                     Platform.runLater(() -> {
-                        usersController.updateHistory(currentHistory);
+                        usersController.updateHistory(currentHistory, isNewUser);
                     });
                 } finally {
                     response.close();
@@ -231,13 +260,70 @@ public class DashboardController {
                     currentHistory = gson.fromJson(json, new TypeToken<List<RunResultDto>>() {}.getType());
 
                     Platform.runLater(() -> {
-                        usersController.updateHistory(currentHistory);
+                        boolean isNewUser = true;
+                        if(username==null){
+                            if(selectedUser==null)
+                                isNewUser = false;
+                            else{
+                                if(selectedUser.equals(getUserName()))
+                                    isNewUser = false;
+                            }
+                            selectedUser = getUserName();
+                        }
+                        else{
+                            if(selectedUser.equals(username.getName()))
+                                isNewUser = false;
+                            selectedUser = username.getName();
+                        }
+                        usersController.updateHistory(currentHistory, isNewUser);
                     });
                 } finally {
                     response.close();
                 }
             }
         });
+    }
+
+    public void onReRunButtonListener(RunResultDto selectedRun) throws IOException{
+        if(selectedRun==null)
+            return;
+        final String FXML_PATH = Constants.EXECUTION_FXML_RESOURCE_LOCATION;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_PATH));
+        ScrollPane root = loader.load();
+
+        ExecutionController controller = loader.getController();
+        controller.setMainController(this);
+
+        Stage dialog = new Stage();
+        dialog.setTitle("Execution");
+
+        String userName = getUserName();
+        controller.setUserName(userName);
+
+        // ProgramInfo programInContext = this.programsTbl.getSelectionModel().getSelectedItem();
+        setExecutionController(controller);
+        boolean isProgram = false;
+        if(selectedRun.getProgramOrFunction().equals("Program"))
+            isProgram = true;
+
+        programInContext = selectedRun.getName();
+        this.isProgram = isProgram;
+        initialExecutionScreen(selectedRun.getName(), isProgram);
+        //controller.setAverageCredits(programInContext.getAverageCredits());
+
+        controller.initialReRun(selectedRun);
+
+        Scene scene = new Scene(root);
+        dialog.initOwner(this.systemScrollPane.getScene().getWindow());
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setAlwaysOnTop(true);
+        dialog.setScene(scene);
+        dialog.showAndWait();
+
+
+
+
     }
 }
 

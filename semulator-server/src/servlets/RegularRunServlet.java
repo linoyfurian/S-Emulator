@@ -30,8 +30,6 @@ public class RegularRunServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("regular-run");
-
         BufferedReader reader = req.getReader();
         // Parse request body
         RunProgramRequest requestObj = gson.fromJson(reader, RunProgramRequest.class);
@@ -51,7 +49,6 @@ public class RegularRunServlet extends HttpServlet {
         ExecutionRunDto result = engine.runProgram(credits, username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
 
         if (result == null) {
-            System.out.println("Program run failed");
             return;
         }
         System.out.println(result.getResult());

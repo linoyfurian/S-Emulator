@@ -38,6 +38,9 @@ import java.util.stream.Collectors;
 public class UsersController {
     private DashboardController mainController;
 
+    @FXML private Button reRunBtn;
+    @FXML private Button showStatusBtn;
+
     @FXML private Button unselectUserBtn;
 
     @FXML private TableColumn<UserInfo, Number> availableUsersColCredits;
@@ -192,10 +195,32 @@ public class UsersController {
         return this.availableUsersTbl.getSelectionModel().getSelectedItem();
     }
 
-    public void updateHistory(List<RunResultDto> currentRunHistoryToDisplay){
-        this.historyRunData.clear();
-        this.historyRunData.addAll(currentRunHistoryToDisplay);
-        this.historyTbl.refresh();
+    public void updateHistory(List<RunResultDto> currentRunHistoryToDisplay, boolean isUserChanged){
+
+        if(isUserChanged){
+            this.historyRunData.clear();
+            this.historyRunData.addAll(currentRunHistoryToDisplay);
+            this.historyTbl.refresh();
+        }
+        else{
+            List<RunResultDto> historyDelta = getHistoryDelta(this.historyRunData, currentRunHistoryToDisplay);
+            this.historyRunData.addAll(historyDelta);
+            this.historyTbl.refresh();
+        }
+    }
+
+    public List<RunResultDto> getHistoryDelta(List<RunResultDto> original, List<RunResultDto> currentRunHistoryToDisplay){
+        List<RunResultDto> historyDelta = new ArrayList<>();
+        Set<Integer> alreadyExisted = new HashSet<>();
+        for(RunResultDto run : original){
+            alreadyExisted.add(run.getRunNumber());
+        }
+        for(RunResultDto run : currentRunHistoryToDisplay){
+            if(!alreadyExisted.contains(run.getRunNumber())){
+                historyDelta.add(run);
+            }
+        }
+        return historyDelta;
     }
 
     public void updateCredits(String username, int credits){
@@ -239,4 +264,25 @@ public class UsersController {
         UserInfo userSelected = getSelectedUser();
         mainController.onUserSelectedListener(userSelected);
     }
+
+    @FXML
+    void onReRunBtnListener(ActionEvent event) {
+        RunResultDto selectedRun = historyTbl.getSelectionModel().getSelectedItem();
+        if(selectedRun != null){
+            try{
+                mainController.onReRunButtonListener(selectedRun);
+            }
+            catch (Exception e){
+
+            }
+
+        }
+    }
+
+    @FXML
+    void onSelectedHistoryRunListener(MouseEvent event) {
+        this.showStatusBtn.setVisible(true);
+        this.reRunBtn.setVisible(true);
+    }
+
 }

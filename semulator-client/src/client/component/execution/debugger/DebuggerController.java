@@ -456,5 +456,21 @@ public class DebuggerController {
         mainController.cleanDebugContext();
     }
 
+    public void applyRelevantInputs(Map<String, Long> inputs){
+        System.out.println("applyRelevantInputs: " + inputs);
+        ObservableList<Node> programInputs = inputsContainer.getChildren();
+        for(Node node : programInputs){
+            if(node instanceof HBox row){
+                ObservableList<Node> rowDetails = row.getChildren();
+                if(rowDetails.get(0) instanceof Label label){
+                    long value = inputs.getOrDefault(label.getText().substring(0,label.getText().length()-1), 0L);
+                    if(rowDetails.get(1) instanceof TextField textField){
+                        textField.setText(String.valueOf(value));
+                        System.out.println(textField.getText() + "@@@@@@@@");
+                    }
+                }
+            }
+        }
+    }
 
 }
