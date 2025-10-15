@@ -312,6 +312,12 @@ public class DashboardController {
         this.programInContext = selectedRun.getOriginalName();
         this.isProgram = isProgram;
 
+        if(isProgram){
+            controller.setAverageCredits(this.programsFunctionsController.getCurrProgramAverageCredits(this.programInContext));
+        }
+        else
+            controller.setAverageCredits(0);
+
         controller.setIsProgram(isProgram);
         controller.setProgramInContext(selectedRun.getOriginalName());
         initialExecutionScreen(selectedRun.getName(), isProgram);

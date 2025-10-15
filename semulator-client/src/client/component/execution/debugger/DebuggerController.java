@@ -220,6 +220,10 @@ public class DebuggerController {
         this.architectureCbox.setItems(FXCollections.observableList(options));
     }
 
+    public void updateArchitecture(String selectedArchitecture) {
+        this.architectureCbox.getSelectionModel().select(selectedArchitecture);
+        updateRunBtnDisable();
+    }
 
     @FXML
     void onArchitectureSelectedListener(ActionEvent event) {

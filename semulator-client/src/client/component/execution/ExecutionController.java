@@ -645,6 +645,7 @@ public class ExecutionController {
                         instructionsController.highlightLine(-1);
                         debuggerController.updateVariableHighlight("");
                         debuggerController.disableChangeOfInput(false);
+                        debuggerController.updateArchitecture(selectedRun.getArchitecture());
                     });
                 } finally {
                     response.close();

@@ -273,13 +273,23 @@ public class ProgramsFunctionsController {
         this.mainController.setExecutionController(controller);
         this.mainController.initialExecutionScreen(programInContext.getName(), false);
 
+        controller.setAverageCredits(0);
+
         Scene scene = new Scene(root);
         dialog.initOwner(this.programsTbl.getScene().getWindow());
-       // dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setAlwaysOnTop(true);
         dialog.setScene(scene);
-        //dialog.showAndWait();
-        dialog.show();
+        dialog.showAndWait();
+    }
+
+    public double getCurrProgramAverageCredits (String programName){
+        for(ProgramInfo program: programsData){
+            if(program.getName().equals(programName)){
+                return program.getAverageCredits();
+            }
+        }
+        return 0;
     }
 
 }
