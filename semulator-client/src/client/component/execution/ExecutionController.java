@@ -67,6 +67,17 @@ public class ExecutionController {
 
     public void initialProgramDetails(ProgramFunctionDto programDetails, boolean isProgram) {
         this.programInContext = programDetails.getName();
+        String displayName;
+        if (isProgram) {
+            this.programInContext = programDetails.getName();
+            displayName = programDetails.getName();
+        }
+        else{
+            FunctionDto functionDto = (FunctionDto) programDetails;
+            displayName = functionDto.getUserString();
+        }
+
+
         this.isProgram = isProgram;
 
         instructionsController.displayProgram(programDetails);
@@ -77,9 +88,9 @@ public class ExecutionController {
 
         topBarExecutionController.refreshHighlightOptions(programDetails);
         debuggerController.setProgram(programDetails);
-        instructionsController.resetBreakPointSelection();
+       // instructionsController.resetBreakPointSelection();
 
-        topBarExecutionController.setProgramFunctionName(this.programInContext);
+        topBarExecutionController.setProgramFunctionName(displayName);
     }
 
     public void onHighlightChangedListener(String highlightSelected){
@@ -197,7 +208,6 @@ public class ExecutionController {
                             return;
                         }
                         String json = response.body().string();
-
                         Gson gson = new Gson();
                         ExecutionRunDto runResult  = gson.fromJson(json, ExecutionRunDto.class);
 
@@ -571,18 +581,14 @@ public class ExecutionController {
     }
 
     public void initialReRun(RunResultDto selectedRun){
-
-        System.out.println("initialReRun");
         instructionsController.setIsRunning(false);
-        instructionsController.resetBreakPointSelection();
+      //  instructionsController.resetBreakPointSelection();
 
         int currentDegree = topBarExecutionController.getCurrentDegree();
         int degreeOfRun = selectedRun.getDegreeOfRun();
-        System.out.println(degreeOfRun);
         updateSystemToTheDesiredDegree(currentDegree, degreeOfRun);
         debuggerController.initialOfNewRun();
         Map<String,Long> inputs = selectedRun.getInputs();
-        System.out.println("inputs: " + inputs);
         debuggerController.applyRelevantInputs(inputs);
 
         instructionsController.highlightLine(-1);

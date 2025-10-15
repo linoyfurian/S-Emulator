@@ -107,6 +107,7 @@ public class DashboardController {
                 .build()
                 .toString();
 
+
         HttpClientUtil.runAsync(finalUrl, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -307,10 +308,11 @@ public class DashboardController {
         if(selectedRun.getProgramOrFunction().equals("Program"))
             isProgram = true;
 
-        programInContext = selectedRun.getName();
+
+        this.programInContext = selectedRun.getName();
         this.isProgram = isProgram;
+
         initialExecutionScreen(selectedRun.getName(), isProgram);
-        //controller.setAverageCredits(programInContext.getAverageCredits());
 
         controller.initialReRun(selectedRun);
 

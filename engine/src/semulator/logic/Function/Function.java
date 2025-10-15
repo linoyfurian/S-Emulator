@@ -272,7 +272,6 @@ public class Function implements Program, Serializable {
         }
 
         expandedProgram = programToExpand;
-
         return expandedProgram;
     }
 }

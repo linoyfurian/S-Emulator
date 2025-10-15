@@ -48,10 +48,6 @@ public class RegularRunServlet extends HttpServlet {
 
         ExecutionRunDto result = engine.runProgram(credits, username, architecture, degreeOfExpand, programName, isProgram, originalInputs, inputs);
 
-        if (result == null) {
-            return;
-        }
-        System.out.println(result.getResult());
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(result));

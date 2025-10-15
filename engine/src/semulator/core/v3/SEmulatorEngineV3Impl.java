@@ -144,8 +144,10 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
         if(isProgramBool)
             programInContext = programs.get(programName);
-        else
+        else{
             programInContext = functions.get(programName);
+        }
+
 
         expandedProgram = programInContext.expand(degreeOfExpand, functions);
 
@@ -160,24 +162,30 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     @Override
     public ExecutionRunDto runProgram(int credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
-
+        String displayName;
         if(programName == null){
             return  null;
         }
+
+
         Program programInContext;
         if(isProgramBool)
             programInContext = programs.get(programName);
-        else
+        else {
             programInContext = functions.get(programName);
+        }
+
 
         programToRun = programInContext.expand(desiredDegreeOfExpand, functions);
-
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
         ExecutionRunDto runResult = programExecutor.run(credits, desiredDegreeOfExpand, 1, originalInputs, input);
 
         String programOrFunction = "Program";
+        displayName = programName;
         if(!isProgramBool){
             programOrFunction = "Function";
+            Function func = (Function) programInContext;
+            displayName = func.getUserString();
         }
 
         if(!this.runsHistory.containsKey(username)){
@@ -185,7 +193,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         }
 
         List<RunResultDto> results = this.runsHistory.get(username);
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, programName);
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, displayName);
         results.add(currentRunResult);
 
         if(isProgramBool){
@@ -250,6 +258,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     @Override
     public void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture){
         String userName = debugContext.getUserName();
+        String displayName;
         if(!this.runsHistory.containsKey(userName)){
             this.runsHistory.put(userName, new ArrayList<>());
         }
@@ -258,9 +267,15 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
         long resultY = variablesValues.get("y");
         String programOrFunction = "Program";
-        if(!isProgram)
+        displayName = programName;
+        if(!isProgram){
             programOrFunction = "Function";
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, programName);
+            Program currentFunction = functions.get(programName);
+            Function function = (Function) currentFunction;
+            displayName = function.getUserString();
+        }
+
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, displayName);
         results.add(currentRunResult);
 
         if(isProgram){

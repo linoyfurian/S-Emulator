@@ -275,10 +275,11 @@ public class ProgramsFunctionsController {
 
         Scene scene = new Scene(root);
         dialog.initOwner(this.programsTbl.getScene().getWindow());
-        dialog.initModality(Modality.APPLICATION_MODAL);
+       // dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setAlwaysOnTop(true);
         dialog.setScene(scene);
-        dialog.showAndWait();
+        //dialog.showAndWait();
+        dialog.show();
     }
 
 }
