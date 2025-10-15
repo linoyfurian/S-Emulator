@@ -193,7 +193,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
         }
 
         List<RunResultDto> results = this.runsHistory.get(username);
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, displayName);
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, displayName, programName);
         results.add(currentRunResult);
 
         if(isProgramBool){
@@ -275,7 +275,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             displayName = function.getUserString();
         }
 
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, displayName);
+        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, displayName, programName);
         results.add(currentRunResult);
 
         if(isProgram){

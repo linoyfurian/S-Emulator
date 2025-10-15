@@ -309,11 +309,12 @@ public class DashboardController {
             isProgram = true;
 
 
-        this.programInContext = selectedRun.getName();
+        this.programInContext = selectedRun.getOriginalName();
         this.isProgram = isProgram;
 
+        controller.setIsProgram(isProgram);
+        controller.setProgramInContext(selectedRun.getOriginalName());
         initialExecutionScreen(selectedRun.getName(), isProgram);
-
         controller.initialReRun(selectedRun);
 
         Scene scene = new Scene(root);

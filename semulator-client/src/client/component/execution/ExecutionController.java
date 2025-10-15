@@ -52,6 +52,13 @@ public class ExecutionController {
         }
     }
 
+    public void setProgramInContext(String programInContext) {
+        this.programInContext = programInContext;
+    }
+    public void setIsProgram(boolean isProgram) {
+        this.isProgram = isProgram;
+    }
+
     public void setMainController(DashboardController mainController) {
         this.mainController = mainController;
         this.topBarExecutionController.bindCredits();
@@ -582,26 +589,72 @@ public class ExecutionController {
 
     public void initialReRun(RunResultDto selectedRun){
         instructionsController.setIsRunning(false);
-      //  instructionsController.resetBreakPointSelection();
-
-        int currentDegree = topBarExecutionController.getCurrentDegree();
         int degreeOfRun = selectedRun.getDegreeOfRun();
-        updateSystemToTheDesiredDegree(currentDegree, degreeOfRun);
-        debuggerController.initialOfNewRun();
-        Map<String,Long> inputs = selectedRun.getInputs();
-        debuggerController.applyRelevantInputs(inputs);
+        ProgramFunctionDto result = null;
+        String finalUrl = HttpUrl
+                .parse(Constants.EXPAND_SERVLET)
+                .newBuilder()
+                .addQueryParameter("program_name", this.programInContext)
+                .addQueryParameter("is_program", String.valueOf(isProgram))
+                .addQueryParameter("degree_of_expand", String.valueOf(degreeOfRun))
+                .build()
+                .toString();
 
-        instructionsController.highlightLine(-1);
-        debuggerController.updateVariableHighlight("");
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-        debuggerController.disableChangeOfInput(false);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+
+                    Gson gson = new Gson();
+                    ProgramFunctionDto expandedProgramDetails;
+
+                    String displayName;
+                    if (isProgram) {
+                        // ProgramDto implements ProgramFunctionDto
+                        ProgramDto programDto = gson.fromJson(json, ProgramDto.class);
+                        expandedProgramDetails = programDto;
+                        displayName = expandedProgramDetails.getName();
+                    } else {
+                        // FunctionDto implements ProgramFunctionDto
+                        FunctionDto functionDto = gson.fromJson(json, FunctionDto.class);
+                        expandedProgramDetails = functionDto;
+                        displayName = functionDto.getUserString();
+                    }
+                    javafx.application.Platform.runLater(() -> {
+                        instructionsController.clearAllHighlightedInstructions();
+                        instructionsController.displayProgram(expandedProgramDetails);
+                        topBarExecutionController.refreshHighlightOptions(expandedProgramDetails);
+                        topBarExecutionController.updateCurrentDegreeLabel(degreeOfRun);
+                        debuggerController.setProgram(expandedProgramDetails);
+                        debuggerController.updateRunBtnDisable();
+
+                        topBarExecutionController.setProgramFunctionName(displayName);
+                        debuggerController.initialOfNewRun();
+                        Map<String,Long> inputs = selectedRun.getInputs();
+                        debuggerController.applyRelevantInputs(inputs);
+                        instructionsController.highlightLine(-1);
+                        debuggerController.updateVariableHighlight("");
+                        debuggerController.disableChangeOfInput(false);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
+
     }
 
     private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
-        if(degreeOfRun==currentDegree){
-            return;
-        }
-        else
-            btnExpandListener(degreeOfRun);
+
     }
 }

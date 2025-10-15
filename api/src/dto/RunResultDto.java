@@ -12,8 +12,9 @@ public class RunResultDto {
     private final String programOrFunction;
     private final String architecture;
     private final String programName;
+    private final String originalName;
 
-    public RunResultDto(int runNumber, int degreeOfRun, long resultY, int cycles, Map<String,Long> inputs, Map<String,Long> allVariables, String programOrFunction, String architecture, String programName) {
+    public RunResultDto(int runNumber, int degreeOfRun, long resultY, int cycles, Map<String,Long> inputs, Map<String,Long> allVariables, String programOrFunction, String architecture, String programName,  String originalName) {
         this.runNumber = runNumber;
         this.degreeOfRun = degreeOfRun;
         this.resultY = resultY;
@@ -23,6 +24,7 @@ public class RunResultDto {
         this.programOrFunction = programOrFunction;
         this.architecture = architecture;
         this.programName = programName;
+        this.originalName = originalName;
     }
 
     public int getRunNumber() {
@@ -59,5 +61,9 @@ public class RunResultDto {
 
     public String getName() {
         return programName;
+    }
+
+    public String getOriginalName() {
+        return originalName;
     }
 }
