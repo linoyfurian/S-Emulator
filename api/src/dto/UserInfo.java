@@ -4,8 +4,8 @@ public class UserInfo {
     private final String name;
     private  int programsNumber;
     private  int functionsNumber;
-    private  int credits;
-    private  int usedCredits;
+    private  long credits;
+    private  long usedCredits;
     private  int runsNumber;
 
     public UserInfo(String name){
@@ -37,11 +37,11 @@ public class UserInfo {
         return functionsNumber;
     }
 
-    public int getCredits() {
+    public long getCredits() {
         return credits;
     }
 
-    public int getUsedCredits() {
+    public long getUsedCredits() {
         return usedCredits;
     }
 
@@ -57,14 +57,14 @@ public class UserInfo {
         this.functionsNumber = functionsNumber;
     }
 
-    public void setCredits(int credits) {
+    public void setCredits(long credits) {
         this.credits = credits;
     }
 
-    public void updateUsedCredits(int usedCredits) {
+    public void updateUsedCredits(long usedCredits) {
         this.usedCredits += usedCredits;
     }
-    public void setUsedCredits(int usedCredits) {
+    public void setUsedCredits(long usedCredits) {
         this.usedCredits = usedCredits;
     }
 

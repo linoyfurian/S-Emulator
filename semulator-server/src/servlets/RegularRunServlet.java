@@ -1,3 +1,5 @@
+
+
 package servlets;
 
 import com.google.gson.Gson;
@@ -40,8 +42,9 @@ public class RegularRunServlet extends HttpServlet {
         long[] inputs = requestObj.getInputs();
         Map<String, Long> originalInputs = requestObj.getOriginalInputs();
         String architecture = requestObj.getArchitecture();
-        int credits = requestObj.getCredits();
+        long credits = requestObj.getCredits();
 
+        System.out.println("inputs: " + Arrays.toString(inputs));
         String username = SessionUtils.getUsername(req);
 
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
@@ -54,3 +57,4 @@ public class RegularRunServlet extends HttpServlet {
     }
 
 }
+

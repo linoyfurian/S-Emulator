@@ -10,10 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dto.*;
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,20 +41,20 @@ public class DashboardController {
 
     @FXML private ScrollPane systemScrollPane;
 
-    private final IntegerProperty credits = new SimpleIntegerProperty(0);
+    private final LongProperty credits = new SimpleLongProperty(0);
 
     private List<RunResultDto> currentHistory;
 
-    public IntegerProperty creditsProperty() { return credits; }
-    public int getCredits() { return credits.get(); }
-    public void setCredits(int value) {
+    public LongProperty creditsProperty() { return credits; }
+    public long getCredits() { return credits.get(); }
+    public void setCredits(long value) {
         Platform.runLater(() -> {
             credits.set(value);
             String username = topBarController.getUserName();
             usersController.updateCredits(username, credits.get());
 
         }); }
-    public void addCredits(int delta) {
+    public void addCredits(long delta) {
         Platform.runLater(() -> {
             credits.set(credits.get() + delta);
             String username = topBarController.getUserName();

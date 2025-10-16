@@ -110,7 +110,7 @@ public class TopBarController {
     @FXML void onChargeCreditsBtnListener(ActionEvent event) {
         String chargeCredits = chargeCreditsTextF.getText();
         if(chargeCredits!=null && !chargeCredits.equals("")) {
-            int chargeCreditsNumber = Integer.parseInt(chargeCredits);
+            long chargeCreditsNumber = Long.parseLong(chargeCredits);
             this.mainController.addCredits(chargeCreditsNumber);
         }
     }

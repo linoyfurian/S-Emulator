@@ -9,9 +9,9 @@ public class DebugProgramRequest {
     private final long[] inputs;
     private final Map<String, Long> originalInputs;
     private final DebugContextDto debugContext;
-    private final int credits;
+    private final long credits;
 
-    public DebugProgramRequest(int credits, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long[] inputs) {
+    public DebugProgramRequest(long credits, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto context, Map<String, Long> originalInputs, long[] inputs) {
         this.programName = programName;
         this.isProgram = isProgram;
         this.degreeOfExpand = degreeOfExpand;
@@ -40,7 +40,7 @@ public class DebugProgramRequest {
         return debugContext;
     }
 
-    public int getCredits() {
+    public long getCredits() {
         return credits;
     }
 

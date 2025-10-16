@@ -28,7 +28,7 @@ public class CreditsServlet extends HttpServlet {
 
         String operaion = req.getParameter("operation");
         String creditsStr = req.getParameter("credits");
-        int credits = Integer.parseInt(creditsStr);
+        long credits = Integer.parseInt(creditsStr);
 
         if (operaion.equals("new"))
             user.setCredits(credits);

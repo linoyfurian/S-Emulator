@@ -64,7 +64,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     }
 
     @Override
-    public DebugContextDto resume (int credits, long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
+    public DebugContextDto resume (long credits, long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
         ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
 
@@ -129,7 +129,7 @@ public class ProgramDebuggerImpl implements ProgramDebugger {
     }
 
     @Override
-    public DebugContextDto debug (int credits, long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
+    public DebugContextDto debug (long credits, long instructionToExecuteNumber, DebugContextDto debugDetails, Map<String, Long> originalInputs){
         ComplexExecuteResult executeResult;
         List<Instruction> instructions = programToDebug.getInstructions();
 

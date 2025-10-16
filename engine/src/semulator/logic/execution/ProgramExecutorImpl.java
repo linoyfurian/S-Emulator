@@ -25,7 +25,7 @@ public class ProgramExecutorImpl implements ProgramExecutor {
     }
 
     @Override
-    public ExecutionRunDto run(int credits, int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
+    public ExecutionRunDto run(long credits, int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs) {
         int cycles = 0;
         ComplexExecuteResult executeResult;
         ExecutionContext context = new ExecutionContextImpl();

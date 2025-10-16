@@ -5,5 +5,5 @@ import dto.ExecutionRunDto;
 import java.util.Map;
 
 public interface ProgramExecutor {
-    ExecutionRunDto run(int credits, int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs);
+    ExecutionRunDto run(long credits, int degreeOfExpansion, long runNumber, Map<String, Long> originalInputs, long... inputs);
 }

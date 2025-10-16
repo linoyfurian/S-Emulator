@@ -160,7 +160,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public ExecutionRunDto runProgram(int credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
+    public ExecutionRunDto runProgram(long credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
         String displayName;
         if(programName == null){
@@ -228,7 +228,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public DebugContextDto debug (int credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
+    public DebugContextDto debug (long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
         DebugContextDto result;
         Program programToRun;
 
@@ -292,7 +292,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     }
 
     @Override
-    public DebugContextDto resume (int credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
+    public DebugContextDto resume (long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs){
         Program programToRun;
 
         if(programName == null){

@@ -87,9 +87,9 @@ public class UsersController {
         availableUsersColName.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getName()));
         availableUsersColUsedCredit.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getUsedCredits()));
+                new SimpleLongProperty(cellData.getValue().getUsedCredits()));
         availableUsersColCredits.setCellValueFactory(cellData ->
-                new SimpleIntegerProperty(cellData.getValue().getCredits()));
+                new SimpleLongProperty(cellData.getValue().getCredits()));
 
         availableUsersTbl.setItems(usersData);
 
@@ -237,7 +237,7 @@ public class UsersController {
         return historyDelta;
     }
 
-    public void updateCredits(String username, int credits){
+    public void updateCredits(String username, long credits){
         String finalUrl = HttpUrl
                 .parse(Constants.CREDITS_SERVLET)
                 .newBuilder()

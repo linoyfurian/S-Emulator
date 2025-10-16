@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class HttpClientUtil {
 
@@ -14,6 +15,10 @@ public class HttpClientUtil {
             new OkHttpClient.Builder()
                     .cookieJar(COOKIES_MANAGER)
                     .followRedirects(false)
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(70, TimeUnit.SECONDS)
+                    .callTimeout(75, TimeUnit.SECONDS)
                     .build();
 
     public static CookiesManager getCookiesManager() {

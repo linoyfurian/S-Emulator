@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import dto.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -166,7 +167,7 @@ public class ExecutionController {
         return result;
     }
 
-    public IntegerProperty creditsProperty() { return this.mainController.creditsProperty(); }
+    public LongProperty creditsProperty() { return this.mainController.creditsProperty(); }
 
     private boolean isEnoughCreditsAccordingToAverage(double credits, String selectedArchitecture) {
         ArchitectureType architecture = ProgramUtil.getArchitecture(selectedArchitecture);
@@ -182,8 +183,8 @@ public class ExecutionController {
         int degreeOfExpand = this.topBarExecutionController.getCurrentDegree();
         Gson gson = new Gson();
         String architecture = this.debuggerController.getArchitecture();
-        int currentCredits = this.topBarExecutionController.getCredits();
-        int newCredits = currentCredits - ProgramUtil.getCost(architecture);
+        long currentCredits = this.topBarExecutionController.getCredits();
+        long newCredits = currentCredits - ProgramUtil.getCost(architecture);
         updateUsedCredits(ProgramUtil.getCost(architecture));
         this.mainController.setCredits(newCredits);
 

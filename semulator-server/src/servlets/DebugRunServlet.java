@@ -35,7 +35,7 @@ public class DebugRunServlet extends HttpServlet {
         long[] inputs = requestObj.getInputs();
         Map<String, Long> originalInputs = requestObj.getOriginalInputs();
         DebugContextDto debugContext = requestObj.getDebugContext();
-        int credits = requestObj.getCredits();
+        long credits = requestObj.getCredits();
         String username = SessionUtils.getUsername(req);
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);
 

@@ -9,9 +9,9 @@ public class RunProgramRequest {
     private final long[] inputs;
     private final Map<String, Long> originalInputs;
     private final String architecture;
-    private final int credits;
+    private final long credits;
 
-    public RunProgramRequest(int credits, String programName, String architecture, boolean isProgram, int degreeOfExpand,Map<String, Long> originalInputs, long[] inputs) {
+    public RunProgramRequest(long credits, String programName, String architecture, boolean isProgram, int degreeOfExpand,Map<String, Long> originalInputs, long[] inputs) {
         this.programName = programName;
         this.isProgram = isProgram;
         this.degreeOfExpand = degreeOfExpand;
@@ -41,7 +41,7 @@ public class RunProgramRequest {
         return architecture;
     }
 
-    public int getCredits() {
+    public long getCredits() {
         return credits;
     }
 
