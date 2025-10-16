@@ -270,12 +270,18 @@ public class UsersController {
     @FXML
     void onUnselectedUserBtnListener(ActionEvent event) {
         this.availableUsersTbl.getSelectionModel().clearSelection();
+        this.showStatusVariablesVbox.setVisible(false);
+        this.showStatusBtn.setVisible(false);
+        this.reRunBtn.setVisible(false);
         mainController.onUserSelectedListener(null);
     }
 
     @FXML
     void onUserSelectedListener(MouseEvent event) {
         UserInfo userSelected = getSelectedUser();
+        this.showStatusVariablesVbox.setVisible(false);
+        this.showStatusBtn.setVisible(false);
+        this.reRunBtn.setVisible(false);
         mainController.onUserSelectedListener(userSelected);
     }
 
@@ -297,6 +303,7 @@ public class UsersController {
     void onSelectedHistoryRunListener(MouseEvent event) {
         this.showStatusBtn.setVisible(true);
         this.reRunBtn.setVisible(true);
+        this.showStatusVariablesVbox.setVisible(false);
     }
 
     @FXML
