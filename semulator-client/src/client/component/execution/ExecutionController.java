@@ -70,6 +70,29 @@ public class ExecutionController {
         return dialog;
     }
 
+    private Stage showResumeDialog() {
+        Stage owner = (Stage) systemScrollPane.getScene().getWindow();
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(70, 70);
+
+        Label label = new Label("Resume program…");
+
+        VBox root = new VBox(12, spinner, label);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(16));
+
+        Stage dialog = new Stage(StageStyle.UTILITY);
+        dialog.setTitle("Please wait");
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setResizable(false);
+        dialog.setScene(new Scene(root, 260, 140));
+        dialog.show();
+
+        return dialog;
+    }
+
     @FXML
     public void initialize() {
         if (topBarExecutionController != null) {
@@ -246,7 +269,7 @@ public class ExecutionController {
                     try {
                         if (!response.isSuccessful() || response.body() == null) {
                             javafx.application.Platform.runLater(() -> {
-                                if (runningDialog.isShowing()) runningDialog.close(); // ← סגירת החלון
+                                if (runningDialog.isShowing()) runningDialog.close();
                             });
                             return;
                         }
@@ -516,16 +539,19 @@ public class ExecutionController {
                 .build()
                 .toString();
 
+        Stage resumeDialog = showResumeDialog();
         HttpClientUtil.postAsync(finalUrl, body, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try {
                     if (!response.isSuccessful() || response.body() == null) {
+                        javafx.application.Platform.runLater(() -> {
+                            if (resumeDialog.isShowing()) resumeDialog.close();
+                        });
                         return;
                     }
 
@@ -538,6 +564,7 @@ public class ExecutionController {
 
                     boolean isEnoughCredits = debugContext.isSuccess();
                     javafx.application.Platform.runLater(() -> {
+                        if (resumeDialog.isShowing()) resumeDialog.close();
                         if(!isEnoughCredits){
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Insufficient Credits");
