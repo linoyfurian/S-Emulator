@@ -235,21 +235,28 @@ public class ProgramsFunctionsController {
         Stage dialog = new Stage();
         dialog.setTitle("Execution");
 
+
+        Stage owner = (Stage) programsTbl.getScene().getWindow();
+
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+
+        Scene scene = new Scene(root);
+        dialog.setScene(scene);
+
+        owner.hide();
+
+        dialog.setOnHidden(ev -> owner.show());
+
         String userName = this.mainController.getUserName();
         controller.setUserName(userName);
 
         ProgramInfo programInContext = this.programsTbl.getSelectionModel().getSelectedItem();
         this.mainController.setExecutionController(controller);
         this.mainController.initialExecutionScreen(programInContext.getName(), true);
-
         controller.setAverageCredits(programInContext.getAverageCredits());
 
-        Scene scene = new Scene(root);
-        dialog.initOwner(this.programsTbl.getScene().getWindow());
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setAlwaysOnTop(true);
-        dialog.setScene(scene);
-        dialog.showAndWait();
+        dialog.show();
     }
 
 
@@ -266,6 +273,18 @@ public class ProgramsFunctionsController {
         Stage dialog = new Stage();
         dialog.setTitle("Execution");
 
+        Stage owner = (Stage) programsTbl.getScene().getWindow();
+
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+
+        Scene scene = new Scene(root);
+        dialog.setScene(scene);
+
+        owner.hide();
+
+        dialog.setOnHidden(ev -> owner.show());
+
         String userName = this.mainController.getUserName();
         controller.setUserName(userName);
 
@@ -274,13 +293,7 @@ public class ProgramsFunctionsController {
         this.mainController.initialExecutionScreen(programInContext.getName(), false);
 
         controller.setAverageCredits(0);
-
-        Scene scene = new Scene(root);
-        dialog.initOwner(this.programsTbl.getScene().getWindow());
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setAlwaysOnTop(true);
-        dialog.setScene(scene);
-        dialog.showAndWait();
+        dialog.show();
     }
 
     public double getCurrProgramAverageCredits (String programName){

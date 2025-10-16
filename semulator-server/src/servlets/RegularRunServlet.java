@@ -44,7 +44,6 @@ public class RegularRunServlet extends HttpServlet {
         String architecture = requestObj.getArchitecture();
         long credits = requestObj.getCredits();
 
-        System.out.println("inputs: " + Arrays.toString(inputs));
         String username = SessionUtils.getUsername(req);
 
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) getServletContext().getAttribute(Constants.ENGINE);

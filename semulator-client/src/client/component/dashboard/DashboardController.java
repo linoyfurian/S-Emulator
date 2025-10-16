@@ -320,16 +320,19 @@ public class DashboardController {
         initialExecutionScreen(selectedRun.getName(), isProgram);
         controller.initialReRun(selectedRun);
 
+        Stage owner = (Stage) this.systemScrollPane.getScene().getWindow();
+
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+
         Scene scene = new Scene(root);
-        dialog.initOwner(this.systemScrollPane.getScene().getWindow());
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setAlwaysOnTop(true);
         dialog.setScene(scene);
-        dialog.showAndWait();
 
+        owner.hide();
 
+        dialog.setOnHidden(ev -> owner.show());
 
-
+        dialog.show();
     }
 }
 

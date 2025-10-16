@@ -31,6 +31,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import okhttp3.HttpUrl;
 
 import java.util.*;
@@ -240,8 +241,13 @@ public class DebuggerController {
 
     @FXML
     void onBackToDashboardBtnListener(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+        Stage exec = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Window owner = exec.getOwner();
+        exec.close();
+        if (owner instanceof Stage s) {
+            s.show();
+            s.toFront();
+        }
     }
 
     @FXML
