@@ -15,10 +15,17 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +46,29 @@ public class ExecutionController {
     @FXML private TopbarExecutionController topBarExecutionController;
     @FXML private InstructionsController instructionsController;
     @FXML private DebuggerController debuggerController;
+
+    private Stage showRunningDialog() {
+        Stage owner = (Stage) systemScrollPane.getScene().getWindow();
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(70, 70);
+
+        Label label = new Label("Running program…");
+
+        VBox root = new VBox(12, spinner, label);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(16));
+
+        Stage dialog = new Stage(StageStyle.UTILITY);
+        dialog.setTitle("Please wait");
+        dialog.initOwner(owner);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setResizable(false);
+        dialog.setScene(new Scene(root, 260, 140));
+        dialog.show();
+
+        return dialog;
+    }
 
     @FXML
     public void initialize() {
@@ -204,6 +234,8 @@ public class ExecutionController {
                     .build()
                     .toString();
 
+            Stage runningDialog = showRunningDialog();
+
             HttpClientUtil.postAsync(finalUrl, body, new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -213,6 +245,9 @@ public class ExecutionController {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     try {
                         if (!response.isSuccessful() || response.body() == null) {
+                            javafx.application.Platform.runLater(() -> {
+                                if (runningDialog.isShowing()) runningDialog.close(); // ← סגירת החלון
+                            });
                             return;
                         }
                         String json = response.body().string();
@@ -220,12 +255,13 @@ public class ExecutionController {
                         ExecutionRunDto runResult  = gson.fromJson(json, ExecutionRunDto.class);
 
                         javafx.application.Platform.runLater(() -> {
+                            if (runningDialog.isShowing()) runningDialog.close();
                             if(runResult!=null){
                                 debuggerController.updateRunResult(runResult);
                                 mainController.updateHistory();
                                 mainController.updateRunsNumber();
-                                int currentCredits = topBarExecutionController.getCredits();
-                                int newCredits = currentCredits - runResult.getCycles();
+                                long currentCredits = topBarExecutionController.getCredits();
+                                long newCredits = currentCredits - runResult.getCycles();
                                 mainController.setCredits(newCredits);
                                 updateUsedCredits(runResult.getCycles());
                                 if(!runResult.isRunSuccess()){
@@ -327,7 +363,7 @@ public class ExecutionController {
 
     public void btnStepOverListener(){
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
-        int currentCredits = this.topBarExecutionController.getCredits();
+        long currentCredits = this.topBarExecutionController.getCredits();
         DebugProgramRequest debugRequest = new DebugProgramRequest(currentCredits, programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
 
         Gson gson = new Gson();
@@ -380,8 +416,8 @@ public class ExecutionController {
                             long prevInstructionNumber = debugContext.getPreviousInstructionNumber();
                             String variableToHighLight = instructionsController.getInstructionsMainVariable(prevInstructionNumber);
                             debuggerController.updateVariableHighlight(variableToHighLight);
-                            int currentCredits = topBarExecutionController.getCredits();
-                            int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
+                            long currentCredits = topBarExecutionController.getCredits();
+                            long newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
                             mainController.setCredits(newCredits);
                             updateUsedCredits(debugContext.getCurrentInstructionsCycles());
                         }
@@ -461,7 +497,7 @@ public class ExecutionController {
     public void onBtnResumeListener(){
         instructionsController.setIsRunning(false);
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
-        int credits = topBarExecutionController.getCredits();
+        long credits = topBarExecutionController.getCredits();
 
         DebugProgramRequest debugRequest = new DebugProgramRequest(credits, programInContext, isProgram, degreeOfRun, this.debugContext, this.debugContext.getOriginalInputs(), null);
 
@@ -514,8 +550,8 @@ public class ExecutionController {
                             alert.showAndWait();
                         }
 
-                        int currentCredits = topBarExecutionController.getCredits();
-                        int newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
+                        long currentCredits = topBarExecutionController.getCredits();
+                        long newCredits = currentCredits - debugContext.getCurrentInstructionsCycles();
                         mainController.setCredits(newCredits);
                         updateUsedCredits(debugContext.getCurrentInstructionsCycles());
 

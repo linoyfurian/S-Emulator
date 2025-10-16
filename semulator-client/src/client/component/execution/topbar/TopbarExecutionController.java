@@ -209,8 +209,8 @@ public class TopbarExecutionController {
         this.programFunctionName.setText(programFunctionName);
     }
 
-    public int getCredits(){
-        return Integer.parseInt(this.availableCreditsLbl.getText());
+    public long getCredits(){
+        return Long.parseLong(this.availableCreditsLbl.getText());
     }
 
     public void initialDebugMode(){
