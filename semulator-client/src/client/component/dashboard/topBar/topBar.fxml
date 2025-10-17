@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="700.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.dashboard.topBar.TopBarController">
+<GridPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="700.0" stylesheets="@topBar.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.dashboard.topBar.TopBarController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -29,7 +29,7 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <Label fx:id="userNameLbl" text="name" />
+            <Label fx:id="userNameLbl" styleClass="value" text="name" />
          </children>
       </HBox>
       <HBox prefWidth="410.0" spacing="5.0" GridPane.columnSpan="3" GridPane.rowIndex="1">
@@ -50,7 +50,7 @@
                         <Insets left="40.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="availableCreditsLbl" text="0" />
+                  <Label fx:id="availableCreditsLbl" styleClass="value" text="0" />
                </children>
                <padding>
                   <Insets right="5.0" />

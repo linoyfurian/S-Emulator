@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.dashboard.programsFunctions.ProgramsFunctionsController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" stylesheets="@programsFunctions.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.dashboard.programsFunctions.ProgramsFunctionsController">
    <children>
-      <Label text="Available Programs">
+      <Label styleClass="sub-title" text="Available Programs">
          <padding>
             <Insets top="5.0" />
          </padding>
@@ -33,7 +33,7 @@
             <Insets left="5.0" />
          </padding>
       </HBox>
-      <Label text="Available Functions" />
+      <Label styleClass="sub-title" text="Available Functions" />
       <TableView fx:id="functionsTbl" prefHeight="200.0">
         <columns>
           <TableColumn fx:id="functionsTblNameCol" prefWidth="95.0" text="Name" />

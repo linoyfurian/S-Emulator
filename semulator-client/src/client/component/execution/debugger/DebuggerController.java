@@ -469,8 +469,6 @@ public class DebuggerController {
     }
 
     public void applyRelevantInputs(Map<String, Long> inputs){
-        System.out.println("applyRelevantInputs");
-        System.out.println("inputs: " + inputs);
         ObservableList<Node> programInputs = inputsContainer.getChildren();
         for(Node node : programInputs){
             if(node instanceof HBox row){
@@ -478,9 +476,7 @@ public class DebuggerController {
                 if(rowDetails.get(0) instanceof Label label){
                     long value = inputs.getOrDefault(label.getText().substring(0,label.getText().length()-1), 0L);
                     if(rowDetails.get(1) instanceof TextField textField){
-                        System.out.println(value);
                         textField.setText(String.valueOf(value));
-                        System.out.println(textField.getText());
                     }
                 }
             }

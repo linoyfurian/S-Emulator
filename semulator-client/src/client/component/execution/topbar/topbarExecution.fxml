@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.execution.topbar.TopbarExecutionController">
+<GridPane minHeight="-Infinity" minWidth="-Infinity" stylesheets="@topBarExecution.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.component.execution.topbar.TopbarExecutionController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" prefWidth="200.0" />
       <ColumnConstraints hgrow="SOMETIMES" prefWidth="250.0" />
@@ -23,8 +23,8 @@
    <children>
       <HBox alignment="TOP_RIGHT" spacing="2.0" GridPane.columnIndex="3">
          <children>
-            <Label alignment="CENTER_RIGHT" text="Available Credits: " />
-            <Label fx:id="availableCreditsLbl" text="0" />
+            <Label alignment="CENTER_RIGHT" styleClass="sub-title" text="Available Credits: " />
+            <Label fx:id="availableCreditsLbl" styleClass="value" text="0" />
          </children>
          <padding>
             <Insets right="6.0" />
@@ -32,8 +32,8 @@
       </HBox>
       <HBox spacing="2.0">
          <children>
-            <Label text="User Name:" />
-            <Label fx:id="userNameLbl" text="name" />
+            <Label styleClass="sub-title" text="User Name:" />
+            <Label fx:id="userNameLbl" styleClass="value" text="name" />
          </children>
          <padding>
             <Insets left="5.0" />
@@ -43,25 +43,25 @@
          <children>
             <VBox alignment="TOP_CENTER" spacing="3.0">
                <children>
-                  <Label text="Program/Function Name:" />
-                  <Label fx:id="programFunctionName" text="name" />
+                  <Label styleClass="sub-title" text="Program/Function Name:" />
+                  <Label fx:id="programFunctionName" styleClass="value" text="name" />
                </children>
             </VBox>
             <VBox prefWidth="100.0">
                <children>
-                  <Label text="Collapse:" />
+                  <Label styleClass="sub-title" text="Collapse:" />
                   <ComboBox fx:id="cmbCollapse" maxWidth="100.0" onAction="#btnCollapseListener" prefWidth="150.0" />
                </children>
             </VBox>
             <VBox maxHeight="150.0">
                <children>
                   <Label />
-                  <Label fx:id="degreeLabel" text="Current/max degree" VBox.vgrow="ALWAYS" />
+                  <Label fx:id="degreeLabel" styleClass="sub-title" text="Current/max degree" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
             <VBox prefWidth="100.0">
                <children>
-                  <Label text="Expand:">
+                  <Label styleClass="sub-title" text="Expand:">
                      <padding>
                         <Insets left="3.0" />
                      </padding>
@@ -71,7 +71,7 @@
             </VBox>
             <VBox>
                <children>
-                  <Label text="Highlight selection:" />
+                  <Label styleClass="sub-title" text="Highlight selection:" />
                   <ComboBox fx:id="cmbHighlight" onAction="#onHighlightChangedListener" prefHeight="26.0" prefWidth="120.0" />
                </children>
             </VBox>

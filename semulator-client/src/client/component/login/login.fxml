@@ -29,7 +29,7 @@
                     <children>
                         <HBox alignment="CENTER" prefHeight="50.0" spacing="5.0">
                             <children>
-                                <Label text="User Name:" HBox.hgrow="ALWAYS" />
+                                <Label styleClass="sub-title" text="User Name:" HBox.hgrow="ALWAYS" />
                                 <TextField fx:id="userNameTextField" />
                             </children>
                         </HBox>
