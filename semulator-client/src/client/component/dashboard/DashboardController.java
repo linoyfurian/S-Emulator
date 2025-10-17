@@ -299,7 +299,6 @@ public class DashboardController {
         String userName = getUserName();
         controller.setUserName(userName);
 
-        // ProgramInfo programInContext = this.programsTbl.getSelectionModel().getSelectedItem();
         setExecutionController(controller);
         boolean isProgram = false;
         if(selectedRun.getProgramOrFunction().equals("Program"))
@@ -317,8 +316,7 @@ public class DashboardController {
 
         controller.setIsProgram(isProgram);
         controller.setProgramInContext(selectedRun.getOriginalName());
-        initialExecutionScreen(selectedRun.getName(), isProgram);
-        controller.initialReRun(selectedRun);
+        initialExecutionScreenForReRun(selectedRun.getName(), isProgram, selectedRun);
 
         Stage owner = (Stage) this.systemScrollPane.getScene().getWindow();
 
@@ -333,6 +331,56 @@ public class DashboardController {
         dialog.setOnHidden(ev -> owner.show());
 
         dialog.show();
+    }
+
+    public void initialExecutionScreenForReRun(String programName, boolean isProgram, RunResultDto selectedRun) {
+        this.isProgram = isProgram;
+        String finalUrl = HttpUrl
+                .parse(Constants.DISPLAY_SERVLET)
+                .newBuilder()
+                .addQueryParameter("program_name", programName)
+                .addQueryParameter("is_program", String.valueOf(isProgram))
+                .build()
+                .toString();
+
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        return;
+                    }
+
+                    String json = response.body().string();
+
+                    Gson gson = new Gson();
+                    ProgramFunctionDto programDetails;
+
+                    if (isProgram) {
+                        // ProgramDto implements ProgramFunctionDto
+                        ProgramDto programDto = gson.fromJson(json, ProgramDto.class);
+                        programDetails = programDto;
+                    } else {
+                        // FunctionDto implements ProgramFunctionDto
+                        FunctionDto functionDto = gson.fromJson(json, FunctionDto.class);
+                        programDetails = functionDto;
+                    }
+
+                    Platform.runLater(() -> {
+                        executionController.initialProgramDetailsForReRun(programDetails, isProgram, selectedRun);
+                        executionController.initialReRun(selectedRun);
+                    });
+                } finally {
+                    response.close();
+                }
+            }
+        });
     }
 }
 

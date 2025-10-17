@@ -26,10 +26,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import okhttp3.HttpUrl;
@@ -220,6 +217,11 @@ public class DebuggerController {
 
         this.architectureCbox.setItems(FXCollections.observableList(options));
     }
+
+    public Pane getInputsContainer() {
+        return inputsContainer;
+    }
+
 
     public void updateArchitecture(String selectedArchitecture) {
         this.architectureCbox.getSelectionModel().select(selectedArchitecture);
@@ -467,6 +469,8 @@ public class DebuggerController {
     }
 
     public void applyRelevantInputs(Map<String, Long> inputs){
+        System.out.println("applyRelevantInputs");
+        System.out.println("inputs: " + inputs);
         ObservableList<Node> programInputs = inputsContainer.getChildren();
         for(Node node : programInputs){
             if(node instanceof HBox row){
@@ -474,7 +478,9 @@ public class DebuggerController {
                 if(rowDetails.get(0) instanceof Label label){
                     long value = inputs.getOrDefault(label.getText().substring(0,label.getText().length()-1), 0L);
                     if(rowDetails.get(1) instanceof TextField textField){
+                        System.out.println(value);
                         textField.setText(String.valueOf(value));
+                        System.out.println(textField.getText());
                     }
                 }
             }

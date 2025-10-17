@@ -13,10 +13,12 @@ import dto.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -687,29 +689,21 @@ public class ExecutionController {
                         // ProgramDto implements ProgramFunctionDto
                         ProgramDto programDto = gson.fromJson(json, ProgramDto.class);
                         expandedProgramDetails = programDto;
-                        displayName = expandedProgramDetails.getName();
                     } else {
                         // FunctionDto implements ProgramFunctionDto
                         FunctionDto functionDto = gson.fromJson(json, FunctionDto.class);
                         expandedProgramDetails = functionDto;
-                        displayName = functionDto.getUserString();
                     }
                     javafx.application.Platform.runLater(() -> {
                         instructionsController.clearAllHighlightedInstructions();
                         instructionsController.displayProgram(expandedProgramDetails);
                         topBarExecutionController.refreshHighlightOptions(expandedProgramDetails);
                         topBarExecutionController.updateCurrentDegreeLabel(degreeOfRun);
-                        debuggerController.setProgram(expandedProgramDetails);
-                        debuggerController.updateRunBtnDisable();
-
-                        topBarExecutionController.setProgramFunctionName(displayName);
-                        debuggerController.initialOfNewRun();
-                        Map<String,Long> inputs = selectedRun.getInputs();
-                        debuggerController.applyRelevantInputs(inputs);
+                        debuggerController.updateArchitecture(selectedRun.getArchitecture());
                         instructionsController.highlightLine(-1);
                         debuggerController.updateVariableHighlight("");
                         debuggerController.disableChangeOfInput(false);
-                        debuggerController.updateArchitecture(selectedRun.getArchitecture());
+                        debuggerController.updateRunBtnDisable();
                     });
                 } finally {
                     response.close();
@@ -718,6 +712,31 @@ public class ExecutionController {
         });
 
     }
+
+    public void initialProgramDetailsForReRun(ProgramFunctionDto programDetails, boolean isProgram, RunResultDto selectedRun) {
+        this.programInContext = programDetails.getName();
+        String displayName;
+        if (isProgram) {
+            this.programInContext = programDetails.getName();
+            displayName = programDetails.getName();
+        }
+        else{
+            FunctionDto functionDto = (FunctionDto) programDetails;
+            displayName = functionDto.getUserString();
+        }
+        this.isProgram = isProgram;
+        int programDegree = ProgramUtil.getDisplayedProgramDegree(programDetails);
+        int maxDegree = ProgramUtil.getDisplayedProgramMaxDegree(programDetails);
+        topBarExecutionController.updateDegreeLabel(programDegree, maxDegree);
+
+        debuggerController.setProgram(programDetails);
+        debuggerController.initialOfNewRun();
+        Map<String, Long> inputs = selectedRun.getInputs();
+        debuggerController.applyRelevantInputs(inputs);
+        // instructionsController.resetBreakPointSelection();
+        topBarExecutionController.setProgramFunctionName(displayName);
+    }
+
 
     private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
 
