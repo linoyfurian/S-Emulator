@@ -20,12 +20,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     private Map<String, Program> programs = new HashMap<>();
     private Map<String, Program> functions = new HashMap<>();
-    private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
+    //private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
+    private final ConcurrentHashMap<String, List<RunResultDto>> runsHistory = new ConcurrentHashMap<>();
     private Map<String, ProgramStatistics>  programStatistics = new HashMap<>();
+
+    private final ConcurrentHashMap<String, Object> userLocks = new ConcurrentHashMap<>();
+
+    private Object getUserLock(String username) {
+        return userLocks.computeIfAbsent(username, u -> new Object());
+    }
 
     private static final JAXBContext JAXB_CTX;
     static {
@@ -158,7 +166,6 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
         return programFunctionDto;
     }
-
     @Override
     public ExecutionRunDto runProgram(long credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input){
         Program programToRun;
@@ -167,14 +174,12 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             return  null;
         }
 
-
         Program programInContext;
         if(isProgramBool)
             programInContext = programs.get(programName);
         else {
             programInContext = functions.get(programName);
         }
-
 
         programToRun = programInContext.expand(desiredDegreeOfExpand, functions);
         ProgramExecutor programExecutor = new ProgramExecutorImpl(programToRun, functions);
@@ -188,20 +193,33 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             displayName = func.getUserString();
         }
 
-        if(!this.runsHistory.containsKey(username)){
-            this.runsHistory.put(username, new ArrayList<>());
+        synchronized (getUserLock(username)) {
+            List<RunResultDto> results = runsHistory.computeIfAbsent(username, u -> new ArrayList<>());
+
+            // List<RunResultDto> results = this.runsHistory.get(username);
+            RunResultDto currentRunResult = new RunResultDto(
+                    results.size()+1,
+                    desiredDegreeOfExpand,
+                    runResult.getResult(),
+                    runResult.getCycles(),
+                    originalInputs,
+                    runResult.getVariables(),
+                    programOrFunction,
+                    architecture,
+                    displayName,
+                    programName
+            );
+            results.add(currentRunResult);
+
+            if(isProgramBool){
+                ProgramStatistics programStatistic =  programStatistics.get(programName);
+                programStatistic.updateCreditsAverage(currentRunResult.getCycles());
+            }
         }
 
-        List<RunResultDto> results = this.runsHistory.get(username);
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, desiredDegreeOfExpand, runResult.getResult(), runResult.getCycles(), originalInputs, runResult.getVariables(), programOrFunction, architecture, displayName, programName);
-        results.add(currentRunResult);
-
-        if(isProgramBool){
-            ProgramStatistics programStatistic =  programStatistics.get(programName);
-            programStatistic.updateCreditsAverage(currentRunResult.getCycles());
-        }
         return runResult;
     }
+
 
     @Override
     public DebugContextDto initialStartOfDebugger(String username, String programName, boolean isProgram, int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long... inputs) {
@@ -259,36 +277,52 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     public void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture){
         String userName = debugContext.getUserName();
         String displayName;
-        if(!this.runsHistory.containsKey(userName)){
-            this.runsHistory.put(userName, new ArrayList<>());
-        }
 
-        List<RunResultDto> results = this.runsHistory.get(userName);
-        Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
-        long resultY = variablesValues.get("y");
-        String programOrFunction = "Program";
-        displayName = programName;
-        if(!isProgram){
-            programOrFunction = "Function";
-            Program currentFunction = functions.get(programName);
-            Function function = (Function) currentFunction;
-            displayName = function.getUserString();
-        }
+        synchronized (getUserLock(userName)) {
+            List<RunResultDto> results = runsHistory.computeIfAbsent(userName, u -> new ArrayList<>());
 
-        RunResultDto currentRunResult = new RunResultDto(results.size()+1, degreeOfRun, resultY, debugContext.getCycles(), debugContext.getOriginalInputs(), debugContext.getCurrentVariablesValues(), programOrFunction, architecture, displayName, programName);
-        results.add(currentRunResult);
+          //  List<RunResultDto> results = this.runsHistory.get(userName);
+            Map<String, Long> variablesValues = debugContext.getCurrentVariablesValues();
+            long resultY = variablesValues.get("y");
 
-        if(isProgram){
-            ProgramStatistics programStatistic =  programStatistics.get(programName);
-            programStatistic.updateCreditsAverage(currentRunResult.getCycles());
+            String programOrFunction = "Program";
+            displayName = programName;
+            if(!isProgram){
+                programOrFunction = "Function";
+                Program currentFunction = functions.get(programName);
+                Function function = (Function) currentFunction;
+                displayName = function.getUserString();
+            }
+
+            RunResultDto currentRunResult = new RunResultDto(
+                    results.size()+1,
+                    degreeOfRun,
+                    resultY,
+                    debugContext.getCycles(),
+                    debugContext.getOriginalInputs(),
+                    debugContext.getCurrentVariablesValues(),
+                    programOrFunction,
+                    architecture,
+                    displayName,
+                    programName
+            );
+            results.add(currentRunResult);
+
+            if(isProgram){
+                ProgramStatistics programStatistic =  programStatistics.get(programName);
+                programStatistic.updateCreditsAverage(currentRunResult.getCycles());
+            }
         }
     }
 
     @Override
     public List<RunResultDto> getUserRunHistory(String user){
-        if(this.runsHistory.get(user)==null)
-            return new ArrayList<>();
-        return this.runsHistory.get(user);
+//        if(this.runsHistory.get(user)==null)
+//            return new ArrayList<>();
+//        return this.runsHistory.get(user);
+        List<RunResultDto> list = runsHistory.get(user);
+        return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
+
     }
 
     @Override

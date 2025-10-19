@@ -16,7 +16,7 @@ public class ProgramStatistics {
         return creditsAverage;
     }
 
-    public void updateCreditsAverage(int credits) {
+    public synchronized void updateCreditsAverage(int credits) {
         this.creditsAverage = ((this.runsNumber * this.creditsAverage) + credits)/(this.runsNumber+1);
         this.runsNumber++;
     }

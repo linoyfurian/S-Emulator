@@ -9,6 +9,22 @@ public class ServletUtils {
 
     private static final Object userManagerLock = new Object();
 
+    private static final String UPLOAD_LOCK = "UPLOAD_LOCK";
+
+    public static Object getUploadLock(ServletContext ctx) {
+        Object lock = ctx.getAttribute(UPLOAD_LOCK);
+        if (lock == null) {
+            synchronized (ServletUtils.class) {
+                lock = ctx.getAttribute(UPLOAD_LOCK);
+                if (lock == null) {
+                    lock = new Object();
+                    ctx.setAttribute(UPLOAD_LOCK, lock);
+                }
+            }
+        }
+        return lock;
+    }
+
     public static UserManager getUserManager(ServletContext servletContext) {
 
         synchronized (userManagerLock) {

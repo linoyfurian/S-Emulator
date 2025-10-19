@@ -24,28 +24,41 @@ public class LoadFileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
+
         ServletContext ctx = getServletContext();
         SEmulatorEngineV3 engine = (SEmulatorEngineV3) ctx.getAttribute(Constants.ENGINE);
+        Object lock = ServletUtils.getUploadLock(ctx);
 
         try {
             Part filePart = req.getPart("file");
-            String usernameFromSession = SessionUtils.getUsername(req);
+            String username = SessionUtils.getUsername(req);
 
-
-            System.out.println("usernameFromSession: " + usernameFromSession);
+            if (username == null || username.isEmpty()) {
+                write(resp, new LoadReport(false, "No active session"));
+                return;
+            }
             if (filePart == null || filePart.getSize() == 0) {
                 write(resp, new LoadReport(false, "No file uploaded"));
                 return;
             }
 
-            try (InputStream in = filePart.getInputStream()) {
-                LoadReport loadReport = engine.loadProgramDetails(in, usernameFromSession);
-                UserManager userManager = ServletUtils.getUserManager(ctx);
-                UserInfo user = userManager.getUsers().get(usernameFromSession);
-                user.updateProgramsNumber(loadReport.getProgramsNumber());
-                user.updateFunctionsNumber(loadReport.getFunctionsNumber());
-                write(resp, loadReport);
+            LoadReport loadReport;
+            synchronized (lock) {
+                try (InputStream in = filePart.getInputStream()) {
+                    loadReport = engine.loadProgramDetails(in, username);
+                }
+
+                if (loadReport.isSuccess()) {
+                    UserManager userManager = ServletUtils.getUserManager(ctx);
+                    UserInfo user = userManager.getUsers().get(username);
+                    if (user != null) {
+                        user.updateProgramsNumber(loadReport.getProgramsNumber());
+                        user.updateFunctionsNumber(loadReport.getFunctionsNumber());
+                    }
+                }
             }
+
+            write(resp, loadReport);
 
         } catch (Exception ex) {
             write(resp, new LoadReport(false, ex.getMessage() != null ? ex.getMessage() : "Upload error"));
