@@ -100,12 +100,13 @@
 
 .summary-title {
     -fx-font-weight: bold;
-    -fx-text-fill: #333;
+    -fx-text-fill: #000000;
     -fx-padding: 0 10 0 0;
 }
 
 .summary-subtitle {
-    -fx-text-fill: #666;
+    -fx-text-fill: #3c3b3b;
+    -fx-font-weight: bold;
     -fx-font-size: 12px;
 }
 

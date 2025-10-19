@@ -39,6 +39,12 @@ public class InstructionsController {
     private ObservableList<InstructionDto> instructionData = FXCollections.observableArrayList();
     private ObservableList<ParentInstructionDto> instructionChainData = FXCollections.observableArrayList();
 
+
+    @FXML private Label architectureITitle;
+    @FXML private Label architectureIITitle;
+    @FXML private Label architectureIIITitle;
+    @FXML private Label architectureIVTitle;
+
     @FXML private TableView<InstructionDto> tblInstructions;
     @FXML private TableColumn<InstructionDto, String> colNumber;
     @FXML private TableColumn<InstructionDto, String> colType;
@@ -420,5 +426,32 @@ public class InstructionsController {
     public void clearAllHighlightedInstructions(){
         currentLine.set(-1);
         tblInstructions.scrollTo(Math.max(0, 0));
+    }
+
+    public void updateArchitectureColors(String selectedArchitecture){
+        if(selectedArchitecture.equals("I")){
+            architectureITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIITitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+            architectureIIITitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+            architectureIVTitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+        }
+        else if(selectedArchitecture.equals("II")){
+            architectureITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIIITitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+            architectureIVTitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+        }
+        else if(selectedArchitecture.equals("III")){
+            architectureITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIIITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIVTitle.setStyle("-fx-background-color: rgba(239, 59, 80, 0.8);");
+        }
+        else if(selectedArchitecture.equals("IV")){
+            architectureITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIIITitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+            architectureIVTitle.setStyle("-fx-background-color: rgba(116, 244, 164, 0.8);");
+        }
     }
 }

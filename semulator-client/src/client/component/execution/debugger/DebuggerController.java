@@ -231,6 +231,10 @@ public class DebuggerController {
     @FXML
     void onArchitectureSelectedListener(ActionEvent event) {
         updateRunBtnDisable();
+        String selectedArchitecture = architectureCbox.getSelectionModel().getSelectedItem();
+        if(selectedArchitecture==null)
+            return;
+        this.mainController.updateArchitectureColors(selectedArchitecture);
     }
 
     public void updateRunBtnDisable() {

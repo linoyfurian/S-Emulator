@@ -737,8 +737,9 @@ public class ExecutionController {
         topBarExecutionController.setProgramFunctionName(displayName);
     }
 
-
-    private void updateSystemToTheDesiredDegree(int currentDegree, int degreeOfRun){
-
+    public void updateArchitectureColors(String selectedArchitecture){
+        this.instructionsController.updateArchitectureColors(selectedArchitecture);
     }
+
+
 }
