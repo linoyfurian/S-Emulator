@@ -6,6 +6,7 @@ import client.utils.Constants;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import dto.LoadReport;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -61,7 +62,7 @@ public class TopBarController {
 
         ProgressDialog progress = new ProgressDialog(null, "Loading Program");
         progress.show();
-        progress.setStatus("Uploading…");
+        progress.startLoading("Uploading…");
 
         HttpClientUtil.postFileAsync(
                 Constants.LOAD_FILE_PAGE,
@@ -71,10 +72,7 @@ public class TopBarController {
                 new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        javafx.application.Platform.runLater(() -> {
-                            progress.setStatus("Error: " + e.getMessage());
-                            progress.setIndeterminate();
-                        });
+                        Platform.runLater(() -> progress.finishError(e.getMessage()));
                     }
 
                     @Override
@@ -82,15 +80,15 @@ public class TopBarController {
                         String body = response.body().string();
                         LoadReport report = new Gson().fromJson(body, LoadReport.class);
 
-                        javafx.application.Platform.runLater(() -> {
+                        Platform.runLater(() -> {
                             if (report != null && report.isSuccess()) {
-                                progress.setStatus("Loaded successfully.");
                                 fileTextField.setText(selectedFile.getAbsolutePath());
+                                progress.finishSuccess("Loaded successfully.");
                                 progress.close();
                             } else {
-                                String msg = (report != null ? report.getMessage() : "Invalid server response");
-                                progress.setStatus("Error: " + msg);
-                                progress.showDetails(msg);
+                                String msg = (report != null ? report.getMessage()
+                                        : "Invalid server response");
+                                progress.finishError(msg);
                             }
                         });
                     }
