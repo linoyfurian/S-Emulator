@@ -16,7 +16,7 @@ import utils.users.UserManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-@WebServlet("/load-file")
+@WebServlet(name = "servlets.LoadFileServlet", urlPatterns = "/load-file")
 @MultipartConfig(fileSizeThreshold = 1024 * 32, maxFileSize = 1024L * 1024L * 20)
 public class LoadFileServlet extends HttpServlet {
     private final Gson gson = new Gson();

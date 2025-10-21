@@ -127,12 +127,6 @@ public class ProgramsFunctionsController {
                     while (scanner.hasNext()) {
                         json.append(scanner.nextLine());
                     }
-
-//                    Gson gson = new Gson();
-//                    Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
-//                    List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
-//
-
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<ProgramInfo>>() {}.getType();
                         List<ProgramInfo> programs = gson.fromJson(json.toString(), listType);
@@ -304,5 +298,4 @@ public class ProgramsFunctionsController {
         }
         return 0;
     }
-
 }

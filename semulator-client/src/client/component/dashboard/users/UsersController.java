@@ -6,8 +6,6 @@ import client.utils.display.ProgramUtil;
 import client.utils.display.VariableRow;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.reflect.TypeToken;
-import dto.DebugContextDto;
-import dto.FunctionInfo;
 import dto.RunResultDto;
 import dto.UserInfo;
 import javafx.animation.KeyFrame;
@@ -36,7 +34,6 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class UsersController {
     private DashboardController mainController;
@@ -145,14 +142,11 @@ public class UsersController {
                         json.append(scanner.nextLine());
                     }
 
-                    // Gson: fromJson -> List<UserInfo>
                     Gson gson = new Gson();
                     Type listType = new TypeToken<List<UserInfo>>() {}.getType();
                     List<UserInfo> users = gson.fromJson(json.toString(), listType);
 
                     Platform.runLater(() -> {
-//                        usersData.clear();
-//                        usersData.addAll(users);
                         Set<String> usersSet = new HashSet<>();
                         for (UserInfo user : usersData) {
                             usersSet.add(user.getName());
@@ -187,22 +181,6 @@ public class UsersController {
             }
         }
         return null;
-    }
-
-    private List<UserInfo> getUsersDelta(List<UserInfo> original, List<UserInfo> newUsers) {
-        List<UserInfo> usersDelta = new ArrayList<>();
-        Set<String> usersSet = new HashSet<>();
-
-        for (UserInfo user : original) {
-            usersSet.add(user.getName());
-        }
-
-        for (UserInfo user : newUsers) {
-            if (!usersSet.contains(user.getName())) {
-                usersDelta.add(user);
-            }
-        }
-        return usersDelta;
     }
 
     public UserInfo getSelectedUser(){
@@ -317,5 +295,4 @@ public class UsersController {
             this.variablesData.addAll(variables);
         }
     }
-
 }

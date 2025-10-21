@@ -11,7 +11,6 @@
     <children>
         <TableView id="instructions-table" fx:id="tblInstructions" maxHeight="400.0" onMouseClicked="#onInstructionSelectedListener" prefHeight="300.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colBreakPoint" prefWidth="30.0" />
                 <TableColumn id="instructions-table-number" fx:id="colNumber" maxWidth="70.0" prefWidth="70.0" sortable="false" styleClass="col" text="number" />
                 <TableColumn id="instructions-table-bs" fx:id="colType" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" sortable="false" styleClass="col" text="B\S" />
                 <TableColumn fx:id="colLabel" prefWidth="75.0" styleClass="col" text="Label" />

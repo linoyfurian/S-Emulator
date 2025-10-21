@@ -51,7 +51,6 @@ public class InstructionsController {
     @FXML private TableColumn<InstructionDto, String> colLabel;
     @FXML private TableColumn<InstructionDto, String> colCommand;
     @FXML private TableColumn<InstructionDto, String> colCycles;
-    @FXML private TableColumn<InstructionDto, Void> colBreakPoint;
     @FXML private TableColumn<InstructionDto, String> colArchitecture;
 
     @FXML private TableView<ParentInstructionDto> tblChainInstructions;
@@ -131,11 +130,7 @@ public class InstructionsController {
 
 
         initCodeTableHighlighting();
-       // initInstructionsHighlighting();
-
         initInstructionsArchitectureHighlighting();
-
-        initBreakpointColumn();
     }
 
     public void displayProgram(ProgramFunctionDto programDetails){
@@ -171,8 +166,6 @@ public class InstructionsController {
 
         tblInstructions.applyCss();
         tblInstructions.layout();
-
-       // clearAllRowHighlights();
 
         boolean isInstructionToHighlight;
         for (InstructionDto instruction : tableRows) {
@@ -242,70 +235,6 @@ public class InstructionsController {
         currentLine.set(index);
         initInstructionsArchitectureHighlighting();
         tblInstructions.scrollTo(Math.max(index - 3, 0));
-    }
-
-    private void initBreakpointColumn() {
-        colBreakPoint.setCellFactory(col -> new TableCell<InstructionDto, Void>() {
-            private final RadioButton rb = new RadioButton();
-
-            {
-                rb.setFocusTraversable(false);
-                rb.setToggleGroup(breakPoints);
-
-                rb.getStyleClass().add("breakpoint-radio-button");
-                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, ev -> {
-                    if (isRunning.get()) {
-                        ev.consume();
-                        return;
-                    }
-                    if (rb.isSelected()) {
-                        rb.setSelected(false);
-                        ev.consume();
-                    }
-                });
-
-                // When user clicks this radio, remember the current row index
-                rb.setOnAction(e -> {
-                    if (rb.isSelected()) {
-                        selectedRowIndex.set(getIndex());
-                    } else if (selectedRowIndex.get() == getIndex()) {
-                        selectedRowIndex.set(-1);
-                    }
-
-                    getTableView().getSelectionModel().clearSelection();
-                });
-
-                rb.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-                    if (rb.isSelected()) {
-                        rb.setSelected(false);
-                        event.consume();
-                    }
-                });
-
-                // When the "global" selectedRowIndex changes, refresh this cell's checked state
-                selectedRowIndex.addListener((obs, oldV, newV) -> {
-                    // Cells are virtualized; just reflect whether our index is selected
-                    rb.setSelected(getIndex() == newV.intValue());
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                    rb.setToggleGroup(null); // detach when not used
-                } else {
-                    // re-attach for visible cell (virtualization-safe)
-                    if (rb.getToggleGroup() == null) {
-                        rb.setToggleGroup(breakPoints);
-                    }
-                    rb.setSelected(getIndex() == selectedRowIndex.get());
-                    setGraphic(rb);
-                    rb.disableProperty().bind(isRunning);
-                }
-            }
-        });
     }
 
     private void showParentChain(InstructionDto selected) {

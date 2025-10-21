@@ -12,7 +12,7 @@ import semulator.core.v3.SEmulatorEngineV3;
 
 import java.io.IOException;
 
-@WebServlet("/expand")
+@WebServlet(name = "servlets.ExpandServlet", urlPatterns = "/expand")
 public class ExpandServlet extends HttpServlet {
     private final Gson gson = new Gson();
 

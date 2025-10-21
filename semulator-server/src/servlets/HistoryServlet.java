@@ -9,15 +9,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import semulator.core.v3.SEmulatorEngineV3;
-import utils.SessionUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@WebServlet("/history")
+@WebServlet(name = "servlets.HistoryServlet", urlPatterns = "/history")
 public class HistoryServlet extends HttpServlet {
     private final Gson gson = new Gson();
 

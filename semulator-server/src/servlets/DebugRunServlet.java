@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import constants.Constants;
 import dto.DebugContextDto;
 import dto.DebugProgramRequest;
-import dto.ExecutionRunDto;
-import dto.RunProgramRequest;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/debug-run")
+@WebServlet(name = "servlets.DebugRunServlet", urlPatterns = "/debug-run")
 public class DebugRunServlet extends HttpServlet {
     private final Gson gson = new Gson();
 

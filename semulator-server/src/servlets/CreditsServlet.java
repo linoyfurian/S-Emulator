@@ -12,7 +12,7 @@ import utils.users.UserManager;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/credits")
+@WebServlet(name = "servlets.CreditsServlet", urlPatterns = "/credits")
 public class CreditsServlet extends HttpServlet {
 
     @Override

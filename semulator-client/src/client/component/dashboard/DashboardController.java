@@ -19,13 +19,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 public class DashboardController {
 
@@ -383,4 +378,3 @@ public class DashboardController {
         });
     }
 }
-

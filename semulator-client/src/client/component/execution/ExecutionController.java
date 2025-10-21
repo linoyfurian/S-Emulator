@@ -314,16 +314,7 @@ public class ExecutionController {
         else {
             topBarExecutionController.initialDebugMode();
             instructionsController.setIsRunning(true);
-//            int breakPointRowIndex = 0;
-//            breakPointRowIndex = instructionsController.getBreakPointRowIndex();
-
             debuggerController.initialStartOfDebugging();
-
-//            if (breakPointRowIndex != 0) {
-//                DebugContextDto debugDetails;
-//                debugDetails = engine.breakPointRun(breakPointRowIndex, degreeOfRun, originalInputs, inputs);
-//                this.debugContext = debugDetails;
-//            }
 
             DebugProgramRequest debugRequest = new DebugProgramRequest(newCredits, programInContext, isProgram, degreeOfExpand, this.debugContext, originalInputs, inputs);
 
@@ -733,7 +724,6 @@ public class ExecutionController {
         debuggerController.initialOfNewRun();
         Map<String, Long> inputs = selectedRun.getInputs();
         debuggerController.applyRelevantInputs(inputs);
-        // instructionsController.resetBreakPointSelection();
         topBarExecutionController.setProgramFunctionName(displayName);
     }
 

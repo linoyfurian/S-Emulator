@@ -1,16 +1,12 @@
 package client.component.execution.debugger;
 
 import client.component.execution.ExecutionController;
-import client.utils.Constants;
 import client.utils.display.VariableRow;
-import com.google.gson.Gson;
 import dto.DebugContextDto;
 import dto.ExecutionRunDto;
 import dto.ProgramFunctionDto;
-import dto.RunProgramRequest;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,8 +25,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import okhttp3.HttpUrl;
-
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -62,7 +56,6 @@ public class DebuggerController {
     @FXML private Button resumeBtn;
     @FXML private Button stepOverBtn;
     @FXML private Button stopBtn;
-    @FXML private Button stepBackBtn;
 
 
     @FXML private Button backToDashboardBtn;
@@ -121,7 +114,6 @@ public class DebuggerController {
         }
         buildInputsUI(programInContextDetails);
         variablesData.clear();
-        stepBackBtn.setDisable(true);
         runBtn.setDisable(true);
         stopBtn.setDisable(true);
         resumeBtn.setDisable(true);
@@ -217,11 +209,6 @@ public class DebuggerController {
 
         this.architectureCbox.setItems(FXCollections.observableList(options));
     }
-
-    public Pane getInputsContainer() {
-        return inputsContainer;
-    }
-
 
     public void updateArchitecture(String selectedArchitecture) {
         this.architectureCbox.getSelectionModel().select(selectedArchitecture);
@@ -338,7 +325,6 @@ public class DebuggerController {
         resumeBtn.setDisable(false);
         stepOverBtn.setDisable(false);
         radioBtnRegular.setDisable(true);
-        stepBackBtn.setDisable(true);
     }
 
     public void updateDebugResult(DebugContextDto debugContext) {
@@ -358,7 +344,6 @@ public class DebuggerController {
             runBtn.setDisable(false);
             stopBtn.setDisable(true);
             resumeBtn.setDisable(true);
-            stepBackBtn.setDisable(true);
             stepOverBtn.setDisable(true);
             radioBtnRegular.setDisable(false);
             cyclesProperty.set(debugContext.getCycles());
@@ -368,7 +353,6 @@ public class DebuggerController {
 
     @FXML
     void onStepOverBtnListener(ActionEvent event) {
-        stepBackBtn.setDisable(false);
         mainController.btnStepOverListener();
     }
 
@@ -416,7 +400,6 @@ public class DebuggerController {
         stopBtn.setDisable(true);
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
-        stepBackBtn.setDisable(true);
         radioBtnRegular.setDisable(false);
     }
 
@@ -486,5 +469,4 @@ public class DebuggerController {
             }
         }
     }
-
 }

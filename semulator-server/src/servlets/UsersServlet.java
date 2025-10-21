@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-@WebServlet("/users")
+@WebServlet(name = "servlets.UsersServlet", urlPatterns = "/users")
 public class UsersServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
@@ -46,5 +46,3 @@ public class UsersServlet extends HttpServlet {
         user.updateRunsNumber();
     }
 }
-
-

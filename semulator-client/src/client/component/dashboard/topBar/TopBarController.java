@@ -6,15 +6,12 @@ import client.utils.Constants;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import dto.LoadReport;
-import javafx.animation.PauseTransition;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -22,8 +19,6 @@ import okhttp3.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.UnaryOperator;
-
-import static client.utils.Constants.LOAD_FILE_PAGE;
 
 public class TopBarController {
     private DashboardController mainController;

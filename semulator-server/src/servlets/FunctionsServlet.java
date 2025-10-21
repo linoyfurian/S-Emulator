@@ -13,7 +13,7 @@ import semulator.core.v3.SEmulatorEngineV3;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/functions")
+@WebServlet(name = "servlets.FunctionsServlet", urlPatterns = "/functions")
 public class FunctionsServlet extends HttpServlet {
     private final Gson gson = new Gson();
 

@@ -1,31 +1,21 @@
-
-
 package servlets;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import constants.Constants;
 import dto.ExecutionRunDto;
-import dto.ProgramFunctionDto;
 import dto.RunProgramRequest;
-import dto.UserInfo;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import semulator.core.v3.SEmulatorEngineV3;
 import utils.SessionUtils;
-import utils.users.UserManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
-@WebServlet("/regular-run")
+@WebServlet(name = "servlets.RegularRunServlet", urlPatterns = "/regular-run")
 public class RegularRunServlet extends HttpServlet {
 
     private final Gson gson = new Gson();
