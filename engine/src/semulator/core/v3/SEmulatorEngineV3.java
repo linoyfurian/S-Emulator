@@ -9,15 +9,24 @@ import java.util.Map;
 
 public interface SEmulatorEngineV3 {
     ProgramFunctionDto displayProgram(String name, boolean isProgram);
-    LoadReport loadProgramDetails(InputStream in, String username) throws JAXBException;
-    List<ProgramInfo> getPrograms();
-    List<FunctionInfo> getFunctions();
-    ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand);
-    ExecutionRunDto runProgram(long credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long ... input);
-    DebugContextDto initialStartOfDebugger(String username, String programName, boolean isProgram, int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long ... inputs);
-    DebugContextDto debug (long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
-    void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture);
-    List<RunResultDto> getUserRunHistory(String user);
-    DebugContextDto resume (long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
 
+    LoadReport loadProgramDetails(InputStream in, String username) throws JAXBException;
+
+    List<ProgramInfo> getPrograms();
+
+    List<FunctionInfo> getFunctions();
+
+    ProgramFunctionDto expand(String programName, boolean isProgramBool, int degreeOfExpand);
+
+    ExecutionRunDto runProgram(long credits, String username, String architecture, int desiredDegreeOfExpand, String programName, boolean isProgramBool, Map<String, Long> originalInputs, long... input);
+
+    DebugContextDto initialStartOfDebugger(String username, String programName, boolean isProgram, int degreeOfRun, DebugContextDto debugContext, Map<String, Long> originalInputs, long... inputs);
+
+    DebugContextDto debug(long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
+
+    void addCurrentRunToHistory(DebugContextDto debugContext, int degreeOfRun, String programName, boolean isProgram, String architecture);
+
+    List<RunResultDto> getUserRunHistory(String user);
+
+    DebugContextDto resume(long credits, String username, String programName, boolean isProgram, int degreeOfExpand, DebugContextDto debugContext, Map<String, Long> originalInputs);
 }

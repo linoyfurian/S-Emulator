@@ -99,7 +99,7 @@ public class ProgramsFunctionsController {
         programsTbl.setItems(programsData);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(2), event -> refreshProgramsAndFunctions())
+                new KeyFrame(Duration.seconds(1), event -> refreshProgramsAndFunctions())
         );
 
         timeline.setCycleCount(Timeline.INDEFINITE);

@@ -91,7 +91,7 @@ public class UsersController {
         availableUsersTbl.setItems(usersData);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(2), event -> refreshUsers())
+                new KeyFrame(Duration.seconds(1), event -> refreshUsers())
         );
 
         timeline.setCycleCount(Timeline.INDEFINITE);
