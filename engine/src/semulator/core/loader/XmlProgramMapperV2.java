@@ -18,6 +18,7 @@ import java.util.List;
 
 public class XmlProgramMapperV2 {
     public static Program fromSProgramToProgramImpl(SProgram sProgram, String username) {
+        System.out.println("fromSProgramToProgramImpl");
         String programName = sProgram.getName().trim();
         Program program = new ProgramImpl(programName, 0, username);
 
@@ -44,13 +45,25 @@ public class XmlProgramMapperV2 {
             }
         }
 
+//        ProgramImpl programImpl = (ProgramImpl) program;
+//        int maxDepth = programImpl.findMaxDepth();
+//
+//        System.out.println("max depth: " + maxDepth);
+//        for(int i = 0; i < maxDepth; i++) {
+//            setMaxDegreeOfExpansionForComplexInstruction(program);
+//        }
+        return program;
+    }
+
+    public static void updateMaxDegreeOfProgram(Program program) {
         ProgramImpl programImpl = (ProgramImpl) program;
         int maxDepth = programImpl.findMaxDepth();
 
+        System.out.println("max depth: " + maxDepth);
         for(int i = 0; i < maxDepth; i++) {
             setMaxDegreeOfExpansionForComplexInstruction(program);
         }
-        return program;
+
     }
 
 

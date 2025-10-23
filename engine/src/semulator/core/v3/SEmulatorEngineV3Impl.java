@@ -4,6 +4,7 @@ import dto.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import org.w3c.dom.ls.LSOutput;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
@@ -70,8 +71,8 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             if(this.programs.containsKey(sProgram.getName())){
                 return new LoadReport(false, "Error: Program with this name is already exist");
             }
-            Program mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram, username);
 
+            Program mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram, username);
 
             boolean isValidProgram = mappedProgram.validate();
             if (!isValidProgram) {
@@ -95,6 +96,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
                 }
             }
 
+            XmlProgramMapperV2.updateMaxDegreeOfProgram(mappedProgram);
             this.programs.put(mappedProgram.getName(), mappedProgram);
 
             for (Program f : funcs) {
@@ -233,7 +235,6 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             programInContext = functions.get(programName);
 
         programToRun = programInContext.expand(degreeOfRun, functions);
-
 
         ProgramDebugger debugger;
         debugger = new ProgramDebuggerImpl(username, programToRun, functions, originalInputs, inputs);

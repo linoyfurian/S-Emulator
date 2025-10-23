@@ -1,5 +1,6 @@
 package semulator.logic.program;
 
+import org.w3c.dom.ls.LSOutput;
 import semulator.logic.Function.Function;
 import semulator.logic.Function.FunctionUtils;
 import semulator.logic.instruction.*;
@@ -63,6 +64,7 @@ public class ProgramImpl implements Program, Serializable {
 
     @Override
     public boolean validate() {
+
         boolean valid = true;
 
         if (this == null) {
@@ -120,6 +122,7 @@ public class ProgramImpl implements Program, Serializable {
 
     @Override
     public int calculateMaxDegree() {
+        System.out.println("!!!!!!!!");
         if (instructions == null || instructions.isEmpty()) return 0;
 
         return instructions.stream()
