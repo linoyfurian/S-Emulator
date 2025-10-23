@@ -118,11 +118,8 @@ public class ProgramImpl implements Program, Serializable {
         return hasInvalidFunctionReferences;
     }
 
-
-
     @Override
     public int calculateMaxDegree() {
-        System.out.println("!!!!!!!!");
         if (instructions == null || instructions.isEmpty()) return 0;
 
         return instructions.stream()
