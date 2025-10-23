@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Main-Class: client.main.SEmulatorClient
+Class-Path: engine.jar api.jar
+ jaxbLib/jakarta.xml.bind-api.jar
+ jaxbLib/jaxb-core.jar
+ jaxbLib/jaxb-impl.jar
+ jaxbLib/angus-activation.jar
+ jaxbLib/jakarta.activation-api.jar
+ fxLib/javafx.graphics.jar
+ fxLib/javafx.fxml.jar
+ fxLib/javafx.controls.jar
+ fxLib/javafx.base.jar
+ fxLib/javafx-swt.jar
+ fxLib/javafx.web.jar
+ fxLib/javafx.swing.jar
+ fxLib/javafx.media.jar
+ okHttp/okio-2.8.0.jar
+ okHttp/okhttp-4.9.1.jar
+ okHttp/kotlin-stdlib-common-1.4.10.jar
+ okHttp/kotlin-stdlib-1.4.10.jar
+ okHttp/annotations-13.0.jar
+ gson/gson-2.11.0.jar
+ gson/gson-2.11.0-sources.jar
+ gson/gson-2.11.0-javadoc.jar
