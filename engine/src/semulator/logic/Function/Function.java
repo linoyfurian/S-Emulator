@@ -1,5 +1,6 @@
 package semulator.logic.Function;
 
+import semulator.core.loader.Validator;
 import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
 import semulator.logic.label.Label;
@@ -57,11 +58,12 @@ public class Function implements Program, Serializable {
     }
 
     @Override
-    public boolean validate() {
+    public Validator validate() {
+        String message = "";
         boolean valid = true;
 
         if (this == null) {
-            return false;
+            return new Validator(false, message);
         }
 
         Set<String> definedLabels = new HashSet<>();
@@ -79,15 +81,22 @@ public class Function implements Program, Serializable {
                 String target = ji.getTargetLabel().getLabelRepresentation();
                 if (target.isEmpty()) {
                     valid = false;
+                    message = "there is a reference in the function '" + this.name + "' to an empty Label";
                     break;
                 }
                 if ((!definedLabels.contains(target)) && (!target.equals("EXIT"))) {
                     valid = false;
+                    message = "there is a reference in the program '" + this.name + "' to the Label '" + target + "' that doesn't exist";
                     break;
                 }
             }
         }
-        return valid;
+
+        if(!valid) {
+            return new Validator(false, message);
+        }
+
+        return new Validator(true, "success");
     }
 
     @Override
@@ -177,7 +186,8 @@ public class Function implements Program, Serializable {
         return userString;
     }
 
-    public boolean hasInvalidFunctionReferences(List<Program> functions, Map<String, Program> allFunctions) {
+    public Validator hasInvalidFunctionReferences(List<Program> functions, Map<String, Program> allFunctions) {
+        String message = "";
         boolean isFunctionFound;
         boolean hasInvalidFunctionReferences = false;
         List<Instruction> instructions = this.getInstructions();
@@ -189,6 +199,7 @@ public class Function implements Program, Serializable {
                 if(!isFunctionFound){
                     if(!allFunctions.containsKey(functionName)){
                         hasInvalidFunctionReferences = true;
+                        message = "there is a reference to the function '" + functionName + "' but the function doesn't exist";
                         break;
                     }
                 }
@@ -198,6 +209,7 @@ public class Function implements Program, Serializable {
                     if(!isFunctionFound){
                         if(!allFunctions.containsKey(arg)){
                             hasInvalidFunctionReferences = true;
+                            message = "there is a reference to the function '" + arg + "' but the function doesn't exist";
                             break;
                         }
                     }
@@ -208,7 +220,12 @@ public class Function implements Program, Serializable {
                 }
             }
         }
-        return hasInvalidFunctionReferences;
+
+        if(hasInvalidFunctionReferences){
+            return new Validator(false, message);
+        }
+
+        return new Validator(true, "success");
     }
 
     @Override

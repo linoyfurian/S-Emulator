@@ -52,7 +52,6 @@ public class XmlProgramMapperV2 {
 
         for(int i = 0; i < maxDepth; i++) {
             setMaxDegreeOfExpansionForComplexInstruction(program, allFunctions);
-            System.out.println("changed");
         }
     }
 
@@ -264,22 +263,16 @@ public class XmlProgramMapperV2 {
         List<Program> newFunctions = programImpl.getFunctions();
 
         for (Program function : newFunctions) {
-            System.out.println("functionname:" + function.getName());
             List<Instruction> functionInstructions = function.getInstructions();
             for (Instruction instruction : functionInstructions) {
-                if(instruction instanceof ComplexInstruction complexInstruction) {
-                    System.out.println("complexinstruction");
+                if(instruction instanceof ComplexInstruction complexInstruction)
                     complexInstruction.updateDegreeOfExpansion(program, allFunctions);
-                }
             }
         }
 
         for (Instruction instruction : instructions) {
             if(instruction instanceof ComplexInstruction complexInstruction)
                 complexInstruction.updateDegreeOfExpansion(program, allFunctions);
-            System.out.println("basic");
         }
     }
-
-
 }

@@ -1,7 +1,6 @@
 package semulator.logic.program;
 
-import org.w3c.dom.ls.LSOutput;
-import semulator.logic.Function.Function;
+import semulator.core.loader.Validator;
 import semulator.logic.Function.FunctionUtils;
 import semulator.logic.instruction.*;
 import semulator.logic.instruction.expansion.ExpansionUtils;
@@ -63,12 +62,12 @@ public class ProgramImpl implements Program, Serializable {
     }
 
     @Override
-    public boolean validate() {
-
+    public Validator validate() {
+        String message = "";
         boolean valid = true;
 
         if (this == null) {
-            return false;
+            return new Validator(false, message);
         }
 
         Set<String> definedLabels = new HashSet<>();
@@ -86,18 +85,33 @@ public class ProgramImpl implements Program, Serializable {
                 String target = ji.getTargetLabel().getLabelRepresentation();
                 if (target.isEmpty()) {
                     valid = false;
+                    message = "there is a reference in the program '" + this.name + "' to an empty Label";
                     break;
                 }
                 if ((!definedLabels.contains(target)) && (!target.equals("EXIT"))) {
                     valid = false;
+                    message = "there is a reference in the program '" + this.name + "' to the Label '" + target + "' that doesn't exist";
                     break;
                 }
             }
         }
-        return valid;
+
+        if(!valid) {
+            return new Validator(false, message);
+        }
+
+        Validator validator;
+        for (Program function : this.functions){
+            validator = function.validate();
+            if(!validator.isValid()){
+                return new Validator(false, validator.getMessage());
+            }
+        }
+        return new Validator(true, "success");
     }
 
-    public boolean hasInvalidFunctionReferences(Map<String, Program> functions) {
+    public Validator hasInvalidFunctionReferences(Map<String, Program> functions) {
+        String message = "";
         boolean isFunctionFound;
         boolean hasInvalidFunctionReferences = false;
         List<Instruction> instructions = this.getInstructions();
@@ -110,6 +124,7 @@ public class ProgramImpl implements Program, Serializable {
                 if(!isFunctionFound){
                     if(!functions.containsKey(functionName)){
                         hasInvalidFunctionReferences = true;
+                        message = "there is a reference to the function '" + functionName + "' but the function doesn't exist";
                         break;
                     }
                 }
@@ -119,6 +134,7 @@ public class ProgramImpl implements Program, Serializable {
                     if(!isFunctionFound){
                         if(!functions.containsKey(arg)){
                             hasInvalidFunctionReferences = true;
+                            message = "there is a reference to the function '" + arg + "' but the function doesn't exist";
                             break;
                         }
                     }
@@ -129,7 +145,12 @@ public class ProgramImpl implements Program, Serializable {
                 }
             }
         }
-        return hasInvalidFunctionReferences;
+
+        if(hasInvalidFunctionReferences){
+            return new Validator(false, message);
+        }
+
+        return new Validator(true, "success");
     }
 
     @Override

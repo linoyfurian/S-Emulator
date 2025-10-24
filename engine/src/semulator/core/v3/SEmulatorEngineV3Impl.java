@@ -4,6 +4,7 @@ import dto.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import semulator.core.loader.Validator;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
@@ -72,25 +73,29 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
             Program mappedProgram = XmlProgramMapperV2.fromSProgramToProgramImpl(sProgram, username);
 
-            boolean isValidProgram = mappedProgram.validate();
+            Validator validator;
+            validator = mappedProgram.validate();
+            boolean isValidProgram = validator.isValid();
             if (!isValidProgram) {
-                return new LoadReport(false, "Error: Program is not valid, there is a reference to a label that doesnt exits");
+                return new LoadReport(false, "Error:" + validator.getMessage());
             }
 
             ProgramImpl programImpl = (ProgramImpl) mappedProgram;
 
-            if (programImpl.hasInvalidFunctionReferences(functions)) {
-                return new LoadReport(false, "Error: Program is not valid, there is a reference in the program to a function that doesnt exits");
+            validator = programImpl.hasInvalidFunctionReferences(functions);
+            if (!validator.isValid()) {
+                return new LoadReport(false, "Error:" + validator.getMessage());
             }
 
             List<Program> funcs = programImpl.getFunctions();
             for (Program f : funcs) {
                 if(this.functions.containsKey(f.getName())){
-                    return new LoadReport(false, "Error: Program is not valid, there is a reference to a function that already exits");
+                    return new LoadReport(false, "Error: Program is not valid, this file includes the function '" + f.getName() + "' that already exits");
                 }
                 Function fn = (Function) f;
-                if (fn.hasInvalidFunctionReferences(funcs, functions)) {
-                    return new LoadReport(false, "Error: Program is not valid, there is a reference in a function to a function that doesnt exits");
+                validator = fn.hasInvalidFunctionReferences(funcs, functions);
+                if (!validator.isValid()) {
+                    return new LoadReport(false, "Error:" + validator.getMessage());
                 }
             }
 

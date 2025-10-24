@@ -1,5 +1,6 @@
 package semulator.logic.program;
 
+import semulator.core.loader.Validator;
 import semulator.logic.instruction.Instruction;
 import semulator.logic.label.Label;
 import semulator.logic.variable.Variable;
@@ -14,7 +15,7 @@ public interface Program {
     String getName();
     void addInstruction(Instruction instruction);
     List<Instruction> getInstructions();
-    boolean validate();
+    Validator validate();
     int calculateMaxDegree();
     LinkedHashSet<Variable> getVariables();
     LinkedHashSet<Label> getLabels();

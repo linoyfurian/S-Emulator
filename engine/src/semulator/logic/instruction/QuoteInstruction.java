@@ -303,7 +303,6 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
         List<Program> functions = programImpl.getFunctions();
         Program currentFunction = FunctionUtils.findFunctionV3(this.functionName, functions, allFunctions);
 
-        System.out.println("currentFunction" + currentFunction.getName());
         int depth = 1;
         int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 3);
         int currentMaxDegree;
