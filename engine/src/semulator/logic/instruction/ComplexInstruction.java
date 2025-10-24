@@ -13,9 +13,10 @@ public interface ComplexInstruction {
     List<Instruction> expand(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Map<String, Program> functions);
     String getInstructionDescription(Map<String, Program> functions);
     boolean isComposite();
-    void updateDegreeOfExpansion(Program program);
+    void updateDegreeOfExpansion(Program program, Map<String,Program> allFunctions);
     Instruction QuoteFunctionExpandHelper(Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, long instructionNumber, Map<String, String> oldAndNew, Instruction parent);
     Instruction cloneWithDifferentNumber(long instructionNumber);
     int findDepthOfFunction();
     String getNameOfFunction();
+    String getArguments();
 }

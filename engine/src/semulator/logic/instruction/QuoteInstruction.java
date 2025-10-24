@@ -297,12 +297,13 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     }
 
     @Override
-    public void updateDegreeOfExpansion(Program program) {
+    public void updateDegreeOfExpansion(Program program, Map<String,Program> allFunctions) {
         ProgramImpl programImpl = (ProgramImpl) program;
         List<String> functionArguments = FunctionUtils.splitFunctionArguments(this.functionArguments);
         List<Program> functions = programImpl.getFunctions();
-        Program currentFunction = FunctionUtils.findFunction(this.functionName, functions);
+        Program currentFunction = FunctionUtils.findFunctionV3(this.functionName, functions, allFunctions);
 
+        System.out.println("currentFunction" + currentFunction.getName());
         int depth = 1;
         int maxDegreeOfExpansion = Math.max(currentFunction.calculateMaxDegree() + depth, 3);
         int currentMaxDegree;
@@ -320,7 +321,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 else if(c==')'){
                     if(isFunctionName){
                         isFunctionName = false;
-                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        Program currFunction = FunctionUtils.findFunctionV3(currentFunctionName, functions,allFunctions);
                         currentMaxDegree = currFunction.calculateMaxDegree() + depth;
                         maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
                         maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
@@ -331,7 +332,7 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
                 else if(c==','){
                     if(isFunctionName){
                         isFunctionName = false;
-                        Program currFunction = FunctionUtils.findFunction(currentFunctionName, functions);
+                        Program currFunction = FunctionUtils.findFunctionV3(currentFunctionName, functions, allFunctions);
                         currentMaxDegree = currFunction.calculateMaxDegree() + depth;
                         maxDegreeOfExpansion = Math.max(currentMaxDegree, maxDegreeOfExpansion);
                         maxDegreeOfExpansion = Math.max(2 + depth, maxDegreeOfExpansion);
@@ -362,5 +363,10 @@ public class QuoteInstruction extends AbstractInstruction implements ComplexInst
     @Override
     public String getNameOfFunction(){
         return this.functionName;
+    }
+
+    @Override
+    public String getArguments(){
+        return this.functionArguments;
     }
 }

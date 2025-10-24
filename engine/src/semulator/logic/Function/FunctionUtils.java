@@ -152,6 +152,15 @@ public class FunctionUtils {
         return null;
     }
 
+    public static Program findFunctionV3(String functionName, List<Program> functions, Map<String,Program> allFunctions){
+        for (Program function : functions) {
+            if(function.getName().equals(functionName)){
+                return function;
+            }
+        }
+        return allFunctions.get(functionName);
+    }
+
     public static String generateNewFunctionArguments(String functionArguments, Set<Integer> zUsedNumbers, Set<Integer> usedLabelsNumbers, Map<String, String> oldAndNew){
         String arguments = "";
         String currVariable = "";
@@ -341,5 +350,44 @@ public class FunctionUtils {
         }
 
         return arguments;
+    }
+
+    public static List<String> getFunArgs(String functionArguments){
+        List<String> result = new ArrayList<>();
+
+        boolean isFunctionName = false;
+        String currFunctionName="";
+
+        for (int i = 0; i < functionArguments.length(); i++) {
+            char c = functionArguments.charAt(i);
+            if(c=='('){
+                isFunctionName = true;
+            }
+            else if(c==','){
+                if(isFunctionName) {
+                    result.add(currFunctionName);
+                    currFunctionName="";
+                    isFunctionName = false;
+                }
+            }
+            else if(c==')'){
+                if(isFunctionName) {
+                    result.add(currFunctionName);
+                    currFunctionName = "";
+                    isFunctionName = false;
+                }
+            }
+            else
+            {
+                if(isFunctionName)
+                    currFunctionName = currFunctionName + c;
+            }
+
+        }
+
+        if (!currFunctionName.equals(""))
+            result.add(currFunctionName);
+
+        return result;
     }
 }

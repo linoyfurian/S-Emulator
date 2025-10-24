@@ -4,7 +4,6 @@ import dto.*;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
-import org.w3c.dom.ls.LSOutput;
 import semulator.core.loader.XmlProgramMapperV2;
 import semulator.core.loader.jaxb.schema.version2.generated.SProgram;
 import semulator.logic.Function.Function;
@@ -23,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
     private Map<String, Program> programs = new HashMap<>();
     private Map<String, Program> functions = new HashMap<>();
-    //private Map<String, List<RunResultDto>> runsHistory = new HashMap<>();
     private final ConcurrentHashMap<String, List<RunResultDto>> runsHistory = new ConcurrentHashMap<>();
     private Map<String, ProgramStatistics>  programStatistics = new HashMap<>();
 
@@ -96,7 +94,7 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
                 }
             }
 
-            XmlProgramMapperV2.updateMaxDegreeOfProgram(mappedProgram);
+            XmlProgramMapperV2.updateMaxDegreeOfProgram(mappedProgram, this.functions);
             this.programs.put(mappedProgram.getName(), mappedProgram);
 
             for (Program f : funcs) {

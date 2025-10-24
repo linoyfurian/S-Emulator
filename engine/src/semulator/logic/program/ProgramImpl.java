@@ -104,14 +104,28 @@ public class ProgramImpl implements Program, Serializable {
         List<Program> currProgramFunctions = this.getFunctions();
 
         for (Instruction instr : instructions) {
-            if(instr instanceof QuoteInstruction quoteInstruction){
-                String functionName = quoteInstruction.getFunctionName();
+            if(instr instanceof ComplexInstruction complexInstruction){
+                String functionName = complexInstruction.getNameOfFunction();
                 isFunctionFound = FunctionUtils.isFunctionExist(functionName, currProgramFunctions);
                 if(!isFunctionFound){
                     if(!functions.containsKey(functionName)){
                         hasInvalidFunctionReferences = true;
                         break;
                     }
+                }
+                List<String> funcArgs = FunctionUtils.getFunArgs(complexInstruction.getArguments());
+                for(String arg : funcArgs){
+                    isFunctionFound = FunctionUtils.isFunctionExist(arg, currProgramFunctions);
+                    if(!isFunctionFound){
+                        if(!functions.containsKey(arg)){
+                            hasInvalidFunctionReferences = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(hasInvalidFunctionReferences){
+                    break;
                 }
             }
         }

@@ -183,14 +183,28 @@ public class Function implements Program, Serializable {
         List<Instruction> instructions = this.getInstructions();
 
         for (Instruction instr : instructions) {
-            if(instr instanceof QuoteInstruction quoteInstruction){
-                String functionName = quoteInstruction.getFunctionName();
+            if(instr instanceof ComplexInstruction complexInstruction){
+                String functionName = complexInstruction.getNameOfFunction();
                 isFunctionFound = FunctionUtils.isFunctionExist(functionName, functions);
                 if(!isFunctionFound){
                     if(!allFunctions.containsKey(functionName)){
                         hasInvalidFunctionReferences = true;
                         break;
                     }
+                }
+                List<String> funcArgs = FunctionUtils.getFunArgs(complexInstruction.getArguments());
+                for(String arg : funcArgs){
+                    isFunctionFound = FunctionUtils.isFunctionExist(arg, functions);
+                    if(!isFunctionFound){
+                        if(!allFunctions.containsKey(arg)){
+                            hasInvalidFunctionReferences = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(hasInvalidFunctionReferences){
+                    break;
                 }
             }
         }

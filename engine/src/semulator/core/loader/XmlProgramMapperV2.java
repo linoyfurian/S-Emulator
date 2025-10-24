@@ -1,6 +1,5 @@
 package semulator.core.loader;
 
-import jakarta.xml.bind.JAXBException;
 import semulator.core.loader.jaxb.schema.version2.generated.*;
 
 import semulator.logic.Function.Function;
@@ -15,10 +14,10 @@ import semulator.logic.variable.Variable;
 import semulator.logic.variable.VariableImpl;
 import semulator.logic.variable.VariableType;
 import java.util.List;
+import java.util.Map;
 
 public class XmlProgramMapperV2 {
     public static Program fromSProgramToProgramImpl(SProgram sProgram, String username) {
-        System.out.println("fromSProgramToProgramImpl");
         String programName = sProgram.getName().trim();
         Program program = new ProgramImpl(programName, 0, username);
 
@@ -44,26 +43,17 @@ public class XmlProgramMapperV2 {
                 }
             }
         }
-
-//        ProgramImpl programImpl = (ProgramImpl) program;
-//        int maxDepth = programImpl.findMaxDepth();
-//
-//        System.out.println("max depth: " + maxDepth);
-//        for(int i = 0; i < maxDepth; i++) {
-//            setMaxDegreeOfExpansionForComplexInstruction(program);
-//        }
         return program;
     }
 
-    public static void updateMaxDegreeOfProgram(Program program) {
+    public static void updateMaxDegreeOfProgram(Program program, Map<String,Program> allFunctions) {
         ProgramImpl programImpl = (ProgramImpl) program;
         int maxDepth = programImpl.findMaxDepth();
 
-        System.out.println("max depth: " + maxDepth);
         for(int i = 0; i < maxDepth; i++) {
-            setMaxDegreeOfExpansionForComplexInstruction(program);
+            setMaxDegreeOfExpansionForComplexInstruction(program, allFunctions);
+            System.out.println("changed");
         }
-
     }
 
 
@@ -268,24 +258,27 @@ public class XmlProgramMapperV2 {
         return program;
     }
 
-    private static void setMaxDegreeOfExpansionForComplexInstruction(Program program) {
+    private static void setMaxDegreeOfExpansionForComplexInstruction(Program program, Map<String,Program> allFunctions) {
         List<Instruction> instructions = program.getInstructions();
         ProgramImpl programImpl = (ProgramImpl) program;
-        List<Program> functions = programImpl.getFunctions();
+        List<Program> newFunctions = programImpl.getFunctions();
 
-        for (Program function : functions) {
+        for (Program function : newFunctions) {
+            System.out.println("functionname:" + function.getName());
             List<Instruction> functionInstructions = function.getInstructions();
             for (Instruction instruction : functionInstructions) {
-                if(instruction instanceof ComplexInstruction complexInstruction)
-                    complexInstruction.updateDegreeOfExpansion(program);
+                if(instruction instanceof ComplexInstruction complexInstruction) {
+                    System.out.println("complexinstruction");
+                    complexInstruction.updateDegreeOfExpansion(program, allFunctions);
+                }
             }
         }
 
         for (Instruction instruction : instructions) {
             if(instruction instanceof ComplexInstruction complexInstruction)
-                complexInstruction.updateDegreeOfExpansion(program);
+                complexInstruction.updateDegreeOfExpansion(program, allFunctions);
+            System.out.println("basic");
         }
-
     }
 
 
