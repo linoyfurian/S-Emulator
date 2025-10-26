@@ -10,15 +10,10 @@ import client.utils.display.ProgramUtil;
 import client.utils.http.HttpClientUtil;
 import com.google.gson.Gson;
 import dto.*;
-import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
-import javafx.collections.ListChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -32,7 +27,6 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class ExecutionController {
@@ -151,7 +145,7 @@ public class ExecutionController {
 
         topBarExecutionController.refreshHighlightOptions(programDetails);
         debuggerController.setProgram(programDetails);
-       // instructionsController.resetBreakPointSelection();
+        // instructionsController.resetBreakPointSelection();
 
         topBarExecutionController.setProgramFunctionName(displayName);
     }
@@ -580,7 +574,7 @@ public class ExecutionController {
                         debuggerController.updateVariableHighlight(variableToHighLight);
 
                         long currInstructionToHighlight = debugContext.getNextInstructionNumber();
-                     //   instructionsController.highlightLine((int)prevInstructionNumber - 1);
+                        //   instructionsController.highlightLine((int)prevInstructionNumber - 1);
                         if(currInstructionToHighlight == 0){
                             instructionsController.setIsRunning(false);
                             topBarExecutionController.endDebugMode();
