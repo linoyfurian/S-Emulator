@@ -55,6 +55,10 @@ public class DashboardController {
         usersController.updateCredits(username, credits.get());
     }
 
+    public double getAverageCredits(String programInContext){
+        return programsFunctionsController.getCurrProgramAverageCredits(programInContext);
+    }
+
     @FXML
     public void initialize() {
         if (topBarController != null) {

@@ -20,4 +20,8 @@ public class ProgramStatistics {
         this.creditsAverage = ((this.runsNumber * this.creditsAverage) + credits)/(this.runsNumber+1);
         this.runsNumber++;
     }
+
+    public double calculateNewAverage(int credits) {
+        return ((this.runsNumber * this.creditsAverage) + credits)/(this.runsNumber+1);
+    }
 }

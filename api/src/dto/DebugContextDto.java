@@ -21,6 +21,7 @@ public class DebugContextDto {
     private final Map<String, Long> originalInputs;
     private final int currentInstructionsCycles;
     private final boolean isSuccess;
+    private double averageCredits;
 
     public DebugContextDto(boolean isSuccess, int currentInstructionsCycles, String userName, Program debuggedProgram, ExecutionContext context, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
         this.previousInstructionNumber = previousInstructionNumber;
@@ -34,6 +35,7 @@ public class DebugContextDto {
         this.userName = userName;
         this.currentInstructionsCycles = currentInstructionsCycles;
         this.isSuccess = isSuccess;
+        this.averageCredits = 0;
     }
 
     public DebugContextDto(boolean isSuccess, int currentInstructionsCycles, String userName, Program debuggedProgram, Map<String, Long> currentVariablesValues, long previousInstructionNumber, long nextInstructionNumber, int cycles, Map<String, Long> previousVariablesValues, DebugContextDto prevDebugContext, Map<String, Long> originalInputs, int PrevCycles) {
@@ -48,6 +50,7 @@ public class DebugContextDto {
         this.userName = userName;
         this.currentInstructionsCycles = currentInstructionsCycles;
         this.isSuccess = isSuccess;
+        this.averageCredits = 0;
     }
 
     public DebugContextDto (boolean isSuccess, DebugContextDto debugContextDto) {
@@ -62,6 +65,15 @@ public class DebugContextDto {
         this.originalInputs = debugContextDto.getOriginalInputs();
         this.currentInstructionsCycles = debugContextDto.getCurrentInstructionsCycles();
         this.prevDebugContext = debugContextDto.getPrevDebugContext();
+        this.averageCredits = 0;
+    }
+
+    public double getAverageCredits(){
+        return averageCredits;
+    }
+
+    public void setAverageCredits(double averageCredits){
+        this.averageCredits = averageCredits;
     }
 
     public LinkedHashMap<String, Long> getCurrentVariablesValues() {

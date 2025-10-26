@@ -12,6 +12,7 @@ public class ExecutionRunDto implements Serializable {
     private final int cycles;
     private final LinkedHashMap<String, Long> variables;
     private final boolean isRunSuccess;
+    private double averageCredits;
 
     public ExecutionRunDto(boolean isRunSuccess, long runNumber, int expansionDegree, long result, int cycles, Map<String, Long> variables,  Map<String, Long> inputs) {
         this.runNumber = runNumber;
@@ -21,6 +22,15 @@ public class ExecutionRunDto implements Serializable {
         this.cycles = cycles;
         this.variables = sortVarsForDisplay(variables);
         this.isRunSuccess = isRunSuccess;
+        this.averageCredits = 0;
+    }
+
+    public void setAverageCredits(double averageCredits) {
+        this.averageCredits = averageCredits;
+    }
+
+    public double getAverageCredits() {
+        return averageCredits;
     }
 
     private static LinkedHashMap<String, Long> sortVarsForDisplay(Map<String, Long> vars) {

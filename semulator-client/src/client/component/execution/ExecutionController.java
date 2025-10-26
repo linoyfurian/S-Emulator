@@ -212,6 +212,7 @@ public class ExecutionController {
         boolean result;
         this.instructionsController.highlightByArchitecture(selectedArchitecture);
         double currentCredits = this.topBarExecutionController.getCredits();
+
         result = this.instructionsController.checkIfRunIsValid(selectedArchitecture) && isEnoughCreditsAccordingToAverage(currentCredits, selectedArchitecture);
         return result;
     }
@@ -297,6 +298,8 @@ public class ExecutionController {
                                 }
                             }
                             debuggerController.disableChangeOfInput(false);
+                            if(isProgram)
+                                averageCredits = runResult.getAverageCredits();
                             debuggerController.updateRunBtnDisable();
                         });
                     } finally {
@@ -439,10 +442,12 @@ public class ExecutionController {
                             topBarExecutionController.endDebugMode();
                             String architecture = debuggerController.getArchitecture();
                             int degreeOfRun = topBarExecutionController.getCurrentDegree();
+                            if(isProgram)
+                                averageCredits = debugResult.getAverageCredits();
+                            debuggerController.updateRunBtnDisable();
                             addCurrentRunToHistory(debugContext, degreeOfRun, architecture);
                             mainController.updateRunsNumber();
                             debuggerController.disableChangeOfInput(false);
-                            debuggerController.updateRunBtnDisable();
                         }
                         else
                             instructionsController.highlightLine((int)currInstructionToHighlight - 1);
@@ -496,6 +501,9 @@ public class ExecutionController {
         int degreeOfRun = topBarExecutionController.getCurrentDegree();
 
         addCurrentRunToHistory(debugContext,degreeOfRun, debuggerController.getArchitecture());
+
+        if(isProgram)
+            averageCredits = debugContext.getAverageCredits();
 
         instructionsController.setIsRunning(false);
         instructionsController.highlightLine(-1);
@@ -587,6 +595,8 @@ public class ExecutionController {
                         }
                         else
                             instructionsController.highlightLine((int)currInstructionToHighlight - 1);
+                        if(isProgram)
+                            averageCredits = debugContext.getAverageCredits();
                         debuggerController.updateDebugResult(debugContext);
                         debuggerController.updateRunBtnDisable();
                     });

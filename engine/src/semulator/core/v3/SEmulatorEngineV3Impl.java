@@ -213,12 +213,14 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
             );
             results.add(currentRunResult);
 
+            double newAverage = 0;
             if(isProgramBool){
                 ProgramStatistics programStatistic =  programStatistics.get(programName);
                 programStatistic.updateCreditsAverage(currentRunResult.getCycles());
+                newAverage = programStatistic.getCreditsAverage();
             }
+            runResult.setAverageCredits(newAverage);
         }
-
         return runResult;
     }
 
@@ -271,6 +273,12 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
         result = debugger.debug(credits, instructionToExecuteNumber, debugContext, originalInputs);
 
+        double averageCredits = 0;
+        if(isProgram){
+            ProgramStatistics programStatistic =  programStatistics.get(programName);
+            averageCredits = programStatistic.calculateNewAverage(result.getCycles());
+        }
+        result.setAverageCredits(averageCredits);
         return result;
     }
 
@@ -352,6 +360,14 @@ public class SEmulatorEngineV3Impl implements  SEmulatorEngineV3 {
 
         DebugContextDto result;
         result = debugger.resume(credits, instructionToExecuteNumber, debugContext, originalInputs);
+
+        double averageCredits = 0;
+        if(isProgram){
+            ProgramStatistics programStatistic =  programStatistics.get(programName);
+            averageCredits = programStatistic.calculateNewAverage(result.getCycles());
+        }
+        result.setAverageCredits(averageCredits);
+
         return result;
     }
 }

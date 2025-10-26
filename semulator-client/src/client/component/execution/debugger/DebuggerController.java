@@ -341,7 +341,6 @@ public class DebuggerController {
 
         long nextInstructionNumber = debugContext.getNextInstructionNumber();
         if (nextInstructionNumber == 0) { //finish debug
-            runBtn.setDisable(false);
             stopBtn.setDisable(true);
             resumeBtn.setDisable(true);
             stepOverBtn.setDisable(true);
@@ -396,7 +395,6 @@ public class DebuggerController {
     }
 
     public void finishDebug(){
-        runBtn.setDisable(false);
         stopBtn.setDisable(true);
         resumeBtn.setDisable(true);
         stepOverBtn.setDisable(true);
